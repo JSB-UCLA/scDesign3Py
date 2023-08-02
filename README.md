@@ -3,26 +3,40 @@
 - [1. 新版本(基于 rpy2)](#1-新版本基于-rpy2)
 - [2. 开发过程所学](#2-开发过程所学)
   - [2.1. 背景知识 and 统计知识](#21-背景知识-and-统计知识)
-  - [2.2. R 相关](#22-r-相关)
-    - [2.2.1. 经验](#221-经验)
-    - [2.2.2. API](#222-api)
-  - [2.3. python list](#23-python-list)
-  - [2.4. pandas and numpy 相关](#24-pandas-and-numpy-相关)
-    - [2.4.1. 经验](#241-经验)
-    - [2.4.2. API](#242-api)
-  - [2.5. sklearn 相关](#25-sklearn-相关)
-  - [2.6. scipy 相关](#26-scipy-相关)
-  - [2.7. anndata 相关](#27-anndata-相关)
-  - [2.8. pyvinecopulib 相关](#28-pyvinecopulib-相关)
-  - [2.9. Statsmodels 相关](#29-statsmodels-相关)
-    - [2.9.1. 经验](#291-经验)
-    - [2.9.2. 补充](#292-补充)
-  - [2.10. pygam 相关](#210-pygam-相关)
-  - [2.11. python 相关](#211-python-相关)
-    - [2.11.1. python 底层基础](#2111-python-底层基础)
-    - [2.11.2. python 机制](#2112-python-机制)
-  - [2.12. GitHub](#212-github)
-  - [2.13. 其他](#213-其他)
+  - [2.2. rpy2 相关](#22-rpy2-相关)
+    - [2.2.1. init 的方法](#221-init-的方法)
+    - [2.2.2. 查看当前的 R 环境](#222-查看当前的-r-环境)
+    - [2.2.3. `rpy2.robjects.r`函数](#223-rpy2robjectsr函数)
+    - [2.2.4. `rpy2.robjects.packages`函数](#224-rpy2robjectspackages函数)
+  - [2.3. R 相关](#23-r-相关)
+    - [2.3.1. 经验](#231-经验)
+    - [2.3.2. API](#232-api)
+  - [2.4. python 基础类型](#24-python-基础类型)
+  - [2.5. pandas and numpy 相关](#25-pandas-and-numpy-相关)
+    - [2.5.1. 经验](#251-经验)
+    - [2.5.2. API](#252-api)
+  - [2.6. sklearn 相关](#26-sklearn-相关)
+  - [2.7. scipy 相关](#27-scipy-相关)
+  - [2.8. anndata 相关](#28-anndata-相关)
+  - [2.9. pyvinecopulib 相关](#29-pyvinecopulib-相关)
+  - [2.10. Statsmodels 相关](#210-statsmodels-相关)
+    - [2.10.1. 经验](#2101-经验)
+    - [2.10.2. 补充](#2102-补充)
+  - [2.11. pygam 相关](#211-pygam-相关)
+  - [2.12. python 相关](#212-python-相关)
+    - [2.12.1. python 底层基础](#2121-python-底层基础)
+      - [2.12.1.1. 线程与进程](#21211-线程与进程)
+      - [2.12.1.2. 其他](#21212-其他)
+      - [2.12.1.3. Anaconda 相关和库管理相关](#21213-anaconda-相关和库管理相关)
+    - [2.12.2. python 机制](#2122-python-机制)
+      - [2.12.2.1. 命名空间相关](#21221-命名空间相关)
+      - [2.12.2.2. class 相关](#21222-class-相关)
+      - [2.12.2.3. python warning 相关](#21223-python-warning-相关)
+      - [2.12.2.4. python 计时](#21224-python-计时)
+      - [2.12.2.5. python 类型判断和函数传参](#21225-python-类型判断和函数传参)
+      - [2.12.2.6. 其他](#21226-其他)
+  - [2.13. GitHub](#213-github)
+  - [2.14. 其他](#214-其他)
 - [3. 老版本(不用 rpy2 版本)的相关记录](#3-老版本不用-rpy2-版本的相关记录)
   - [3.1. 未来的下一步功能:](#31-未来的下一步功能)
   - [3.2. Questions](#32-questions)
@@ -33,6 +47,23 @@
 ---
 
 ## 1. 新版本(基于 rpy2)
+
+- [ ] 测试工作 spatial 模拟，过程中有一些 2 维度的 smoother，不一定用高斯过程，看结果怎么样
+
+  - 补充
+
+    - s：tp（各向同性的光滑度，spatial 的数据是会有分层的，感觉光滑度还是不是各向同性） ts（可能会压缩一些系数到 0），gp，cr
+    - te，两个 spline 的乘积，指定 1 维的 spline，cr tp gp（？不一定好）
+    - k 指模型复杂度，一维的 k 和 te 的 k 是不一样的，te 的 k 是一维 k 的平方
+
+  - 测试：在不同的 k（如 100,200,400），bs 情况下，比较
+    - time
+    - 效果（图形可视化，比如一个 spatial 的颜色的可视化，spatial 会有一个比较 sharp 的 edge 看看能不能捕捉到）
+    - 输出结果算 RMSE
+
+- [ ] 完成一个从 anndata 转换成 sce 的函数 (只要 cell info 和 count matrix 即可，从 anndata 那里拿过来转过去理论上就可以了)，**多了一个`default_assay_name`参数用来指定在 Single 中 assay 的名称，并且会返回正确的 assay_name**
+- [ ] 完成一个从 R list 转换成 python dict 的函数作为 interface，则只要留一个 return 的 API，如果有需要就转换成 python dict 的形式
+- [ ] scDesign 最后是一个类，各个数据以类属性的方式继承，默认这些类属性都是不可修改的，并且就保留着 Rdata 的形式
 
 ---
 
@@ -56,10 +87,68 @@
 
 [model selcetion](https://arxiv.org/pdf/1306.2427.pdf)
 
-### 2.2. R 相关
+### 2.2. rpy2 相关
 
-#### 2.2.1. 经验
+#### 2.2.1. init 的方法
 
+1. 告诉 python 解释器电脑上 R 语言的位置，运行 R 中`R.home()`的字符串复制到`"R_home_location"`即可；如果电脑的环境变量中有 R_HOME 则不需要这一步的配置，`os.environ.get()`就能直接拿到这个 R 的地址
+
+```python
+import os
+os.environ['R_HOME'] = "R_home_location"
+```
+
+2. 相当于在 python 进程中开了一个 R 进程，只要是在同一个 python 进程中，所有的 R 进程都是共享的，即在另一个 module 中对 R 做了什么操作，在主 module 中调用 R 的时候也能看到
+
+3. 对所有的`rpy2.robjects`下属的 R 对象 call `print`的输出结果会是完全 R 风格的输出，适合直接查看；感觉上 rpy2 就是拿到了 R 运行结果的 object
+
+#### 2.2.2. 查看当前的 R 环境
+
+1. `rpy2.robjects.r.search()`可以输出当前已经 attach 的 namesapce 的名字，对应 R 中的`search()`函数
+2. `rpy2.robjects.r.ls()`可以输出当前 global 环境中的变量名称，对应 R 中的`ls()`函数
+3. `rpy2.robjects.globalenv`是一个类似字典的对象，可以用`items()`方法拿到 global 环境下的所有变量和对应的值
+
+```python
+from rpy2 import robjects as ro
+{key:value for key,value in ro.globalenv.items()}
+```
+
+#### 2.2.3. `rpy2.robjects.r`函数
+
+1. 只要使用`r("""R_script""")`就能把整个 R_script 传到 R 终端作为运行并且拿到最后的运行结果输出
+2. 已经 attach 后的 namespace 里的函数就可以使用`r['func_name']`的方式拿到了，在没有 attach 的时候在 R 环境中找不到对应的函数名称所以无法找到。实际上对于在 R 环境中能找到名字的函数可以直接用`r.func_name()`调用该函数。**非嵌套调用只是用一下的情况下可以考虑用 method2，要多重函数嵌套使用的情况下用 method1 感觉会更好**，这两种方法都适合只要拿到结果，不适合把结果还要存一个 R 中的变量（这意味着所有的操作都要借着 python 的 interface 来操作不能在 R 中操作，因为所有的结果都是以 python object 的形式保存的）
+
+```python
+from rpy2.robjects import pandas2ri
+from rpy2.robjects import r
+pandas2ri.activate()
+data = pd.DataFrame([[1,4],[2,5],[3,6]],columns=['x','y'])
+# method 1 to call lm
+lm = r['lm']
+print(lm(ro.Formula('y~x'),data=data))
+
+# method 2 to call lm
+print(r.lm(ro.Formula('y~x'),data=data))
+```
+
+3. 从 R 拿到的函数一般要用 R 对象（即经过 rpy2 处理过后，从 python 对象变为 r 对象）作为输入才能进行调用，拿到的结果也是 R 对象，如果有必要再手动转换为 python 对象。
+   - `str`对象是直接兼容的，但是返回的`str`对象也是封装在`np.array`中的；`bool`对象也是直接兼容的，返回的对象封装在 BoolVector 中；普通的数字对象也是兼容的
+   - python 中的`list`对应到 R 中也是`list`，而不是直观上的 vector，要得到 vector 类型的输入必须先用`rpy2.robjects.vectors`中的对应函数对`list`进行转换
+   - `dict`是不兼容的
+   - 使用`pandas2ri.activate()`和`numpy2ri.activate()`后不需要显式地将 pandas 和 numpy 对象转换为 R 对象，rpy2 会自动将这两种对象转换为 R 对象，返回值如果是可以转换为 numpy(如 vector,matrix) 的类型也可以直接从 R 对象转换为 Python 对象，但是返回值是`data.frame`或者`list`就会直接存成 rpy2 中对应的 R object，不会自动转成`pd.DataFrame`或者`dict`
+   - **拿到的 matrix 对象是没有行名和列名的！**直接转换成 np 格式了
+
+#### 2.2.4. `rpy2.robjects.packages`函数
+
+1. `packages.isinstalled()`函数可以检查函数包是否已经被下载，返回 python bool 对象，并且不会像 r 的`require()`函数一样自动就把包 attach 了
+2. `packages.importr()`函数一方面把 R 对应包的命名空间拿到 python 中供 python 调用，一方面在对应的 R 进程中会把对应的包 attach 上，因此运行`packages.importr()`以后就能用`r['func_name']`拿到对应的包里的函数了
+
+### 2.3. R 相关
+
+#### 2.3.1. 经验
+
+- R 中的[环境概念](https://zhuanlan.zhihu.com/p/585188479)，
+  - `!require('package_name',quietly = TRUE)`如果该包没有被下载就会返回 True，如果该包已经被下载，就会返回 False，同时被 attach 到 Namespace 中。在没有 attach 的情况下，只要该包被下载了，就可以用`package_name::func_name`的方式调用包中的函数
 - 如何从 singlecellexperiment object 转换成 h5ad 存储后，用 scanpy 读取 [参考](https://www.bilibili.com/read/cv8675277/)使用`sceasy`包
 - SummerizedExperiment 集成从 singlecellexperiment object 中提取 coldata/assay 等的方法，对应`anndata.obs`, `anndata.layer`
 - `is.factor`等函数比起`typeof`更适合判断`data.frame`一列的数据类型
@@ -73,8 +162,9 @@ parafunc(fun_name,arg1=...,arg2=...,...,MoreArgs=list())
 - `list`和`data.frame`数据类型，`list`可以认为是一个字典（如果`list`创建的时候不写明键名字`list(0,1,2)`，会自动用 1 开始的数字编号作为键名字），访问某一个键的方式可以是`$name`也可以是`list[["name"]]`。`data.frame`可以看成一个特殊的`list`，列名是键名，每一个值都是一个`vector`对象，因此在访问列名时也可以使用`$name`方法，也因此调用`length()`函数时，`data.frame`输出的是列数，即键数目，和对`list`计算得到的结果是一样的（也和 python 对 dict 调用 len 输出键数是一样的）。当然`data.frame`还可以使用很多切片索引等方法是`list`不行的
 - `lapply`和`sapply`的区别：都是对 list 的每个键下的元素用相同的 function 进行操作，区别在于`lapply`返回一个对应的 list，而`sapply`会尝试返回一个更简单的结果，如 vector 或者 matrix，若返回矩阵，其中**每列**对应于输入 list 中的一个元素的结果。（感觉操作的实际上是任意可迭代对象）
 - `formula`对象可以用`update.formula`进行修改，在`formula`用`-`代表删去一些变量
+- `invisible()`可以对单行运行的 R 代码不输出返回值
 
-#### 2.2.2. API
+#### 2.3.2. API
 
 - `mclust:Mclust`使用高斯混合模型进行聚类 [参考](https://mclust-org.github.io/mclust/reference/Mclust.html)
 - `interaction`函数计算 factor 变量的交互结果（乘积）
@@ -87,7 +177,7 @@ parafunc(fun_name,arg1=...,arg2=...,...,MoreArgs=list())
 - `mgcv`中 s,ti,te 的区别和指定方式，简单而言，ti 仅代表交互效应，te 代表又有交互效应又有非交互效应，`te(x1,x2)`与`s(x1)+s(x2)+ti(x1,x2)`大致类似，但是估计的平滑惩罚数目不同(2 vs 4)。而 s(x1,x2)和 te(x1,x2)是类似的，区别在于 s(x1,x2)假设 x1,x2 有相同的 scale，即 isotropic 各向同性，te(x1,x2)认为是各变量的 scale 不同，各向异性(tensor product ti and te 处理的就是各向异性的情况)。[参考](https://stats.stackexchange.com/questions/519433/gam-and-multiple-continuous-continuous-interactions-tensor-smooths)
 - `all.vars(formula)`返回一个 vector，第一位置是 y 的 var，第二位置是 x 的 var
 
-### 2.3. python list
+### 2.4. python 基础类型
 
 - list \* k，即可把 list 中的元素复制 k 遍，和 list1+list2 异曲同工
 - `set(list)`得到 list 中所有的 unique 内容
@@ -106,9 +196,11 @@ result_list = [func(i) for i in range(5)]
 merged_dict = {k: v for d in result_list for k, v in d.items()}
 ```
 
-### 2.4. pandas and numpy 相关
+- `dict`对象如果使用`dict[key]`拿到对应的 key 的值，且没有这个 key，那么就会报错 keyerror；如果使用`dict.get()`方法，则没有这个 key 时会返回一个`None`
 
-#### 2.4.1. 经验
+### 2.5. pandas and numpy 相关
+
+#### 2.5.1. 经验
 
 - 从其他 dataframe 赋值的新 dataframe，要用.copy()得到一个备份，否则会出问题
 - 如果用下述代码进行 dataframe 赋值，需要`series`和`dataframe`有相同的`index`，否则匹配不上的情况下`dataframe`中`index`匹配不上的部分直接赋值为`nan`，`series`的内容就丢了
@@ -204,7 +296,7 @@ result = data.isin(values)
 dat_use = dat_use.loc[~dat_use.index.isin(removed_cell)]
 ```
 
-#### 2.4.2. API
+#### 2.5.2. API
 
 - pandas 支持`dtype('category')`对应 R 中的`factor`类型 [参考](https://zhuanlan.zhihu.com/p/384727931)
 
@@ -224,19 +316,20 @@ for name,group in df.groupby('name'):
 - `df.values`返回 dataframe 中的数值，为 np.array
 - `df.describe()`返回所有的数值变量的描述性统计量，类似`summary` in R
 - `np.random.seed(0)`设置`numpy`中的随机数种子
+- `np.ndarray`中 dtype 为`U1`， 表示 Unicode 字符串，长度为 1。
 
-### 2.5. sklearn 相关
+### 2.6. sklearn 相关
 
 - `sklearn.mixture.GussianMixture`为高斯混合模型
 - [KDE 核密度估计，非参方法估计分布函数](https://scikit-learn.org/stable/modules/density.html)
 - sklearn 实现数据记忆的方式就是将一个 model 封装成一个类，类内不需要设置私有变量，可参考
 - sklearn 训练数据如果是`np.array()`则维度必须为 n\*k，不能是只有单维度，也因此如果传 pandas 数据必须是`dataframe`不能是`series`
 
-### 2.6. scipy 相关
+### 2.7. scipy 相关
 
 - [稀疏矩阵信息](https://zhuanlan.zhihu.com/p/306320459)，可以使用`toarray()`转换成一般的 ndarray 的样式
 
-### 2.7. anndata 相关
+### 2.8. anndata 相关
 
 - anndata 数据结构存储都是 scipy 稀疏矩阵形式
 - anndata.layer 存储不同类型的 assay（即对 anndata.X 的各种 transform）
@@ -245,7 +338,7 @@ for name,group in df.groupby('name'):
 adata.layers['log_transformed'] = np.log1p(adata.X)
 ```
 
-### 2.8. pyvinecopulib 相关
+### 2.9. pyvinecopulib 相关
 
 pyvinecopulib 和 rvinecopulib 是 C++库 Vinecopulib 在 python 和 R 上的分别实现
 
@@ -268,9 +361,9 @@ x_simu = x_simu.T
 
 注意其输入数据必须是 0-1 之间的数值，因为本质上 copula 函数是对一组 0-1 间的均匀分布数据进行计算，随机变量的 CDF 即为 0-1 均匀分布。但是 pyvinecopulib 不会像 rvinecopulib 一样给 raw data 自动做好转换为 CDF 的对应取值再做拟合，需要添加一步得到，并且要将拟合结果返回到原本的数据。
 
-### 2.9. Statsmodels 相关
+### 2.10. Statsmodels 相关
 
-#### 2.9.1. 经验
+#### 2.10.1. 经验
 
 - 使用`GLMGam.from_formula`构建模型会更好，线性的部分用 formula 的形式给出，其会将 dataframe 中 category 的部分直接转换为 dummy 编码并且自动添加截距项。如果直接用 y 和 x 对应的 dataframe 输入（用 endog 和 exog）则两者都需要手动操作，很不方便。`from_formula`由 package`patsy`提供支持([documentation](https://patsy.readthedocs.io/en/latest/))，`patsy`本身支持根据 mgcv 格式产生 spline 项，但是不支持惩罚项等的计算，因此无法投入应用。
 - 超参数的选择可以指定，[`select_penweight`](https://www.statsmodels.org/stable/generated/statsmodels.gam.generalized_additive_model.GLMGam.select_penweight.html#statsmodels.gam.generalized_additive_model.GLMGam.select_penweight)，方法默认 aic，也可以选 gcv 等方法
@@ -289,27 +382,26 @@ result = model.fit()
 
 - GLMGam 类使用 fit 方法后会返回 GLMGamResults 类，该类有两种获取 predict value 的方法，一种是`predict()`，直接返回预测值，为`np.array()`，另一种是`get_prediction().summary_frame()`前者返回一个 predcit result 类，后者用 dataframe 形式呈现结果，除了包含预测值外，还有对应的标准误差估计和置信区间
 
-#### 2.9.2. 补充
+#### 2.10.2. 补充
 
 [GAM 示例](https://www.statsmodels.org/stable/gam.html) [支持的 distribution](https://www.statsmodels.org/stable/glm.html) [model API](https://www.statsmodels.org/stable/generated/statsmodels.gam.generalized_additive_model.GLMGam.select_penweight.html#statsmodels.gam.generalized_additive_model.GLMGam.select_penweight)，`smoother`是样条函数选择，需要调用别的类来指定，在其中进一步规定样条函数自由度，`alpha`是平滑参数选择，可用`select_penweight()`得到。`k`代表了将一个拟合区间细分成 k+1 个小区间，每个区间使用一个 spline 去拟合，`k`与 spline 类型和要估计的参数`df`有换算关系。具体关系见[此](https://stats.stackexchange.com/questions/517375/splines-relationship-of-knots-degree-and-degrees-of-freedom#:~:text=In%20essence%2C%20splines%20are%20piecewise,degree%203%20and%20so%20on.)。
 
-### 2.10. pygam 相关
+### 2.11. pygam 相关
 
 - `model.gridsearch(X,y)`自动找到最好的超参数，[progress 是否显示进度条;用 lam 参数可以指定 lam 的搜索空间;objective 为搜索的优化目标](https://pygam.readthedocs.io/en/latest/api/gam.html)
 - `model.sample`和`model.predict`的区别，sample 方法用于从模型的后验分布中生成样本。它可以用于生成模型的不确定性估计，以及对未观测数据的采样预测。sample 方法可以接受一个输入特征矩阵，并为每个样本生成一组预测。它返回一个 numpy 数组，其中每一行代表一个样本的预测。predict 方法用于对给定的输入进行预测。它接受一个输入特征矩阵，并为每个样本生成预测值。与 sample 方法不同，predict 方法不考虑模型的不确定性，它仅返回点估计的预测结果。它也返回一个 numpy 数组，其中每一行代表一个样本的预测值。
 - AICc = AIC + 2p(p + 1)/(n − p − 1)
 
-### 2.11. python 相关
+### 2.12. python 相关
 
-#### 2.11.1. python 底层基础
+#### 2.12.1. python 底层基础
 
-- [如何组织 python 项目](https://zhuanlan.zhihu.com/p/335347908#:~:text=1%20%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84%201%20Python%E9%A1%B9%E7%9B%AE%E7%9A%84%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84%E4%B8%BB%E8%A6%81%E7%94%B1%20%E5%8C%85--%E6%A8%A1%E5%9D%97--%E7%B1%BB%20%E8%BF%99%E4%BA%9B%E9%83%A8%E5%88%86%E6%9E%84%E6%88%90%E3%80%82%202%20%E5%8C%85%EF%BC%9A,%E4%B8%80%E4%B8%AA%E6%A8%A1%E5%9D%97%E4%B8%8B%E9%9D%A2%E4%B9%9F%E5%8F%AF%E4%BB%A5%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E7%B1%BB%E3%80%82%20%E6%A8%A1%E5%9D%97%E4%B8%8B%E9%9D%A2%E4%B9%9F%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E5%86%99%E5%87%BD%E6%95%B0%E3%80%82%204%20%E7%B1%BB%EF%BC%9A%20%E7%B1%BB%E4%B8%AD%E5%AE%9A%E4%B9%89%E4%BA%86%E5%8F%98%E9%87%8F%E5%92%8C%E5%87%BD%E6%95%B0%E3%80%82%205%20%E5%87%BD%E6%95%B0%EF%BC%9A%20%E7%94%A8%E4%BA%8E%E5%AE%9E%E7%8E%B0%E7%89%B9%E5%AE%9A%E5%8A%9F%E8%83%BD%EF%BC%8C)
-- `pip -V`查看现在使用的 pip 对应的下载位置和 python 解释器版本
-- 线程与进程
-  - [进程与线程的区别](https://www.bilibili.com/video/BV19b411L7y1/?spm_id_from=333.337.search-card.all.click&vd_source=44ff757ed2fdadeadf410d10bde17c2c)进程是分配资源的操作，是一个资源的综合，一个进程中是线程在进行操作，一个进程中的多线程，用一块资源来实现，实现多任务；而多进程则是多划了几块资源，每个进程只有一个主线程，每个线程都用自己的进程资源实现多任务
-  - [python 的进程和线程的编程](https://www.bilibili.com/video/BV1jW411Y7pv?p=2&vd_source=44ff757ed2fdadeadf410d10bde17c2c)
-  - [`multiprocessing`包大致功能介绍及编程](https://blog.csdn.net/sqzhao/article/details/120732881)
-  - [如何得到子进程的返回值](https://blog.csdn.net/u013510614/article/details/109852590)
+##### 2.12.1.1. 线程与进程
+
+- [进程与线程的区别](https://www.bilibili.com/video/BV19b411L7y1/?spm_id_from=333.337.search-card.all.click&vd_source=44ff757ed2fdadeadf410d10bde17c2c)进程是分配资源的操作，是一个资源的综合，一个进程中是线程在进行操作，一个进程中的多线程，用一块资源来实现，实现多任务；而多进程则是多划了几块资源，每个进程只有一个主线程，每个线程都用自己的进程资源实现多任务
+- [python 的进程和线程的编程](https://www.bilibili.com/video/BV1jW411Y7pv?p=2&vd_source=44ff757ed2fdadeadf410d10bde17c2c)
+- [`multiprocessing`包大致功能介绍及编程](https://blog.csdn.net/sqzhao/article/details/120732881)
+- [如何得到子进程的返回值](https://blog.csdn.net/u013510614/article/details/109852590)
 
 ```python
 # multiprocess demo
@@ -338,38 +430,151 @@ if __name__ == '__main__':
     print(result)
 ```
 
-- python 与 cpython 当使用 C++库提供的 Python 接口时，不需要额外安装 C++解释器。Python 本身已经提供了 CPython 解释器，它是使用 C 语言实现的，并且是 Python 的默认解释器。
-- Anaconda 相关和库管理相关
+##### 2.12.1.2. 其他
 
-  - `conda init powershell`使得 anaconda 在 windows powershell 中会显示虚拟环境名称，如果遇到遇到无法加载 profile.ps1，[解决方案](https://zhuanlan.zhihu.com/p/452273123)
-  - 新 python 环境安装 jupyter kernel 的方式
+- [如何组织 python 项目](https://zhuanlan.zhihu.com/p/335347908#:~:text=1%20%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84%201%20Python%E9%A1%B9%E7%9B%AE%E7%9A%84%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84%E4%B8%BB%E8%A6%81%E7%94%B1%20%E5%8C%85--%E6%A8%A1%E5%9D%97--%E7%B1%BB%20%E8%BF%99%E4%BA%9B%E9%83%A8%E5%88%86%E6%9E%84%E6%88%90%E3%80%82%202%20%E5%8C%85%EF%BC%9A,%E4%B8%80%E4%B8%AA%E6%A8%A1%E5%9D%97%E4%B8%8B%E9%9D%A2%E4%B9%9F%E5%8F%AF%E4%BB%A5%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E7%B1%BB%E3%80%82%20%E6%A8%A1%E5%9D%97%E4%B8%8B%E9%9D%A2%E4%B9%9F%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E5%86%99%E5%87%BD%E6%95%B0%E3%80%82%204%20%E7%B1%BB%EF%BC%9A%20%E7%B1%BB%E4%B8%AD%E5%AE%9A%E4%B9%89%E4%BA%86%E5%8F%98%E9%87%8F%E5%92%8C%E5%87%BD%E6%95%B0%E3%80%82%205%20%E5%87%BD%E6%95%B0%EF%BC%9A%20%E7%94%A8%E4%BA%8E%E5%AE%9E%E7%8E%B0%E7%89%B9%E5%AE%9A%E5%8A%9F%E8%83%BD%EF%BC%8C)
 
-  ```bash
-  conda activate newenv
-  conda install ipykernel
-  python -m ipykernel install --user --name newenv --display-name 'any name is OK, just kernel name'
-  ```
+- 通过 C++库的 Python 接口，可以在 Python 环境中直接调用 C++库的功能，而无需安装额外的 C++解释器。Python 本身已经提供了 CPython 解释器，它是使用 C 语言实现的，并且是 Python 的默认解释器。可以将 C++代码编译为动态链接库（如.so 文件或.dll 文件），然后在 Python 中导入这些库，并使用其中的函数和类。Python 解释器会与这些动态链接库进行交互，以实现对 C++代码的调用和执行。
 
-  - 依赖管理问题
-    - `conda env export > environment.yaml`命令导出虚拟环境中的所有包依赖。用 conda 下载的包用`pip freeze > requirements.txt`时不会正确显示在 pypi 上的路径，只会显示一个本地路径，该命令主要是为了导出 pip 的相关依赖。
-      - 个人感觉如果是想要包最后能直接发布到 Pypi 上，那就都用 Pypi 来装实现基础功能的包，这样方便直接得到直接可以用 Pypi 安装的 requirements，运行`pip install -r requirements.txt`即可实现迁移。
-      - 如果为了真个 conda 环境的可迁移性，则直接用 ymal 文件即可，在创建新的虚拟环境时使用`conda env create -f environment.yaml`即可重新配置相同的环境。
-    - 在 conda 环境中得到纯 pip 的 requirements 感觉也没什么特别好的办法，要么从 conda 的 yaml 里将 pip 相关的复制出来统一格式，要么从 pip freeze 中去掉本地安装路径的部分(目前在`modify_requirements.py`中实现，并验证过应该可以完整复现 pip 的所有安装)。<b>conda 和 pip 产生的文件都是 utf-16 编码的，处理解码时需要注意</b>
-    - 如果全都是用 pip 装包，额外装了依赖，要卸除这些依赖，可以考虑`pip install python3-pip-autoremove`后运行`pip3-autoremove package_name`进行包及其依赖的卸载工作
+##### 2.12.1.3. Anaconda 相关和库管理相关
 
-- 通过 C++库的 Python 接口，可以在 Python 环境中直接调用 C++库的功能，而无需安装额外的 C++解释器。可以将 C++代码编译为动态链接库（如.so 文件或.dll 文件），然后在 Python 中导入这些库，并使用其中的函数和类。Python 解释器会与这些动态链接库进行交互，以实现对 C++代码的调用和执行。
+- `conda init powershell`使得 anaconda 在 windows powershell 中会显示虚拟环境名称，如果遇到遇到无法加载 profile.ps1，[解决方案](https://zhuanlan.zhihu.com/p/452273123)
+- `pip -V`查看现在使用的 pip 对应的下载位置和 python 解释器版本
+- 新 python 环境安装 jupyter kernel 的方式
 
-#### 2.11.2. python 机制
+```bash
+conda activate newenv
+conda install ipykernel
+python -m ipykernel install --user --name newenv --display-name 'any name is OK, just kernel name'
+```
+
+- 依赖管理问题
+
+  - `conda env export > environment.yaml`命令导出虚拟环境中的所有包依赖。用 conda 下载的包用`pip freeze > requirements.txt`时不会正确显示在 pypi 上的路径，只会显示一个本地路径，该命令主要是为了导出 pip 的相关依赖。
+    - 个人感觉如果是想要包最后能直接发布到 Pypi 上，那就都用 Pypi 来装实现基础功能的包，这样方便直接得到直接可以用 Pypi 安装的 requirements，运行`pip install -r requirements.txt`即可实现迁移。
+    - 如果为了真个 conda 环境的可迁移性，则直接用 ymal 文件即可，在创建新的虚拟环境时使用`conda env create -f environment.yaml`即可重新配置相同的环境。
+  - 在 conda 环境中得到纯 pip 的 requirements 感觉也没什么特别好的办法，要么从 conda 的 yaml 里将 pip 相关的复制出来统一格式，要么从 pip freeze 中去掉本地安装路径的部分(目前在`modify_requirements.py`中实现，并验证过应该可以完整复现 pip 的所有安装)。<b>conda 和 pip 产生的文件都是 utf-16 编码的，处理解码时需要注意</b>
+  - 如果全都是用 pip 装包，额外装了依赖，要卸除这些依赖，可以考虑`pip install python3-pip-autoremove`后运行`pip3-autoremove package_name`进行包及其依赖的卸载工作
+
+#### 2.12.2. python 机制
+
+##### 2.12.2.1. 命名空间相关
 
 - [import 函数详解](https://www.bilibili.com/video/BV1K24y1k7XA/?spm_id_from=333.788&vd_source=44ff757ed2fdadeadf410d10bde17c2c) 在 import 一个 module 的时候 python 会进行以下步骤
   - 创建模块命名空间：Python 会为模块创建一个独立的命名空间，该命名空间用于存储模块中定义的变量、函数和类。这样可以避免不同模块之间的命名冲突。
   - 执行模块代码：Python 会<b>按顺序执行</b>模块中的代码，将定义的变量、函数和类加载到模块的命名空间中。这样，其他代码可以通过模块名来访问这些定义。
   - 返回模块对象：在导入过程完成后，import module 语句会返回一个表示模块的对象，该对象可以在后续的代码中使用。可以使用该对象访问模块中定义的内容，例如变量、函数和类。
-- [`if __name__ == '__main__'` 详解](https://blog.csdn.net/heqiang525/article/details/89879056)
-- [函数指定传参的数据类型](https://blog.csdn.net/qq_42327755/article/details/87196150)
-- [Python 类的私有公有变量设置](https://zhuanlan.zhihu.com/p/30223570)
-- 判断 None Type 时，必须要用`variable is None`进行判断
-- python warning 相关
+- [`if __name__ == '__main__'` 详解](https://blog.csdn.net/heqiang525/article/details/89879056),**name**中保存的是[module 的名字](https://zhuanlan.zhihu.com/p/57309137)，用来判断这个脚本是不是在被主调用还是被 import
+
+##### 2.12.2.2. class 相关
+
+1. 类的属性分为两种，一种是类属性，一种是实例属性，类属性在定义类的时候直接指名即可，实例属性是只有创建了类的实例，并且运行了创建实例属性的语句之后才会产生。
+2. `self`字段就意味着带`self`字段的对象（var，fun 等）会被绑定到一个给定的实例上，可以用`__dict__`方法查看类/实例有哪些属性。**实例的`__dict__`看不到定义在类层面上的东西，但是定义在类上的东西依然可以被实例调用；类的`__dict__`看不到实例上面的定义，也调用不到实例中定义的东西。即一个实例可以访问已经创建的实例属性和类属性，一个类只能访问类属性。此外在实例层面的对于类属性的修改并不会对类本身该属性造成任何影响**
+
+```python
+class test_class():
+  # 类属性
+  class_var = 'This is a class var'
+  def create_ob_var (self):
+    # 带self，被绑定在一个实例上，是实例属性
+    self.ob_var = 'This is a object var'
+
+# 未运行create_ob_var，没有实例属性产生，也看不到类级别的属性和函数定义
+test_ob = test_class()
+test_ob.__dict__
+# {}
+
+# 看不到实例级别的属性，但是可以看到类级别的属性和函数
+test_class.__dict__
+# mappingproxy({'__module__': '__main__',
+#               'class_var': 'This is a class var',
+#               'create_ob_var': <function __main__.test_class.create_ob_var(self)>,
+#               '__dict__': <attribute '__dict__' of 'test_class' objects>,
+#               '__weakref__': <attribute '__weakref__' of 'test_class' objects>,
+#               '__doc__': None})
+
+# 可以看到实例属性在产生后就可以被查看到
+test_ob.create_ob_var()
+test_ob.__dict__
+# {'ob_var': 'This is a object var'}
+
+# 实例可以访问实例属性和类定义的属性
+test_ob.class_var
+# 'This is a class var'
+test_ob.ob_var
+# 'This is a object var'
+
+# 类只能访问类属性
+test_class.class_var
+# 'This is a class var'
+test_class.ob_var
+# AttributeError: type object 'test_class' has no attribute 'ob_var'
+
+# 实例对象对于类属性的改变不会影响类属性的值，而是会创建一个随着该实例对象的同名属性
+test_ob.class_var = 1
+test_ob.class_var
+# 1
+test_class.class_var
+# 'This is a class var'
+```
+
+3. Python 类中所有可以被调用到的属性都是可以被直接赋值修改的，因此需要[Python 类的私有公有变量设置](https://zhuanlan.zhihu.com/p/30223570)，可以控制一些不想被修改的变量不被修改（但其实也是假的，python 没办法严格控制类的私有变量，也因此一般就用`_var_name`代替`__var_name`表示不想被用户随意拿到和修改的类属性）。这种设置**在类属性和实例属性、函数上都生效**
+
+```python
+class test():
+  def __init__(self):
+    self.__hidden = 'Hidden'
+  def give_hidden(self):
+    return self.__hidden
+
+# 无法直接访问hidden
+ob = test()
+ob.__hidden
+# AttributeError: 'test' object has no attribute '__hidden'
+
+# 原因其实就是__开都的属性名字之前加了_class_name导致找不到了
+ob.__dict__
+# {'_test__hidden': 'Hidden'}
+
+# 但是实际上还是可以对该变量进行赋值修改
+ob.__hidden = 1
+ob.__hidden
+# 1
+
+# 但赋值修改的其实是另一个就叫__hidden的属性
+ob.__dict__
+# {'_test__hidden': 'Hidden', '__hidden': 1}
+
+# 实际在调用的时候用的还是_test__hidden这个属性
+ob.give_hidden()
+# 'Hidden'
+```
+
+4. 类的两种 built in 的装饰器函数，`@classmethod`和`@staticmethod`，都是为了在不实例化类的情况下就能调用类内的一些方法。因此这两种方法函数的第一个 argument 都不用是`self`，`@classmethod`的第一个 argument 必须是`cls`。`@classmethod`可以被用来不需要实例化的情况下访问一些类变量并且进行操作，比如修改一个一般不被外部允许改变的类属性；`@staticmethod`相当于为了功能完整性封装在一个类内的方法。`@classmethod`和`@staticmethod`装饰的函数在**实例对象也可以使用**。
+
+```python
+class test:
+  __hidden = 1
+
+  @classmethod
+  def change_hidden(cls,value):
+    cls.__hidden = value
+    return cls.__hidden
+
+  @staticmethod
+  def f(a,b):
+    return a+b
+
+test.f(1,2)
+# 3
+
+test.change_hidden(5)
+# 5
+```
+
+5. `hasattr`函数判断一个对象是否有对应的属性
+
+##### 2.12.2.3. python warning 相关
 
 ```python
 import warnings
@@ -401,14 +606,7 @@ for warning in warninglist:
     print(warning.message)
 ```
 
-- 将脚本工作路径设置为当前脚本所在位置的方法
-
-```python
-import os
-os.chdir(os.path.dirname(__file__))
-```
-
-- python 计时
+##### 2.12.2.4. python 计时
 
 ```python
 import time
@@ -417,7 +615,10 @@ end_time = time.time()
 running_time = start_time - end_time
 ```
 
-- python 类型判断：`isinstance` or `type`，[建议使用前者](https://www.jianshu.com/p/7ef549503c93)
+##### 2.12.2.5. python 类型判断和函数传参
+
+- `isinstance` or `type`，[建议使用前者](https://www.jianshu.com/p/7ef549503c93)
+- [函数指定传参的数据类型](https://blog.csdn.net/qq_42327755/article/details/87196150)
 - python 在声明函数时如果可以接受不同的输入类型的话可以使用如下方式，[参考 1](https://www.bilibili.com/video/BV11Z4y1h79y/?spm_id_from=333.788.recommend_more_video.-1&vd_source=44ff757ed2fdadeadf410d10bde17c2c)，[参考 2](https://www.bilibili.com/video/BV16Y411K73d/?p=23&spm_id_from=pageDriver)，编译时通过标注类型实现编译时报错而非运行时报错
 
 ```python
@@ -426,10 +627,21 @@ def toy(x:Union[list,str,int]) -> None:
     pass
 ```
 
-- [python 装饰器](https://www.bilibili.com/video/BV1Gu411Q7JV/?spm_id_from=333.337.search-card.all.click&vd_source=44ff757ed2fdadeadf410d10bde17c2c)，本质上就是一个可以以函数为输入以函数为输出的函数，以`@decorator`形式写在装饰的函数的上方
 - python 中可以通过`*args`和`**kwargs`进行**不定数量的参数**的传参，前者是以`tuple`的形式传入，后者以`dict`的形式传入
 
-### 2.12. GitHub
+##### 2.12.2.6. 其他
+
+- 判断 None Type 时，必须要用`variable is None`进行判断
+- 将脚本工作路径设置为当前脚本所在位置的方法
+
+```python
+import os
+os.chdir(os.path.dirname(__file__))
+```
+
+- [python 装饰器](https://www.bilibili.com/video/BV1Gu411Q7JV/?spm_id_from=333.337.search-card.all.click&vd_source=44ff757ed2fdadeadf410d10bde17c2c)，本质上就是一个可以以函数为输入以函数为输出的函数，以`@decorator`形式写在装饰的函数的上方
+
+### 2.13. GitHub
 
 [git 标准工作流程](https://www.bilibili.com/video/BV19e4y1q7JJ/?spm_id_from=333.337.search-card.all.click&vd_source=44ff757ed2fdadeadf410d10bde17c2c)
 
@@ -451,7 +663,7 @@ def toy(x:Union[list,str,int]) -> None:
 
 [本地 github 传不上去的问题解决](https://blog.csdn.net/Xminyang/article/details/124837086)貌似是一个由于代理设置导致的问题
 
-### 2.13. 其他
+### 2.14. 其他
 
 [VSCode 图标含义](https://www.zhihu.com/question/370258254)
 
