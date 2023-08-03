@@ -1,7 +1,7 @@
 # scdesign test
 ```{r}
 library(scDesign3)
-example_sce <- readRDS("./test/test_data/exampledata1.rds")
+example_sce <- readRDS("test_data/exampledata1.rds")
 # example_sce <- example_sce[1:100, ]
 example_sce <- example_sce[1:3, ]
 

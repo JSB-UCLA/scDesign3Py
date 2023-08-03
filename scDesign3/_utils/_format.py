@@ -7,7 +7,7 @@ from typing import Optional, Union, get_args, get_origin
 import anndata as ad
 import numpy as np
 import pandas as pd
-from rpy2.robjects import numpy2ri, pandas2ri, r
+from rpy2.robjects import NULL, default_converter, numpy2ri, pandas2ri, r
 from rpy2.robjects.vectors import DataFrame, FloatVector, IntVector, ListVector, Matrix, StrVector
 
 
@@ -102,26 +102,36 @@ def _anndata_to_sce(data: ad.AnnData, assay_use=None, default_assay_name=None, c
         except:
             raise ConvertionError("The specified assay name doesn't exist in anndata object. Please check.")
 
-    pandas2ri.activate()
-    numpy2ri.activate()
-    sce = r("SingleCellExperiment::SingleCellExperiment")(
-        assay=ListVector({assay_use: count_matrix}),
-        colData=cell_info,
-        rowData=gene_info,
-    )
+    with (default_converter + pandas2ri.converter + numpy2ri.converter).context():
+        sce = r("SingleCellExperiment::SingleCellExperiment")(
+            assay=ListVector({assay_use: count_matrix}),
+            colData=cell_info,
+            rowData=gene_info,
+        )
 
     return sce, assay_use
 
 
 def _other_to_list(*args):
-    result = []
-    for x in args:
-        if isinstance(x, list) or (x is None):
-            result.append(x)
-        else:
-            result.append([x])
+    """
+    If None, return None
 
-    return result
+    If list, return it
+
+    If other type, return a list with that as a element
+    """
+    return [x if isinstance(x, list) or (x is None) else [x] for x in args]
+
+
+def _strvec_none2ri(*args):
+    """
+    Para list[str] and None should call this func to change format
+
+    If str or list[str], return StrVector
+
+    If None, return NULL
+    """
+    return [NULL if x is None else StrVector(x) for x in args]
 
 
 def _typecheck(*type_args, **type_kwargs):
@@ -141,18 +151,19 @@ def _typecheck(*type_args, **type_kwargs):
             # type check
             for name, value in bound_values.arguments.items():
                 if name in bound_types:
-                    if not isinstance(value, bound_types[name]):
-                        from_typing = get_origin(bound_types[name])
-                        if (from_typing is Union) or (from_typing is Optional):
+                    from_typing = get_origin(bound_types[name])
+                    if (from_typing is Union) or (from_typing is Optional):
+                        supported = get_args(bound_types[name])
+                        if not any(map(lambda x: isinstance(value, x), supported)):
                             right_types = " or ".join(
                                 map(
                                     lambda x: x.__name__,
-                                    get_args(bound_types[name]),
+                                    supported,
                                 )
                             )
                             raise TypeError(f"Argument {name} must be {right_types}")
-
-                        else:
+                    else:
+                        if not isinstance(value, bound_types[name]):
                             right_types = bound_types[name].__name__
                             raise TypeError(f"Argument {name} must be {right_types}")
             return func(*args, **kwargs)
