@@ -32,7 +32,9 @@ class scDesign3:
     def get_bpparam(**kwargs):
         """Get your parallelization parameters robject.
 
-        Check R function `BiocParallel::MulticoreParam` for more informarion on how to set the parameters. Current available parameters including "workers","tasks","stop_on_error","progressbar","RNGseed","timeout","exportglobals","log","threshold","logdir","resultdir","jobname","force_GC","fallback","manager_hostname" and "manager_port".
+        Check R function `BiocParallel::MulticoreParam` for more informarion on how to set the parameters.
+
+        Current available parameters including "workers","tasks","stop_on_error","progressbar","RNGseed","timeout","exportglobals","log","threshold","logdir","resultdir","jobname","force_GC","fallback","manager_hostname" and "manager_port".
         """
         para_list = [
             "workers",
@@ -84,7 +86,7 @@ class scDesign3:
         other_covariates: Optional[Union[str, list[str]]] = None,
         ncell: Optional[int] = None,
         parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "mcmapply",
-        bpparam: Optional[r] = None,
+        bpparam=None,
         show: bool = False,
     ) -> None:
         """Construct the input data (covaraite matrix and expression matrix)
