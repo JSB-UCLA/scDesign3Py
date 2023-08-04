@@ -133,6 +133,14 @@ def _strvec_none2ri(*args):
     """
     return [NULL if x is None else StrVector(x) for x in args]
 
+def _parapara(parallelization, bpparam):
+    if (bpparam is None) and ((parallelization == 'pbmcmapply') or (parallelization == 'mcmapply')):
+        return NULL
+    elif (not (bpparam is None)) and (parallelization == 'bpmapply'):
+        return bpparam
+    else:
+        raise InputError('If parallelization is pbmcmapply or mcmapply, bpparam should be None. If parallelization is bpmapply, please run get_bpparam to get bpparam.')
+
 
 def _typecheck(*type_args, **type_kwargs):
     """

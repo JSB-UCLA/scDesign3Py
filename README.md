@@ -38,6 +38,7 @@
       - [2.12.2.6. 其他](#21226-其他)
   - [2.13. GitHub](#213-github)
   - [2.14. 其他](#214-其他)
+  - [简单 linux](#简单-linux)
 - [3. 老版本(不用 rpy2 版本)的相关记录](#3-老版本不用-rpy2-版本的相关记录)
   - [3.1. 未来的下一步功能:](#31-未来的下一步功能)
   - [3.2. Questions](#32-questions)
@@ -62,7 +63,7 @@
     - 效果（图形可视化，比如一个 spatial 的颜色的可视化，spatial 会有一个比较 sharp 的 edge 看看能不能捕捉到）
     - 输出结果算 RMSE
 
-- [ ] 完成一个从 anndata 转换成 sce 的函数 (只要 cell info 和 count matrix 即可，从 anndata 那里拿过来转过去理论上就可以了)，**多了一个`default_assay_name`参数用来指定在 Single 中 assay 的名称，并且会返回正确的 assay_name**
+- [ ] 完成一(a.b='1')\*
 - [ ] 完成一个从 R list 转换成 python dict 的函数作为 interface，则只要留一个 return 的 API，如果有需要就转换成 python dict 的形式
 - [ ] scDesign 最后是一个类，各个数据以类属性的方式继承，默认这些类属性都是不可修改的，并且就保留着 Rdata 的形式
 
@@ -136,9 +137,10 @@ print(r.lm(ro.Formula('y~x'),data=data))
    - `str`对象是直接兼容的，但是返回的`str`对象也是封装在`np.array`中的；`bool`对象也是直接兼容的，返回的对象封装在 BoolVector 中；普通的数字对象也是兼容的
    - python 中的`list`对应到 R 中也是`list`，而不是直观上的 vector，要得到 vector 类型的输入必须先用`rpy2.robjects.vectors`中的对应函数对`list`进行转换
    - `dict`是不兼容的
-   - `None`是不兼容的，专门有`rpy2.robjects.NULL`对象对应的是`NULL`
+   - `None`是不兼容的，专门有`rpy2.robjects.NULL`对象对应的是`NULL`，但是这个`NULL`的布尔类型是`False`
    - 使用`pandas2ri.activate()`和`numpy2ri.activate()`后不需要显式地将 pandas 和 numpy 对象转换为 R 对象，rpy2 会自动将这两种对象转换为 R 对象，返回值如果是可以转换为 numpy(如 vector,matrix) 的类型也可以直接从 R 对象转换为 Python 对象，但是返回值是`data.frame`或者`list`就会直接存成 rpy2 中对应的 R object，不会自动转成`pd.DataFrame`或者`dict`
    - **拿到的 matrix 对象是没有行名和列名的！**直接转换成 np 格式了
+   - python 命名的`_`和 R 中的`.`是可以被 rpy2 自动转换的
 
 #### 2.2.4. `rpy2.robjects.packages`函数
 
@@ -147,7 +149,7 @@ print(r.lm(ro.Formula('y~x'),data=data))
 
 #### 2.2.5. `rpy2.robjects.converter`相关函数
 
-主要功能是实现 python object 和 R object 的相互转换，默认是`default_converter`并且设置全局，其他的内置 converter 就包括`pandas2ri`和`numpy2ri`，`pandas2ri`和`numpy2ri`只包含对应的类型的转换，但对于简单的`str`的转换又是只有`default_converter`才含有的，因此要转换含有字符串的`pd.DataFrame`时要把两种converter连用
+主要功能是实现 python object 和 R object 的相互转换，默认是`default_converter`并且设置全局，其他的内置 converter 就包括`pandas2ri`和`numpy2ri`，`pandas2ri`和`numpy2ri`只包含对应的类型的转换，但对于简单的`str`的转换又是只有`default_converter`才含有的，因此要转换含有字符串的`pd.DataFrame`时要把两种 converter 连用
 
 - 如果需要在一个 local 的地方实现特殊的 convert 需求，可以使用
 
@@ -156,13 +158,12 @@ with default_converter.context():
   pass
 ```
 
-- 如果有多个converter一起使用，可以把对应的converter相加
+- 如果有多个 converter 一起使用，可以把对应的 converter 相加
+
 ```python
 with (default_converter + pandas2ri.converter).context():
     r('function(x){print(x)}')(example_sce.obs)
 ```
-
-
 
 ### 2.3. R 相关
 
@@ -219,6 +220,7 @@ merged_dict = {k: v for d in result_list for k, v in d.items()}
 
 - `dict`对象如果使用`dict[key]`拿到对应的 key 的值，且没有这个 key，那么就会报错 keyerror；如果使用`dict.get()`方法，则没有这个 key 时会返回一个`None`
 - 将多个`list`对象中的内容合并在一个`list`中可以使用`itertools`包，返回一个可迭代对象，用类型转换为 list。代码为：`list(itertools.chain(*filter(None, [lists])))`（同时忽略其中的所有`None`对象）
+- 当有一个字典存储了一个 python 函数的参数名和参数值时，可以通过`func(**dict)`向那个函数传参
 
 ### 2.5. pandas and numpy 相关
 
@@ -692,6 +694,11 @@ os.chdir(os.path.dirname(__file__))
 [简单代码在线测试工具](https://app.datacamp.com/)
 
 [VSCode 中使用 Black Formatter 和 isort](https://medium.com/mlearning-ai/python-auto-formatter-autopep8-vs-black-and-some-practical-tips-e71adb24aee1)，如果需要调整参数设置，可以在 arg 中设置，如`-l 100`设置每行最多的字符数；另外如果需要强制换行的，在最后多加一个`,`即可，formatter 会自动形成换行
+
+### 简单 linux
+
+- `which`命令输出当前命令的对应路径
+- `nohup python -u my.py > log.txt 2>&1 &`后台挂起程序运行，关闭 terminal 也生效，其中`-u`参数是为了 python 能实时写入，`log.txt`是最后输出日志文件的地方
 
 ---
 
