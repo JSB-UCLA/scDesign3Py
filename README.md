@@ -38,7 +38,7 @@
       - [2.12.2.6. 其他](#21226-其他)
   - [2.13. GitHub](#213-github)
   - [2.14. 其他](#214-其他)
-  - [简单 linux](#简单-linux)
+  - [2.15. 简单 linux](#215-简单-linux)
 - [3. 老版本(不用 rpy2 版本)的相关记录](#3-老版本不用-rpy2-版本的相关记录)
   - [3.1. 未来的下一步功能:](#31-未来的下一步功能)
   - [3.2. Questions](#32-questions)
@@ -171,18 +171,22 @@ with (default_converter + pandas2ri.converter).context():
 
 - R 中的[环境概念](https://zhuanlan.zhihu.com/p/585188479)，
   - `!require('package_name',quietly = TRUE)`如果该包没有被下载就会返回 True，如果该包已经被下载，就会返回 False，同时被 attach 到 Namespace 中。在没有 attach 的情况下，只要该包被下载了，就可以用`package_name::func_name`的方式调用包中的函数
-- 如何从 singlecellexperiment object 转换成 h5ad 存储后，用 scanpy 读取 [参考](https://www.bilibili.com/read/cv8675277/)使用`sceasy`包
-- SummerizedExperiment 集成从 singlecellexperiment object 中提取 coldata/assay 等的方法，对应`anndata.obs`, `anndata.layer`
-- `is.factor`等函数比起`typeof`更适合判断`data.frame`一列的数据类型
-- 并行计算用函数 `parallel::mcmapply` `BiocParallel::bpmapply` `pbmcapply::pbmcmapply`都有两类参数，一类参数是直接传进去的，一类是封装在 MoreArgs 中传进去的，前者在每一个进程中是可迭代式地一个个取出来的，因此在每个进程中是不同的，后者是每一个进程中都需要用到的部分
+- SingleCellExperiment 相关
+  - 如何从 singlecellexperiment object 转换成 h5ad 存储后，用 scanpy 读取 [参考](https://www.bilibili.com/read/cv8675277/)使用`sceasy`包
+  - SummerizedExperiment 集成从 singlecellexperiment object 中提取 coldata/assay 等的方法，对应`anndata.obs`, `anndata.layer`
+- 并行计算用函数 `parallel::mcmapply` `BiocParallel::bpmapply` `pbmcapply::pbmcmapply`都有两类参数，一类参数是直接传进去的，一类是封装在 MoreArgs 中传进去的，前者在每一个进程中是可迭代式地一个个取出来的，因此在每个进程中是不同的，后者是每一个进程中都需要用到的部分。需要注意的是`mcmapply`在传入第一类参数的时候不会自动实现对参数的排列组合，而是**按照参数所在位置进行对应**。如果要生成所有的排列组合，调用`expand.grid()`，可以生成有所有排列组合 dataframe。
 
 ```r
 parafunc(fun_name,arg1=...,arg2=...,...,MoreArgs=list())
 ```
 
 - `tryCatch`和 python 中的`try...except...`一致，`withCallingHandlers`，可以在特定的代码块中捕获和处理异常、警告和消息
-- `list`和`data.frame`数据类型，`list`可以认为是一个字典（如果`list`创建的时候不写明键名字`list(0,1,2)`，会自动用 1 开始的数字编号作为键名字），访问某一个键的方式可以是`$name`也可以是`list[["name"]]`。`data.frame`可以看成一个特殊的`list`，列名是键名，每一个值都是一个`vector`对象，因此在访问列名时也可以使用`$name`方法，也因此调用`length()`函数时，`data.frame`输出的是列数，即键数目，和对`list`计算得到的结果是一样的（也和 python 对 dict 调用 len 输出键数是一样的）。当然`data.frame`还可以使用很多切片索引等方法是`list`不行的
-- `lapply`和`sapply`的区别：都是对 list 的每个键下的元素用相同的 function 进行操作，区别在于`lapply`返回一个对应的 list，而`sapply`会尝试返回一个更简单的结果，如 vector 或者 matrix，若返回矩阵，其中**每列**对应于输入 list 中的一个元素的结果。（感觉操作的实际上是任意可迭代对象）
+- `list`和`data.frame`相关
+  - `list`和`data.frame`数据类型，`list`可以认为是一个字典（如果`list`创建的时候不写明键名字`list(0,1,2)`，会自动用 1 开始的数字编号作为键名字），访问某一个键的方式可以是`$name`也可以是`list[["name"]]`。`data.frame`可以看成一个特殊的`list`，列名是键名，每一个值都是一个`vector`对象，因此在访问列名时也可以使用`$name`方法，也因此调用`length()`函数时，`data.frame`输出的是列数，即键数目，和对`list`计算得到的结果是一样的（也和 python 对 dict 调用 len 输出键数是一样的）。当然`data.frame`还可以使用很多切片索引等方法是`list`不行的
+  - `is.factor`等函数比起`typeof`更适合判断`data.frame`一列的数据类型
+  - `lapply`和`sapply`的区别：都是对 list 的每个键下的元素用相同的 function 进行操作，区别在于`lapply`返回一个对应的 list，而`sapply`会尝试返回一个更简单的结果，如 vector 或者 matrix，若返回矩阵，其中**每列**对应于输入 list 中的一个元素的结果。（感觉操作的实际上是任意可迭代对象）
+  - `list`对象非常的恶心，很难转换成别的类型的对象，如果要变成`vector`，使用`unlist()`函数。
+  - 使用`cbind`将带有 name 的`vector`或`data.frame`并在一起时会把每一列变成一个`list`，很抽象
 - `formula`对象可以用`update.formula`进行修改，在`formula`用`-`代表删去一些变量
 - `invisible()`可以对单行运行的 R 代码不输出返回值
 
@@ -695,10 +699,12 @@ os.chdir(os.path.dirname(__file__))
 
 [VSCode 中使用 Black Formatter 和 isort](https://medium.com/mlearning-ai/python-auto-formatter-autopep8-vs-black-and-some-practical-tips-e71adb24aee1)，如果需要调整参数设置，可以在 arg 中设置，如`-l 100`设置每行最多的字符数；另外如果需要强制换行的，在最后多加一个`,`即可，formatter 会自动形成换行
 
-### 简单 linux
+### 2.15. 简单 linux
 
 - `which`命令输出当前命令的对应路径
 - `nohup python -u my.py > log.txt 2>&1 &`后台挂起程序运行，关闭 terminal 也生效，其中`-u`参数是为了 python 能实时写入，`log.txt`是最后输出日志文件的地方
+- 挂起 R 脚本的时候用的是`Rscript`，即`nohup Rscript rscript.R > log.txt 2>&1 &`，不需要像 python 一样指定参数，会实时写入
+- 貌似使用`apt`在线下载软件和使用`dpkg -i`安装下载好的`.deb`文件，最后都是用 apt 管理的
 
 ---
 
