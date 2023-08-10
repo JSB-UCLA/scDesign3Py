@@ -50,7 +50,7 @@
 
 ## 1. 新版本(基于 rpy2)
 
-- [ ] 测试工作 spatial 模拟，过程中有一些 2 维度的 smoother，不一定用高斯过程，看结果怎么样
+- [x] 测试工作 spatial 模拟，过程中有一些 2 维度的 smoother，不一定用高斯过程，看结果怎么样
 
   - 补充
 
@@ -59,11 +59,16 @@
     - k 指模型复杂度，一维的 k 和 te 的 k 是不一样的，te 的 k 是一维 k 的平方
 
   - 测试：在不同的 k（如 100,200,400），bs 情况下，比较
+
     - time
     - 效果（图形可视化，比如一个 spatial 的颜色的可视化，spatial 会有一个比较 sharp 的 edge 看看能不能捕捉到）
     - 输出结果算 RMSE
 
-- [ ] 完成一(a.b='1')\*
+  - 测试结果
+    - "ds" spline 速度太慢了，不用考虑了
+    - 建议`fit_marginal`时间不要转换成 numeric，转换之后就没有办法看出真实的时间了，特别是运行时间超过 1 min 的时候
+    - 挑选了全实验中 RMSE 最大的 20 个基因作为研究对象，因为感觉这些基因总体的预测难度会比较大
+
 - [ ] 完成一个从 R list 转换成 python dict 的函数作为 interface，则只要留一个 return 的 API，如果有需要就转换成 python dict 的形式
 - [ ] scDesign 最后是一个类，各个数据以类属性的方式继承，默认这些类属性都是不可修改的，并且就保留着 Rdata 的形式
 
@@ -174,7 +179,7 @@ with (default_converter + pandas2ri.converter).context():
 - SingleCellExperiment 相关
   - 如何从 singlecellexperiment object 转换成 h5ad 存储后，用 scanpy 读取 [参考](https://www.bilibili.com/read/cv8675277/)使用`sceasy`包
   - SummerizedExperiment 集成从 singlecellexperiment object 中提取 coldata/assay 等的方法，对应`anndata.obs`, `anndata.layer`
-- 并行计算用函数 `parallel::mcmapply` `BiocParallel::bpmapply` `pbmcapply::pbmcmapply`都有两类参数，一类参数是直接传进去的，一类是封装在 MoreArgs 中传进去的，前者在每一个进程中是可迭代式地一个个取出来的，因此在每个进程中是不同的，后者是每一个进程中都需要用到的部分。需要注意的是`mcmapply`在传入第一类参数的时候不会自动实现对参数的排列组合，而是**按照参数所在位置进行对应**。如果要生成所有的排列组合，调用`expand.grid()`，可以生成有所有排列组合 dataframe。
+- 并行计算用函数 `parallel::mcmapply`, `BiocParallel::bpmapply`([document](https://www.bioconductor.org/packages/devel/bioc/manuals/BiocParallel/man/BiocParallel.pdf)), `pbmcapply::pbmcmapply`都有两类参数，一类参数是直接传进去的，一类是封装在 MoreArgs 中传进去的，前者在每一个进程中是可迭代式地一个个取出来的，因此在每个进程中是不同的，后者是每一个进程中都需要用到的部分。需要注意的是`mcmapply`在传入第一类参数的时候不会自动实现对参数的排列组合，而是**按照参数所在位置进行对应**。如果要生成所有的排列组合，调用`expand.grid()`，可以生成有所有排列组合 dataframe。
 
 ```r
 parafunc(fun_name,arg1=...,arg2=...,...,MoreArgs=list())
@@ -202,6 +207,7 @@ parafunc(fun_name,arg1=...,arg2=...,...,MoreArgs=list())
 - `mgcv::gam(s(varible_name,k=10,bs='cr'),method=REML)`bs 代表回归样条的[基函数类型](https://www.rdocumentation.org/packages/mgcv/versions/1.9-0/topics/smooth.terms)（cr 为三次样条函数，三次样条函数指的就是具有连续性、且一阶和二阶导连续的三阶分段多项式），[k](https://www.rdocumentation.org/packages/mgcv/versions/1.9-0/topics/choose.k)，method 指定了平滑参数的估计方式
 - `mgcv`中 s,ti,te 的区别和指定方式，简单而言，ti 仅代表交互效应，te 代表又有交互效应又有非交互效应，`te(x1,x2)`与`s(x1)+s(x2)+ti(x1,x2)`大致类似，但是估计的平滑惩罚数目不同(2 vs 4)。而 s(x1,x2)和 te(x1,x2)是类似的，区别在于 s(x1,x2)假设 x1,x2 有相同的 scale，即 isotropic 各向同性，te(x1,x2)认为是各变量的 scale 不同，各向异性(tensor product ti and te 处理的就是各向异性的情况)。[参考](https://stats.stackexchange.com/questions/519433/gam-and-multiple-continuous-continuous-interactions-tensor-smooths)
 - `all.vars(formula)`返回一个 vector，第一位置是 y 的 var，第二位置是 x 的 var
+- `formals(func)` 返回函数所有参数的标准输入，返回值是`list`
 
 ### 2.4. python 基础类型
 
@@ -225,6 +231,7 @@ merged_dict = {k: v for d in result_list for k, v in d.items()}
 - `dict`对象如果使用`dict[key]`拿到对应的 key 的值，且没有这个 key，那么就会报错 keyerror；如果使用`dict.get()`方法，则没有这个 key 时会返回一个`None`
 - 将多个`list`对象中的内容合并在一个`list`中可以使用`itertools`包，返回一个可迭代对象，用类型转换为 list。代码为：`list(itertools.chain(*filter(None, [lists])))`（同时忽略其中的所有`None`对象）
 - 当有一个字典存储了一个 python 函数的参数名和参数值时，可以通过`func(**dict)`向那个函数传参
+- 当使用一个`list`存储不定数量的返回值时，如果只有一个返回值，需要在赋值时使用 `(a,) = res_list` 的格式，只有这样才能正确拿到里面的值，而不是拿到嵌套在`list`中的值
 
 ### 2.5. pandas and numpy 相关
 
@@ -702,11 +709,15 @@ os.chdir(os.path.dirname(__file__))
 ### 2.15. 简单 linux
 
 - `which`命令输出当前命令的对应路径
-- `nohup python -u my.py > log.txt 2>&1 &`后台挂起程序运行，关闭 terminal 也生效，其中`-u`参数是为了 python 能实时写入，`log.txt`是最后输出日志文件的地方
-- 挂起 R 脚本的时候用的是`Rscript`，即`nohup Rscript rscript.R > log.txt 2>&1 &`，不需要像 python 一样指定参数，会实时写入
+- 后台任务相关
+  - `nohup python -u my.py > log.txt 2>&1 &`后台挂起程序运行，关闭 terminal 也生效，其中`-u`参数是为了 python 能实时写入，`log.txt`是最后输出日志文件的地方
+  - 挂起 R 脚本的时候用的是`Rscript`，即`nohup Rscript rscript.R > log.txt 2>&1 &`，不需要像 python 一样指定参数，会实时写入
+  - `kill`+进程 PID 可以终止进程，一般`kill`就直接终止了，如果用`kill --STOP`则会暂停任务
+  - 查看后台运行情况（静态）的命令`ps aux`，[具体参数](https://www.cnblogs.com/5201351/p/4206461.html)
+  - 可以用`top`命令实时观察后台进程的运行情况
+  - `ps -ef|grep python|grep -v grep|grep -v jupyter|cut -c 9-15|xargs kill -9`尝试关闭所有多进程的任务（9-15 是 PID），多进程中杀死父进程子进程还是会继续运行并且占用资源，所以要一起杀光
 - 貌似使用`apt`在线下载软件和使用`dpkg -i`安装下载好的`.deb`文件，最后都是用 apt 管理的
-
----
+- ***
 
 ## 3. 老版本(不用 rpy2 版本)的相关记录
 

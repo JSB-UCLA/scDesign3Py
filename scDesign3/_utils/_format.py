@@ -10,41 +10,34 @@ import pandas as pd
 from rpy2.robjects import NULL, default_converter, numpy2ri, pandas2ri, r
 from rpy2.robjects.vectors import DataFrame, FloatVector, IntVector, ListVector, Matrix, StrVector
 
+from ._errors import ConvertionError, InputError
 
-class ConvertionError(RuntimeError):
-    pass
-
-
-class InputError(RuntimeError):
-    pass
-
-
-def _recurse_r_tree(data):
-    """
-    step through an R object recursively and convert the types to python types as appropriate.
-    Leaves will be converted to e.g. numpy arrays or lists as appropriate and the whole tree to a dictionary.
-    """
-    r_dict_types = [DataFrame, ListVector]
-    r_array_types = [FloatVector, IntVector, Matrix]
-    r_list_types = [StrVector]
-    if type(data) in r_dict_types:
-        return OrderedDict(zip(data.names, [_recurse_r_tree(elt) for elt in data]))
-    elif type(data) in r_list_types:
-        return [_recurse_r_tree(elt) for elt in data]
-    elif type(data) in r_array_types:
-        return np.array(data)
-    else:
-        if hasattr(data, "rclass"):  # An unsupported r class
-            raise KeyError(
-                "Could not proceed, type {} is not defined"
-                "to add support for this type, just add it to the imports "
-                "and to the appropriate type list above".format(type(data))
-            )
-        else:
-            return data  # We reached the end of recursion
+# def _recurse_r_tree(data):
+#     """
+#     step through an R object recursively and convert the types to python types as appropriate.
+#     Leaves will be converted to e.g. numpy arrays or lists as appropriate and the whole tree to a dictionary.
+#     """
+#     r_dict_types = [DataFrame, ListVector]
+#     r_array_types = [FloatVector, IntVector, Matrix]
+#     r_list_types = [StrVector]
+#     if type(data) in r_dict_types:
+#         return OrderedDict(zip(data.names, [_recurse_r_tree(elt) for elt in data]))
+#     elif type(data) in r_list_types:
+#         return [_recurse_r_tree(elt) for elt in data]
+#     elif type(data) in r_array_types:
+#         return np.array(data)
+#     else:
+#         if hasattr(data, "rclass"):  # An unsupported r class
+#             raise KeyError(
+#                 "Could not proceed, type {} is not defined to add support for this type, just add it to the imports and to the appropriate type list above".format(
+#                     type(data)
+#                 )
+#             )
+#         else:
+#             return data  # We reached the end of recursion
 
 
-def _anndata_to_sce(data: ad.AnnData, assay_use=None, default_assay_name=None, covar=None):
+def _anndata2sce(data: ad.AnnData, assay_use=None, default_assay_name=None, covar=None):
     """Extract anndata info used for scDesign3 and change into R SingleCellExperiment"""
 
     ## check unique cell names and gene names
@@ -112,7 +105,7 @@ def _anndata_to_sce(data: ad.AnnData, assay_use=None, default_assay_name=None, c
     return sce, assay_use
 
 
-def _other_to_list(*args):
+def _other2list(*args):
     """
     If None, return None
 
@@ -133,13 +126,16 @@ def _strvec_none2ri(*args):
     """
     return [NULL if x is None else StrVector(x) for x in args]
 
-def _parapara(parallelization, bpparam):
-    if (bpparam is None) and ((parallelization == 'pbmcmapply') or (parallelization == 'mcmapply')):
+
+def _bpparamcheck(parallelization, bpparam):
+    if (bpparam is None) and ((parallelization == "pbmcmapply") or (parallelization == "mcmapply")):
         return NULL
-    elif (not (bpparam is None)) and (parallelization == 'bpmapply'):
+    elif (not (bpparam is None)) and (parallelization == "bpmapply"):
         return bpparam
     else:
-        raise InputError('If parallelization is pbmcmapply or mcmapply, bpparam should be None. If parallelization is bpmapply, please run get_bpparam to get bpparam.')
+        raise InputError(
+            "If parallelization is pbmcmapply or mcmapply, bpparam should be None. If parallelization is bpmapply, please run get_bpparam to get bpparam."
+        )
 
 
 def _typecheck(*type_args, **type_kwargs):
