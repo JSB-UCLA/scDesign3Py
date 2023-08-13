@@ -16,29 +16,35 @@
   - [2.5. pandas and numpy 相关](#25-pandas-and-numpy-相关)
     - [2.5.1. 经验](#251-经验)
     - [2.5.2. API](#252-api)
-  - [2.6. sklearn 相关](#26-sklearn-相关)
-  - [2.7. scipy 相关](#27-scipy-相关)
-  - [2.8. anndata 相关](#28-anndata-相关)
-  - [2.9. pyvinecopulib 相关](#29-pyvinecopulib-相关)
-  - [2.10. Statsmodels 相关](#210-statsmodels-相关)
-    - [2.10.1. 经验](#2101-经验)
-    - [2.10.2. 补充](#2102-补充)
-  - [2.11. pygam 相关](#211-pygam-相关)
-  - [2.12. python 相关](#212-python-相关)
-    - [2.12.1. python 底层基础](#2121-python-底层基础)
-      - [2.12.1.1. 线程与进程](#21211-线程与进程)
-      - [2.12.1.2. 其他](#21212-其他)
-      - [2.12.1.3. Anaconda 相关和库管理相关](#21213-anaconda-相关和库管理相关)
-    - [2.12.2. python 机制](#2122-python-机制)
-      - [2.12.2.1. 命名空间相关](#21221-命名空间相关)
-      - [2.12.2.2. class 相关](#21222-class-相关)
-      - [2.12.2.3. python warning 相关](#21223-python-warning-相关)
-      - [2.12.2.4. python 计时](#21224-python-计时)
-      - [2.12.2.5. python 类型判断和函数传参](#21225-python-类型判断和函数传参)
-      - [2.12.2.6. 其他](#21226-其他)
-  - [2.13. GitHub](#213-github)
-  - [2.14. 其他](#214-其他)
-  - [2.15. 简单 linux](#215-简单-linux)
+  - [2.6. matplotlib 相关](#26-matplotlib-相关)
+    - [2.6.1. 子图作图](#261-子图作图)
+    - [2.6.2. 添加文字](#262-添加文字)
+    - [2.6.3. scatter 函数](#263-scatter-函数)
+    - [2.6.4. 样例](#264-样例)
+  - [2.7. sklearn 相关](#27-sklearn-相关)
+  - [2.8. scipy 相关](#28-scipy-相关)
+  - [2.9. anndata 相关](#29-anndata-相关)
+  - [2.10. pyvinecopulib 相关](#210-pyvinecopulib-相关)
+  - [2.11. Statsmodels 相关](#211-statsmodels-相关)
+    - [2.11.1. 经验](#2111-经验)
+    - [2.11.2. 补充](#2112-补充)
+  - [2.12. pygam 相关](#212-pygam-相关)
+  - [2.13. python 相关](#213-python-相关)
+    - [2.13.1. python 底层基础](#2131-python-底层基础)
+      - [2.13.1.1. 线程与进程](#21311-线程与进程)
+      - [2.13.1.2. 其他](#21312-其他)
+      - [2.13.1.3. Anaconda 相关和库管理相关](#21313-anaconda-相关和库管理相关)
+    - [2.13.2. python 机制](#2132-python-机制)
+      - [2.13.2.1. 命名空间相关](#21321-命名空间相关)
+      - [2.13.2.2. class 相关](#21322-class-相关)
+      - [2.13.2.3. python warning 相关](#21323-python-warning-相关)
+      - [2.13.2.4. python 计时](#21324-python-计时)
+      - [2.13.2.5. python 类型判断和函数传参](#21325-python-类型判断和函数传参)
+      - [2.13.2.6. python os](#21326-python-os)
+      - [2.13.2.7. 其他](#21327-其他)
+  - [2.14. GitHub](#214-github)
+  - [2.15. 其他](#215-其他)
+  - [2.16. 简单 linux](#216-简单-linux)
 - [3. 老版本(不用 rpy2 版本)的相关记录](#3-老版本不用-rpy2-版本的相关记录)
   - [3.1. 未来的下一步功能:](#31-未来的下一步功能)
   - [3.2. Questions](#32-questions)
@@ -352,19 +358,104 @@ for name,group in df.groupby('name'):
 - `df.describe()`返回所有的数值变量的描述性统计量，类似`summary` in R
 - `np.random.seed(0)`设置`numpy`中的随机数种子
 - `np.ndarray`中 dtype 为`U1`， 表示 Unicode 字符串，长度为 1。
+- `pd.DataFrame.style`可以对数据框的一些外观（比如字体颜色和背景色颜色做修改），在存储时可以使用`.to_excel(path.xlsx", engine="openpyxl")`的方式进行保存，这样可以存储所有的颜色注释。**所有的 style 对应的对象都很难再像正常的数据框对象一样进行数值操作了，因此在做颜色标注之前一定要先做完数据处理。**
 
-### 2.6. sklearn 相关
+```python
+## 自定义染色的一个实例
+pos_dict = {"best": [], "second": [], "third": []}
+for name in compare.columns:
+    if name in ["time(min)", "RMSE", "MAE", "aic", "bic"]:
+        sorted = compare.sort_values(
+            name,
+        )
+    elif name in ["Person_corr", "R_adj", "exp_dev"]:
+        sorted = compare.sort_values(
+            name,
+            ascending=False,
+        )
+
+    ## 找到对应结果最好的前三个，将坐标记录
+    pos_dict["best"].append([sorted.head(3).index[0], name])
+    pos_dict["second"].append([sorted.head(3).index[1], name])
+    pos_dict["third"].append([sorted.head(3).index[2], name])
+
+value_dict = {"best": [], "second": [], "third": []}
+for key, values in pos_dict.items():
+    for value in values:
+        value_dict[key].append(compare.loc[value[0], value[1]])
+
+## 根据数据结果进行颜色调整
+def set_cell_color(value):
+    if value in value_dict["best"]:
+        return "background-color: orange"
+    elif value in value_dict["second"]:
+        return "background-color: yellow"
+    elif value in value_dict["third"]:
+        return "background-color: blue"
+
+## 直接用applymap对每一个单元格都进行一遍检索和改变样式过程
+res = compare.style.applymap(set_cell_color)
+```
+
+### 2.6. matplotlib 相关
+
+#### 2.6.1. 子图作图
+
+- `fig, axes = plt.subplots(a, b, figsize=(b * 5, a * 5))`得到一张有 n 张子图的一个大图，通过前两个参数将整个大图分割成 $a \times b$个子图，通过`figsize`相当于得到每个子图的大小，但是要注意参数是反过来的
+- 进一步用`row, col = np.unravel_index(i, axes.shape)`和`ax = axes[row, col]`来得到一张子图的位置，其中`i`是第`i`张子图
+- 使用`ax.scatter`对于该子图进行绘图，理论上任何可以画的子图函数都可以调用，调用就像普通的`plt`调用方法一样
+- `fig.suptitle()`指明全图的标题，`ax.set_title()`得到小标题
+
+#### 2.6.2. 添加文字
+
+- `ax.text()`自定义添加文字，文字位置如果都是 0-1 之间的数字就是按比例放置，超过范围的就会转换成在对应的坐标处放文字
+- `ax.legend()`添加图例
+
+#### 2.6.3. scatter 函数
+
+- `c`参数代表颜色，是一种数值上的对应，和`cmap`对应使用，前者给一个数值，后者拿到这个数值后在对应的 map 上找对应的颜色
+- `s`参数给出点的大小，可以是一个可迭代对象给每个点一个特定的大小
+- `plt.colorbar(scatter_plt_object)`可以把对应的颜色柱对应的图例显示在边上
+
+#### 2.6.4. 样例
+
+```python
+## 作图样例
+fig, axes = plt.subplots(8, 5, figsize=(5 * 5, 9 * 5))
+fig.suptitle("Gene name: " + gene, fontsize=16, y=0.95)
+
+for i, (method, v2) in enumerate(v1.items()):
+    rmse = v2["RMSE"]
+    r = v2["r"]
+    df = v2["plot"]
+
+    row, col = np.unravel_index(i, axes.shape)
+    ax = axes[row, col]
+    sc = ax.scatter(df["X"], df["Y"], c=df["Expression"], cmap="viridis")
+    ax.set_title(f"Setting: {method}\nRMSE: {rmse:.2f}\nr: {r:.2f}")
+    ax.set_xlabel("X")
+    ax.set_ylabel("Y")
+    plt.colorbar(sc)
+
+    plt.subplots_adjust(hspace=0.4, wspace=0.3)
+
+    # ax.text(0.8, 0.02, f"RMSE: {rmse:.2f}\nr: {r:.2f}", transform=ax.transAxes, ha="center")
+
+plt.savefig(f"./Res/{datasetname}/plot/{gene}.pdf")
+```
+
+### 2.7. sklearn 相关
 
 - `sklearn.mixture.GussianMixture`为高斯混合模型
 - [KDE 核密度估计，非参方法估计分布函数](https://scikit-learn.org/stable/modules/density.html)
 - sklearn 实现数据记忆的方式就是将一个 model 封装成一个类，类内不需要设置私有变量，可参考
 - sklearn 训练数据如果是`np.array()`则维度必须为 n\*k，不能是只有单维度，也因此如果传 pandas 数据必须是`dataframe`不能是`series`
 
-### 2.7. scipy 相关
+### 2.8. scipy 相关
 
 - [稀疏矩阵信息](https://zhuanlan.zhihu.com/p/306320459)，可以使用`toarray()`转换成一般的 ndarray 的样式
 
-### 2.8. anndata 相关
+### 2.9. anndata 相关
 
 - anndata 数据结构存储都是 scipy 稀疏矩阵形式
 - anndata.layer 存储不同类型的 assay（即对 anndata.X 的各种 transform）
@@ -373,7 +464,7 @@ for name,group in df.groupby('name'):
 adata.layers['log_transformed'] = np.log1p(adata.X)
 ```
 
-### 2.9. pyvinecopulib 相关
+### 2.10. pyvinecopulib 相关
 
 pyvinecopulib 和 rvinecopulib 是 C++库 Vinecopulib 在 python 和 R 上的分别实现
 
@@ -396,9 +487,9 @@ x_simu = x_simu.T
 
 注意其输入数据必须是 0-1 之间的数值，因为本质上 copula 函数是对一组 0-1 间的均匀分布数据进行计算，随机变量的 CDF 即为 0-1 均匀分布。但是 pyvinecopulib 不会像 rvinecopulib 一样给 raw data 自动做好转换为 CDF 的对应取值再做拟合，需要添加一步得到，并且要将拟合结果返回到原本的数据。
 
-### 2.10. Statsmodels 相关
+### 2.11. Statsmodels 相关
 
-#### 2.10.1. 经验
+#### 2.11.1. 经验
 
 - 使用`GLMGam.from_formula`构建模型会更好，线性的部分用 formula 的形式给出，其会将 dataframe 中 category 的部分直接转换为 dummy 编码并且自动添加截距项。如果直接用 y 和 x 对应的 dataframe 输入（用 endog 和 exog）则两者都需要手动操作，很不方便。`from_formula`由 package`patsy`提供支持([documentation](https://patsy.readthedocs.io/en/latest/))，`patsy`本身支持根据 mgcv 格式产生 spline 项，但是不支持惩罚项等的计算，因此无法投入应用。
 - 超参数的选择可以指定，[`select_penweight`](https://www.statsmodels.org/stable/generated/statsmodels.gam.generalized_additive_model.GLMGam.select_penweight.html#statsmodels.gam.generalized_additive_model.GLMGam.select_penweight)，方法默认 aic，也可以选 gcv 等方法
@@ -417,21 +508,21 @@ result = model.fit()
 
 - GLMGam 类使用 fit 方法后会返回 GLMGamResults 类，该类有两种获取 predict value 的方法，一种是`predict()`，直接返回预测值，为`np.array()`，另一种是`get_prediction().summary_frame()`前者返回一个 predcit result 类，后者用 dataframe 形式呈现结果，除了包含预测值外，还有对应的标准误差估计和置信区间
 
-#### 2.10.2. 补充
+#### 2.11.2. 补充
 
 [GAM 示例](https://www.statsmodels.org/stable/gam.html) [支持的 distribution](https://www.statsmodels.org/stable/glm.html) [model API](https://www.statsmodels.org/stable/generated/statsmodels.gam.generalized_additive_model.GLMGam.select_penweight.html#statsmodels.gam.generalized_additive_model.GLMGam.select_penweight)，`smoother`是样条函数选择，需要调用别的类来指定，在其中进一步规定样条函数自由度，`alpha`是平滑参数选择，可用`select_penweight()`得到。`k`代表了将一个拟合区间细分成 k+1 个小区间，每个区间使用一个 spline 去拟合，`k`与 spline 类型和要估计的参数`df`有换算关系。具体关系见[此](https://stats.stackexchange.com/questions/517375/splines-relationship-of-knots-degree-and-degrees-of-freedom#:~:text=In%20essence%2C%20splines%20are%20piecewise,degree%203%20and%20so%20on.)。
 
-### 2.11. pygam 相关
+### 2.12. pygam 相关
 
 - `model.gridsearch(X,y)`自动找到最好的超参数，[progress 是否显示进度条;用 lam 参数可以指定 lam 的搜索空间;objective 为搜索的优化目标](https://pygam.readthedocs.io/en/latest/api/gam.html)
 - `model.sample`和`model.predict`的区别，sample 方法用于从模型的后验分布中生成样本。它可以用于生成模型的不确定性估计，以及对未观测数据的采样预测。sample 方法可以接受一个输入特征矩阵，并为每个样本生成一组预测。它返回一个 numpy 数组，其中每一行代表一个样本的预测。predict 方法用于对给定的输入进行预测。它接受一个输入特征矩阵，并为每个样本生成预测值。与 sample 方法不同，predict 方法不考虑模型的不确定性，它仅返回点估计的预测结果。它也返回一个 numpy 数组，其中每一行代表一个样本的预测值。
 - AICc = AIC + 2p(p + 1)/(n − p − 1)
 
-### 2.12. python 相关
+### 2.13. python 相关
 
-#### 2.12.1. python 底层基础
+#### 2.13.1. python 底层基础
 
-##### 2.12.1.1. 线程与进程
+##### 2.13.1.1. 线程与进程
 
 - [进程与线程的区别](https://www.bilibili.com/video/BV19b411L7y1/?spm_id_from=333.337.search-card.all.click&vd_source=44ff757ed2fdadeadf410d10bde17c2c)进程是分配资源的操作，是一个资源的综合，一个进程中是线程在进行操作，一个进程中的多线程，用一块资源来实现，实现多任务；而多进程则是多划了几块资源，每个进程只有一个主线程，每个线程都用自己的进程资源实现多任务
 - [python 的进程和线程的编程](https://www.bilibili.com/video/BV1jW411Y7pv?p=2&vd_source=44ff757ed2fdadeadf410d10bde17c2c)
@@ -465,13 +556,13 @@ if __name__ == '__main__':
     print(result)
 ```
 
-##### 2.12.1.2. 其他
+##### 2.13.1.2. 其他
 
 - [如何组织 python 项目](https://zhuanlan.zhihu.com/p/335347908#:~:text=1%20%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84%201%20Python%E9%A1%B9%E7%9B%AE%E7%9A%84%E7%BB%84%E7%BB%87%E7%BB%93%E6%9E%84%E4%B8%BB%E8%A6%81%E7%94%B1%20%E5%8C%85--%E6%A8%A1%E5%9D%97--%E7%B1%BB%20%E8%BF%99%E4%BA%9B%E9%83%A8%E5%88%86%E6%9E%84%E6%88%90%E3%80%82%202%20%E5%8C%85%EF%BC%9A,%E4%B8%80%E4%B8%AA%E6%A8%A1%E5%9D%97%E4%B8%8B%E9%9D%A2%E4%B9%9F%E5%8F%AF%E4%BB%A5%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E7%B1%BB%E3%80%82%20%E6%A8%A1%E5%9D%97%E4%B8%8B%E9%9D%A2%E4%B9%9F%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E5%86%99%E5%87%BD%E6%95%B0%E3%80%82%204%20%E7%B1%BB%EF%BC%9A%20%E7%B1%BB%E4%B8%AD%E5%AE%9A%E4%B9%89%E4%BA%86%E5%8F%98%E9%87%8F%E5%92%8C%E5%87%BD%E6%95%B0%E3%80%82%205%20%E5%87%BD%E6%95%B0%EF%BC%9A%20%E7%94%A8%E4%BA%8E%E5%AE%9E%E7%8E%B0%E7%89%B9%E5%AE%9A%E5%8A%9F%E8%83%BD%EF%BC%8C)
 
 - 通过 C++库的 Python 接口，可以在 Python 环境中直接调用 C++库的功能，而无需安装额外的 C++解释器。Python 本身已经提供了 CPython 解释器，它是使用 C 语言实现的，并且是 Python 的默认解释器。可以将 C++代码编译为动态链接库（如.so 文件或.dll 文件），然后在 Python 中导入这些库，并使用其中的函数和类。Python 解释器会与这些动态链接库进行交互，以实现对 C++代码的调用和执行。
 
-##### 2.12.1.3. Anaconda 相关和库管理相关
+##### 2.13.1.3. Anaconda 相关和库管理相关
 
 - `conda init powershell`使得 anaconda 在 windows powershell 中会显示虚拟环境名称，如果遇到遇到无法加载 profile.ps1，[解决方案](https://zhuanlan.zhihu.com/p/452273123)
 - `pip -V`查看现在使用的 pip 对应的下载位置和 python 解释器版本
@@ -491,9 +582,9 @@ python -m ipykernel install --user --name newenv --display-name 'any name is OK,
   - 在 conda 环境中得到纯 pip 的 requirements 感觉也没什么特别好的办法，要么从 conda 的 yaml 里将 pip 相关的复制出来统一格式，要么从 pip freeze 中去掉本地安装路径的部分(目前在`modify_requirements.py`中实现，并验证过应该可以完整复现 pip 的所有安装)。<b>conda 和 pip 产生的文件都是 utf-16 编码的，处理解码时需要注意</b>
   - 如果全都是用 pip 装包，额外装了依赖，要卸除这些依赖，可以考虑`pip install python3-pip-autoremove`后运行`pip3-autoremove package_name`进行包及其依赖的卸载工作
 
-#### 2.12.2. python 机制
+#### 2.13.2. python 机制
 
-##### 2.12.2.1. 命名空间相关
+##### 2.13.2.1. 命名空间相关
 
 - [import 函数详解](https://www.bilibili.com/video/BV1K24y1k7XA/?spm_id_from=333.788&vd_source=44ff757ed2fdadeadf410d10bde17c2c) 在 import 一个 module 的时候 python 会进行以下步骤
   - 创建模块命名空间：Python 会为模块创建一个独立的命名空间，该命名空间用于存储模块中定义的变量、函数和类。这样可以避免不同模块之间的命名冲突。
@@ -501,7 +592,7 @@ python -m ipykernel install --user --name newenv --display-name 'any name is OK,
   - 返回模块对象：在导入过程完成后，import module 语句会返回一个表示模块的对象，该对象可以在后续的代码中使用。可以使用该对象访问模块中定义的内容，例如变量、函数和类。
 - [`if __name__ == '__main__'` 详解](https://blog.csdn.net/heqiang525/article/details/89879056),**name**中保存的是[module 的名字](https://zhuanlan.zhihu.com/p/57309137)，用来判断这个脚本是不是在被主调用还是被 import
 
-##### 2.12.2.2. class 相关
+##### 2.13.2.2. class 相关
 
 1. 类的属性分为两种，一种是类属性，一种是实例属性，类属性在定义类的时候直接指名即可，实例属性是只有创建了类的实例，并且运行了创建实例属性的语句之后才会产生。
 2. `self`字段就意味着带`self`字段的对象（var，fun 等）会被绑定到一个给定的实例上，可以用`__dict__`方法查看类/实例有哪些属性。**实例的`__dict__`看不到定义在类层面上的东西，但是定义在类上的东西依然可以被实例调用；类的`__dict__`看不到实例上面的定义，也调用不到实例中定义的东西。即一个实例可以访问已经创建的实例属性和类属性，一个类只能访问类属性。此外在实例层面的对于类属性的修改并不会对类本身该属性造成任何影响**
@@ -609,7 +700,7 @@ test.change_hidden(5)
 
 5. `hasattr`函数判断一个对象是否有对应的属性
 
-##### 2.12.2.3. python warning 相关
+##### 2.13.2.3. python warning 相关
 
 ```python
 import warnings
@@ -641,7 +732,7 @@ for warning in warninglist:
     print(warning.message)
 ```
 
-##### 2.12.2.4. python 计时
+##### 2.13.2.4. python 计时
 
 ```python
 import time
@@ -650,7 +741,7 @@ end_time = time.time()
 running_time = start_time - end_time
 ```
 
-##### 2.12.2.5. python 类型判断和函数传参
+##### 2.13.2.5. python 类型判断和函数传参
 
 - `isinstance` or `type`，[建议使用前者](https://www.jianshu.com/p/7ef549503c93)
 - [函数指定传参的数据类型](https://blog.csdn.net/qq_42327755/article/details/87196150)
@@ -664,9 +755,13 @@ def toy(x:Union[list,str,int]) -> None:
 
 - python 中可以通过`*args`和`**kwargs`进行**不定数量的参数**的传参，前者是以`tuple`的形式传入，后者以`dict`的形式传入
 
-##### 2.12.2.6. 其他
+##### 2.13.2.6. python os
 
-- 判断 None Type 时，必须要用`variable is None`进行判断
+`os`库作用是可以和操作系统交互，常用功能如下：
+
+- `os.environ`是一个类似字典的对象，存储所有 python 运行的环境变量的名称和对应的地址，可以用字典的方式，如`get(key)`或`[key]`方式得到某一个环境变量的具体地址
+- `os.path.exists()`判断文件是否存在
+- `os.listdir()`输出对应路径下所有文件(夹)的对应名字
 - 将脚本工作路径设置为当前脚本所在位置的方法
 
 ```python
@@ -674,9 +769,13 @@ import os
 os.chdir(os.path.dirname(__file__))
 ```
 
+##### 2.13.2.7. 其他
+
+- 判断 None Type 时，必须要用`variable is None`进行判断
+
 - [python 装饰器](https://www.bilibili.com/video/BV1Gu411Q7JV/?spm_id_from=333.337.search-card.all.click&vd_source=44ff757ed2fdadeadf410d10bde17c2c)，本质上就是一个可以以函数为输入以函数为输出的函数，以`@decorator`形式写在装饰的函数的上方
 
-### 2.13. GitHub
+### 2.14. GitHub
 
 [git 标准工作流程](https://www.bilibili.com/video/BV19e4y1q7JJ/?spm_id_from=333.337.search-card.all.click&vd_source=44ff757ed2fdadeadf410d10bde17c2c)
 
@@ -698,7 +797,7 @@ os.chdir(os.path.dirname(__file__))
 
 [本地 github 传不上去的问题解决](https://blog.csdn.net/Xminyang/article/details/124837086)貌似是一个由于代理设置导致的问题
 
-### 2.14. 其他
+### 2.15. 其他
 
 [VSCode 图标含义](https://www.zhihu.com/question/370258254)
 
@@ -706,7 +805,7 @@ os.chdir(os.path.dirname(__file__))
 
 [VSCode 中使用 Black Formatter 和 isort](https://medium.com/mlearning-ai/python-auto-formatter-autopep8-vs-black-and-some-practical-tips-e71adb24aee1)，如果需要调整参数设置，可以在 arg 中设置，如`-l 100`设置每行最多的字符数；另外如果需要强制换行的，在最后多加一个`,`即可，formatter 会自动形成换行
 
-### 2.15. 简单 linux
+### 2.16. 简单 linux
 
 - `which`命令输出当前命令的对应路径
 - 后台任务相关

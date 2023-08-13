@@ -265,8 +265,8 @@ class scDesign3:
         sigma_formula: `str`
             A string of the sigma parameter formula
 
-        family_use: `str`
-            A string or a vector of strings of the marginal distribution. Must be one of 'binomial', 'poisson', 'nb', 'zip', 'zinb' or 'gaussian', which represent 'poisson distribution', 'negative binomial distribution', 'zero-inflated poisson distribution', 'zero-inflated negative binomail distribution' and 'gaussian distribution' respectively.
+        family_use: `str` or `list[str]`
+            A string or a list of strings of the marginal distribution. Must be one of 'binomial', 'poisson', 'nb', 'zip', 'zinb' or 'gaussian', which represent 'poisson distribution', 'negative binomial distribution', 'zero-inflated poisson distribution', 'zero-inflated negative binomail distribution' and 'gaussian distribution' respectively.
 
         n_cores: `int`
             The number of cores to use.
@@ -320,9 +320,130 @@ class scDesign3:
         return self.fit_marginal_res
 
     # fit copula
-    @_typecheck()
-    def fit_copula():
-        pass
+    @_typecheck(
+        family_use=Union[str, list],
+        n_cores=int,
+        copula=str,
+        input_data=str,
+        empirical_quantile=bool,
+        marginal_list=Optional[ro.vectors.ListVector],
+        dt=bool,
+        pseudo_obs=bool,
+        epsilon=float,
+        family_set=Union[str, list],
+        important_feature=Union[str, list],
+        parallelization=str,
+        bpparam=Optional[ro.methods.RS4],
+    )
+    def fit_copula(
+        self,
+        family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]],
+        n_cores: int,
+        copula: Literal["gaussian", "vine"] = "gaussian",
+        input_data: Literal["count_mat", "dat", "newCovariate"] = "dat",
+        empirical_quantile: bool = False,
+        marginal_list: Optional[ro.vectors.ListVector] = None,
+        dt: bool = True,
+        pseudo_obs: bool = False,
+        epsilon: float = 1e-6,
+        family_set: Union[str, list[str]] = ["gaussian", "indep"],
+        important_feature: Union[Literal["all", "auto"], list[bool]] = "all",
+        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "mcmapply",
+        bpparam: Optional[ro.methods.RS4] = None,
+    ) -> ro.vectors.ListVector:
+        """Fit the copula model
+
+        @fit_copula fits the copula model.
+
+        This function takes the result from @fit_marginal as the input and fit the copula model on the residuals.
+
+        Arguments:
+        ----------
+        family_use: `str` or `list[str]`
+            A string or a list of strings of the marginal distribution. Must be one of 'binomial', 'poisson', 'nb', 'zip', 'zinb' or 'gaussian'.
+
+        n_cores: `int`
+            The number of cores to use.
+
+        copula: `str` (default: 'gaussian')
+            A string of the copula choice. Must be one of 'gaussian' or 'vine'. Note that vine copula may have better modeling of high-dimensions, but can be very slow when features are >1000.
+
+        input_data: `str` (default: 'dat')
+            One of the output of @construct_data, only need to specify the name.
+
+        empirical_quantile: `bool` (default: False)
+            Please only use it if you clearly know what will happen! If True, DO NOT fit the copula and use the EMPIRICAL CDF values of the original data; it will make the simulated data fixed (no randomness). Only works if ncell is the same as your original data.
+
+        marginal_list: `rpy2.robject.vectors.ListVector` (default: None)
+            The result of @fit_marginal. Default is None, using the class property @fit_marginal_res.
+
+        dt: `bool` (default: True)
+            If True, perform the distributional transformation to make the discrete data continuous. This is useful for discrete distributions (e.g., Poisson, NB). Note that for continuous data (e.g., Gaussian), DT does not make sense and should be set as False.
+
+        pseudo_obs: `bool` (default: False)
+            If True, use the empirical quantiles instead of theoretical quantiles for fitting copula.
+
+        epsilon: `float` (default: 1e-6)
+            A numeric variable for preventing the transformed quantiles to collapse to 0 or 1.
+
+        family_set: `str` or `list[str]` (default: ['gaussian', 'indep'])
+            A string or a string list of the bivariate copula families.
+
+        important_feature: `str` or `list[bool]` (default: 'all')
+            A string or list which indicates whether a gene will be used in correlation estimation or not. If this is a string, then this string must be either "all" (using all genes) or "auto", which indicates that the genes will be automatically selected based on the proportion of zero expression across cells for each gene. Gene with zero proportion greater than 0.8 will be excluded form gene-gene correlation estimation. If this is a list, then this should be a logical vector with length equal to the number of genes in @sce. True in the logical vector means the corresponding gene will be included in gene-gene correlation estimation and False in the logical vector means the corresponding gene will be excluded from the gene-gene correlation estimation.
+
+        parallelization: `str` (default: 'mcmapply')
+            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam.
+
+        bpparam: `rpy2.robject.methods.RS4` (default: None)
+            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', remain default None.
+        """
+
+        # change other parameters to R form
+        family_use, family_set = _other2list(family_use, family_set)
+        family_use, family_set = _strvec_none2ri(family_use, family_set)
+
+        # check parallelization parameter
+        bpparam = _bpparamcheck(parallelization, bpparam)
+
+        # check important feature
+        if isinstance(important_feature, list):
+            important_feature = ro.vectors.BoolVector(important_feature)
+        elif not (important_feature == "all" or important_feature == "auto"):
+            raise InputError("important_feature should be 'all', 'auto', or a list.")
+
+        # use construct data res
+        try:
+            input_data = self.construct_data_res.rx2(input_data)
+        except AttributeError:
+            raise SequentialError("Please first run @construct_data.")
+
+        # use fit marginal res
+        try:
+            if marginal_list is None:
+                marginal_list = self.fit_marginal_res
+        except AttributeError:
+            raise SequentialError("Please first run @fit_marginal.")
+
+        self.fit_copula_res = self._rscdesign.fit_copula(
+            sce=self.sce,
+            assay_use=self.assay_use,
+            input_data=input_data,
+            empirical_quantile=empirical_quantile,
+            marginal_list=marginal_list,
+            family_use=family_use,
+            copula=copula,
+            DT=dt,
+            pseudo_obs=pseudo_obs,
+            epsilon=epsilon,
+            family_set=family_set,
+            important_feature=important_feature,
+            n_cores=n_cores,
+            parallelization=parallelization,
+            BPPARAM=bpparam,
+        )
+
+        return self.fit_copula_res
 
     @_typecheck()
     def extract_para():
