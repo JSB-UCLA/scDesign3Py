@@ -176,6 +176,13 @@ with (default_converter + pandas2ri.converter).context():
     r('function(x){print(x)}')(example_sce.obs)
 ```
 
+- 可以通过配置`converter`的方式，再结合`ro.conversion.get_conversion().py2rpy()`，可以实现局部类型的单向转换
+
+```python
+with (default_converter+pandas2ri.converter).context():
+    test = ro.conversion.get_conversion().py2rpy(test)
+```
+
 ### 2.3. R 相关
 
 #### 2.3.1. 经验

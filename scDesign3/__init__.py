@@ -55,4 +55,8 @@ if all_install:
     print("Dependencies {} are installed in R.".format(", ".join(all_install)))
 
 
+from scDesign3.tools.get_bpparam import get_bpparam
+from scDesign3.tools.lrt import perform_lrt
+from scDesign3.tools.plot import plot_reduceddim
+
 from ._core import scDesign3

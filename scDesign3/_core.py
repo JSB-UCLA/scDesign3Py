@@ -2,6 +2,7 @@ import itertools
 from typing import Literal, Optional, Union
 
 import anndata as ad
+import pandas as pd
 import rpy2.robjects as ro
 from rpy2.robjects import r
 from rpy2.robjects.packages import importr
@@ -77,79 +78,6 @@ class scDesign3:
         self.parallelization = parallelization
         self.n_cores = n_cores
         self.bpparam = _bpparamcheck(parallelization, bpparam)
-
-    # get_bpparam
-    @staticmethod
-    def get_bpparam(name=Literal["MulticoreParam", "SnowParam"], show=True, **kwargs):
-        """Get your parallelization parameters robject.
-
-        Check R function `BiocParallel::MulticoreParam` and `BiocParallel::SnowParam` for more informarion on how to set the parameters.
-
-        Arguments:
-        ----------
-        name: `str`
-            The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.
-
-        show: `bool` (default: True)
-            Whether to print the constructed onject information on the screen.
-        """
-
-        if name == "MulticoreParam":
-            para_list = [
-                "workers",
-                "tasks",
-                "stop_on_error",
-                "progressbar",
-                "RNGseed",
-                "timeout",
-                "exportglobals",
-                "log",
-                "threshold",
-                "logdir",
-                "resultdir",
-                "jobname",
-                "force_GC",
-                "fallback",
-                "manager_hostname",
-                "manager_port",
-            ]
-        elif name == "SnowParam":
-            para_list = [
-                "workers",
-                "type",
-                "tasks",
-                "stop_on_error",
-                "progressbar",
-                "RNGseed",
-                "timeout",
-                "exportglobals",
-                "exportvariables",
-                "log",
-                "threshold",
-                "logdir",
-                "resultdir",
-                "jobname",
-                "force_GC",
-                "fallback",
-                "manager_hostname",
-                "manager_port",
-            ]
-        else:
-            raise InputError("Currently only support MulticoreParam for linux/mac and SnowParam for windows.")
-
-        para_dict = {key: value for key, value in kwargs.items() if key in para_list}
-        if not para_dict:
-            raise InputError(
-                "Please check R document BiocParallel for argument details. https://www.bioconductor.org/packages/devel/bioc/manuals/BiocParallel/man/BiocParallel.pdf"
-            )
-        elif name == "MulticoreParam":
-            para_object = r("BiocParallel::MulticoreParam")(**para_dict)
-        elif name == "SnowParam":
-            para_object = r("BiocParallel::SnowParam")(**para_dict)
-
-        if show:
-            print(para_object)
-        return para_object
 
     # construct data
     @_typecheck(
@@ -505,9 +433,112 @@ class scDesign3:
 
         return self.fit_copula_res
 
-    @_typecheck()
-    def extract_para():
-        pass
+    @_typecheck(
+        data=Union[str, pd.DataFrame],
+        new_covariate=Union[str, pd.DataFrame],
+        marginal_list=Union[ro.vectors.ListVector, str],
+        family_use=Union[str, list],
+        n_cores=Union[int, str],
+        parallelization=str,
+        bpparam=Optional[Union[ro.methods.RS4, str]],
+    )
+    def extract_para(
+        self,
+        data: Union[str, pd.DataFrame] = "dat",
+        new_covariate: Union[str, pd.DataFrame] = "newCovariate",
+        marginal_list: ro.vectors.ListVector = "default",
+        family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
+        n_cores: int = "default",
+        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
+        bpparam: Optional[ro.methods.RS4] = "default",
+    ) -> ro.vectors.ListVector:
+        """Extract the parameters of each cell's distribution
+
+        This function generates parameter matricies which determine each cell's distribution
+
+        The function takes the new covariate (if use) from @construct_data and marginal models from @fit_marginal.
+
+        Arguments:
+        ----------
+        data: `str` or `pandas.DataFrame` (default: 'dat')
+            The data used for fitting the gene marginal models. Default is 'dat', use the @construct_data_res, 'dat' output.
+
+        new_covariate: `str` or `pandas.DataFrame` (default: 'newCovariate')
+            The new covariates to simulate new gene expression data using the gene marginal models. Default is 'newCovariate', use the @construct_data_res, 'newCovariate' output.
+
+        marginal_list: `rpy2.robject.vectors.ListVector` (default: 'default')
+            The result of @fit_marginal. Default is 'default', using the class property @fit_marginal_res.
+
+        family_use: `str` or `list[str]` (default: 'default')
+            A string or a list of strings of the marginal distribution. Must be one of 'binomial', 'poisson', 'nb', 'zip', 'zinb' or 'gaussian'. Default is 'default', use the class property @family_use.
+
+        n_cores: `int` (default: 'default')
+            The number of cores to use. Default is 'default', use the setting when initializing.
+
+        parallelization: `str` (default: 'default')
+            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
+
+        bpparam: `rpy2.robject.methods.RS4` (default: 'default')
+            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
+        """
+
+        # check what is data and new_covariate
+        try:
+            if data == "dat":
+                data = self.construct_data_res.rx2(data)
+            if new_covariate == "newCovariate":
+                new_covariate = self.construct_data_res.rx2(new_covariate)
+            ## if either is still a str
+            if isinstance(data, str) or isinstance(new_covariate, str):
+                raise InputError(
+                    "If data and new_covariate given as string, they must be part of the output of @construct_data_res"
+                )
+        except AttributeError:
+            raise SequentialError("Please first run @construct_data.")
+
+        if isinstance(data, pd.DataFrame):
+            with (ro.default_converter + ro.pandas2ri.converter).context():
+                data = ro.conversion.get_conversion().py2rpy(data)
+        if isinstance(new_covariate, pd.DataFrame):
+            with (ro.default_converter + ro.pandas2ri.converter).context():
+                new_covariate = ro.conversion.get_conversion().py2rpy(new_covariate)
+
+        # use fit marginal res
+        try:
+            if marginal_list == "default":
+                marginal_list = self.fit_marginal_res
+        except AttributeError:
+            raise SequentialError("Please first run @fit_marginal.")
+
+        # change other parameters to R form
+        if family_use == "default":
+            family_use = self.family_use
+        (family_use,) = _other2list(family_use)
+        (family_use,) = _strvec_none2ri(family_use)
+
+        # check parallelization parameter
+        if parallelization == "default":
+            parallelization = self.parallelization
+        if n_cores == "default":
+            n_cores = self.n_cores
+        if bpparam == "default":
+            bpparam = self.bpparam
+        else:
+            bpparam = _bpparamcheck(parallelization, bpparam)
+
+        self.model_paras = self._rscdesign.extract_para(
+            sce=self.sce,
+            assay_use=self.assay_use,
+            marginal_list=marginal_list,
+            family_use=family_use,
+            new_covariate=new_covariate,
+            data=data,
+            n_cores=n_cores,
+            parallelization=parallelization,
+            BPPARAM=bpparam,
+        )
+
+        return self.model_paras
 
     @_typecheck()
     def simu_new():
