@@ -11,8 +11,31 @@ from ._utils._format import _anndata2sce, _bpparamcheck, _other2list, _strvec_no
 
 
 class scDesign3:
-    def __init__(self) -> None:
+    @_typecheck(
+        n_cores=int,
+        parallelization=str,
+        bpparam=Optional[ro.methods.RS4],
+    )
+    def __init__(
+        self,
+        n_cores: int,
+        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "mcmapply",
+        bpparam: Optional[ro.methods.RS4] = None,
+    ) -> None:
         """
+
+        Arguments:
+        ----------
+        n_cores: `int`
+            The number of cores to use.
+
+        parallelization: `str` (default: 'mcmapply')
+            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam.
+
+        bpparam: `rpy2.robject.methods.RS4` (default: None)
+            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', remain default None.
+
+
         :sce:
             SingleCellExperiment R object changed from the given Anndata object
 
@@ -21,6 +44,18 @@ class scDesign3:
 
         :all_covar:
             All covariates (explainary variables) used to model gene expression pattern
+
+        :family_use:
+            The set marginal distribution of each gene.
+
+        :n_cores:
+            The number of cores used for model fitting.
+
+        :parallelization:
+            The parallelization method.
+
+        :bpparam:
+            If @parallelization is 'bpmapply', the corresponding R object to set the parallelization parameters.
 
         :construct_data_res:
             Result of calling @construct_data
@@ -39,6 +74,9 @@ class scDesign3:
         """
         # import r package
         self._rscdesign = importr("scDesign3")
+        self.parallelization = parallelization
+        self.n_cores = n_cores
+        self.bpparam = _bpparamcheck(parallelization, bpparam)
 
     # get_bpparam
     @staticmethod
@@ -125,7 +163,7 @@ class scDesign3:
         other_covariates=Optional[Union[str, list]],
         ncell=Optional[int],
         parallelization=str,
-        bpparam=Optional[ro.methods.RS4],
+        bpparam=Optional[Union[ro.methods.RS4, str]],
     )
     def construct_data(
         self,
@@ -138,8 +176,8 @@ class scDesign3:
         spatial: Optional[list[str]] = None,
         other_covariates: Optional[Union[str, list[str]]] = None,
         ncell: Optional[int] = None,
-        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "mcmapply",
-        bpparam: Optional[ro.methods.RS4] = None,
+        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
+        bpparam: Optional[ro.methods.RS4] = "default",
     ) -> ro.vectors.ListVector:
         """Construct the input data (covaraite matrix and expression matrix)
 
@@ -174,11 +212,11 @@ class scDesign3:
         ncell: `int` (default: None)
             The number of cell you want to simulate. Default is None, which means only the provided cells in the `anndata.AnnData` object will be used. If an arbitrary number is provided, the fucntion will use Vine Copula to simulate a new covaraite matrix.
 
-        parallelization: `str` (default: 'mcmapply')
-            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam.
+        parallelization: `str` (default: 'default')
+            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
 
-        bpparam: `rpy2.robject.methods.RS4` (default: None)
-            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', remain default None.
+        bpparam: `rpy2.robject.methods.RS4` (default: 'default')
+            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
         """
 
         # modify input
@@ -207,7 +245,12 @@ class scDesign3:
         )
 
         # check parallelization parameter
-        bpparam = _bpparamcheck(parallelization, bpparam)
+        if parallelization == "default":
+            parallelization = self.parallelization
+        if bpparam == "default":
+            bpparam = self.bpparam
+        else:
+            bpparam = _bpparamcheck(parallelization, bpparam)
 
         # Call scDesign3::construct_data
         self.construct_data_res = self._rscdesign.construct_data(
@@ -230,12 +273,12 @@ class scDesign3:
         mu_formula=str,
         sigma_formula=str,
         family_use=Union[str, list],
-        n_cores=int,
         usebam=bool,
-        data=Optional[ro.vectors.ListVector],
+        data=Union[ro.vectors.ListVector, str],
         predictor=str,
+        n_cores=Union[int, str],
         parallelization=str,
-        bpparam=Optional[ro.methods.RS4],
+        bpparam=Optional[Union[ro.methods.RS4, str]],
         trace=bool,
     )
     def fit_marginal(
@@ -243,12 +286,12 @@ class scDesign3:
         mu_formula: str,
         sigma_formula: str,
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]],
-        n_cores: int,
         usebam: bool,
-        data: Optional[ro.vectors.ListVector] = None,
+        data: ro.vectors.ListVector = "default",
         predictor: str = "gene",
-        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "mcmapply",
-        bpparam: Optional[ro.methods.RS4] = None,
+        n_cores: int = "default",
+        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
+        bpparam: Optional[ro.methods.RS4] = "default",
         trace: bool = False,
     ) -> ro.vectors.ListVector:
         """Fit the marginal models
@@ -268,23 +311,23 @@ class scDesign3:
         family_use: `str` or `list[str]`
             A string or a list of strings of the marginal distribution. Must be one of 'binomial', 'poisson', 'nb', 'zip', 'zinb' or 'gaussian', which represent 'poisson distribution', 'negative binomial distribution', 'zero-inflated poisson distribution', 'zero-inflated negative binomail distribution' and 'gaussian distribution' respectively.
 
-        n_cores: `int`
-            The number of cores to use.
-
         usebam: `bool`
             If True, call R function mgcv::bam for calculation acceleration.
 
-        data: `rpy2.robject.vectors.ListVector` (default: None)
-            The result of @construct_data. Default is None, using the class property @construct_data_res.
+        data: `rpy2.robject.vectors.ListVector` (default: 'default')
+            The result of @construct_data. Default is 'default', using the class property @construct_data_res.
 
         predictor: `str` (default: 'gene')
             A string of the predictor for the gam/gamlss model. This is essentially just a name.
 
-        parallelization: `str` (default: 'mcmapply')
-            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam.
+        n_cores: `int` (default: 'default')
+            The number of cores to use. Default is 'default', use the setting when initializing.
 
-        bpparam: `rpy2.robject.methods.RS4` (default: None)
-            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', remain default None.
+        parallelization: `str` (default: 'default')
+            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
+
+        bpparam: `rpy2.robject.methods.RS4` (default: 'default')
+            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
 
         trace: `bool` (default: False)
             If True, the warning/error log and runtime for gam/gamlss will be returned.
@@ -292,17 +335,25 @@ class scDesign3:
 
         # use constructed data
         try:
-            if data is None:
+            if data == "default":
                 data = self.construct_data_res
         except AttributeError:
             raise SequentialError("Please first run @construct_data.")
 
         # change other parameters to R form
+        self.family_use = family_use
         (family_use,) = _other2list(family_use)
         (family_use,) = _strvec_none2ri(family_use)
 
         # check parallelization parameter
-        bpparam = _bpparamcheck(parallelization, bpparam)
+        if parallelization == "default":
+            parallelization = self.parallelization
+        if n_cores == "default":
+            n_cores = self.n_cores
+        if bpparam == "default":
+            bpparam = self.bpparam
+        else:
+            bpparam = _bpparamcheck(parallelization, bpparam)
 
         self.fit_marginal_res = self._rscdesign.fit_marginal(
             data=data,
@@ -321,35 +372,35 @@ class scDesign3:
 
     # fit copula
     @_typecheck(
-        family_use=Union[str, list],
-        n_cores=int,
-        copula=str,
         input_data=str,
+        copula=str,
         empirical_quantile=bool,
-        marginal_list=Optional[ro.vectors.ListVector],
+        marginal_list=Union[ro.vectors.ListVector, str],
+        family_use=Union[str, list],
         dt=bool,
         pseudo_obs=bool,
         epsilon=float,
         family_set=Union[str, list],
         important_feature=Union[str, list],
+        n_cores=Union[int, str],
         parallelization=str,
-        bpparam=Optional[ro.methods.RS4],
+        bpparam=Optional[Union[ro.methods.RS4, str]],
     )
     def fit_copula(
         self,
-        family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]],
-        n_cores: int,
-        copula: Literal["gaussian", "vine"] = "gaussian",
         input_data: Literal["count_mat", "dat", "newCovariate"] = "dat",
+        copula: Literal["gaussian", "vine"] = "gaussian",
         empirical_quantile: bool = False,
-        marginal_list: Optional[ro.vectors.ListVector] = None,
+        marginal_list: ro.vectors.ListVector = "default",
+        family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
         dt: bool = True,
         pseudo_obs: bool = False,
         epsilon: float = 1e-6,
         family_set: Union[str, list[str]] = ["gaussian", "indep"],
         important_feature: Union[Literal["all", "auto"], list[bool]] = "all",
-        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "mcmapply",
-        bpparam: Optional[ro.methods.RS4] = None,
+        n_cores: int = "default",
+        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
+        bpparam: Optional[ro.methods.RS4] = "default",
     ) -> ro.vectors.ListVector:
         """Fit the copula model
 
@@ -359,23 +410,20 @@ class scDesign3:
 
         Arguments:
         ----------
-        family_use: `str` or `list[str]`
-            A string or a list of strings of the marginal distribution. Must be one of 'binomial', 'poisson', 'nb', 'zip', 'zinb' or 'gaussian'.
-
-        n_cores: `int`
-            The number of cores to use.
+        input_data: `str` (default: 'dat')
+            One of the output of @construct_data, only need to specify the name.
 
         copula: `str` (default: 'gaussian')
             A string of the copula choice. Must be one of 'gaussian' or 'vine'. Note that vine copula may have better modeling of high-dimensions, but can be very slow when features are >1000.
 
-        input_data: `str` (default: 'dat')
-            One of the output of @construct_data, only need to specify the name.
-
         empirical_quantile: `bool` (default: False)
             Please only use it if you clearly know what will happen! If True, DO NOT fit the copula and use the EMPIRICAL CDF values of the original data; it will make the simulated data fixed (no randomness). Only works if ncell is the same as your original data.
 
-        marginal_list: `rpy2.robject.vectors.ListVector` (default: None)
-            The result of @fit_marginal. Default is None, using the class property @fit_marginal_res.
+        marginal_list: `rpy2.robject.vectors.ListVector` (default: 'default')
+            The result of @fit_marginal. Default is 'default', using the class property @fit_marginal_res.
+
+        family_use: `str` or `list[str]` (default: 'default')
+            A string or a list of strings of the marginal distribution. Must be one of 'binomial', 'poisson', 'nb', 'zip', 'zinb' or 'gaussian'. Default is 'default', use the class property @family_use.
 
         dt: `bool` (default: True)
             If True, perform the distributional transformation to make the discrete data continuous. This is useful for discrete distributions (e.g., Poisson, NB). Note that for continuous data (e.g., Gaussian), DT does not make sense and should be set as False.
@@ -392,19 +440,31 @@ class scDesign3:
         important_feature: `str` or `list[bool]` (default: 'all')
             A string or list which indicates whether a gene will be used in correlation estimation or not. If this is a string, then this string must be either "all" (using all genes) or "auto", which indicates that the genes will be automatically selected based on the proportion of zero expression across cells for each gene. Gene with zero proportion greater than 0.8 will be excluded form gene-gene correlation estimation. If this is a list, then this should be a logical vector with length equal to the number of genes in @sce. True in the logical vector means the corresponding gene will be included in gene-gene correlation estimation and False in the logical vector means the corresponding gene will be excluded from the gene-gene correlation estimation.
 
-        parallelization: `str` (default: 'mcmapply')
-            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam.
+        n_cores: `int` (default: 'default')
+            The number of cores to use. Default is 'default', use the setting when initializing.
 
-        bpparam: `rpy2.robject.methods.RS4` (default: None)
-            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', remain default None.
+        parallelization: `str` (default: 'default')
+            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
+
+        bpparam: `rpy2.robject.methods.RS4` (default: 'default')
+            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
         """
 
         # change other parameters to R form
+        if family_use == "default":
+            family_use = self.family_use
         family_use, family_set = _other2list(family_use, family_set)
         family_use, family_set = _strvec_none2ri(family_use, family_set)
 
         # check parallelization parameter
-        bpparam = _bpparamcheck(parallelization, bpparam)
+        if parallelization == "default":
+            parallelization = self.parallelization
+        if n_cores == "default":
+            n_cores = self.n_cores
+        if bpparam == "default":
+            bpparam = self.bpparam
+        else:
+            bpparam = _bpparamcheck(parallelization, bpparam)
 
         # check important feature
         if isinstance(important_feature, list):
@@ -420,7 +480,7 @@ class scDesign3:
 
         # use fit marginal res
         try:
-            if marginal_list is None:
+            if marginal_list == "default":
                 marginal_list = self.fit_marginal_res
         except AttributeError:
             raise SequentialError("Please first run @fit_marginal.")
@@ -451,4 +511,8 @@ class scDesign3:
 
     @_typecheck()
     def simu_new():
+        pass
+
+    @_typecheck()
+    def run_pipeline():
         pass
