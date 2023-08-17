@@ -406,6 +406,8 @@ res = compare.style.applymap(set_cell_color)
 
 ### 2.6. matplotlib 相关
 
+[matplotib 颜色](https://matplotlib.org/stable/tutorials/colors/colormaps.html#lightness-of-matplotlib-colormaps)
+
 #### 2.6.1. 子图作图
 
 - `fig, axes = plt.subplots(a, b, figsize=(b * 5, a * 5))`得到一张有 n 张子图的一个大图，通过前两个参数将整个大图分割成 $a \times b$个子图，通过`figsize`相当于得到每个子图的大小，但是要注意参数是反过来的

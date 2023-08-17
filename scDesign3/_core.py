@@ -2,9 +2,10 @@ import itertools
 from typing import Literal, Optional, Union
 
 import anndata as ad
+import numpy as np
 import pandas as pd
 import rpy2.robjects as ro
-from rpy2.robjects import r
+from rpy2.robjects import NULL, r
 from rpy2.robjects.packages import importr
 
 from ._utils._errors import InputError, SequentialError
@@ -25,7 +26,7 @@ class scDesign3:
     ) -> None:
         """
 
-        Arguments:
+        Properties:
         ----------
         n_cores: `int`
             The number of cores to use.
@@ -144,7 +145,7 @@ class scDesign3:
             The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
 
         bpparam: `rpy2.robject.methods.RS4` (default: 'default')
-            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
+            If @parallelization is 'bpmapply', first call function @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
         """
 
         # modify input
@@ -255,7 +256,7 @@ class scDesign3:
             The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
 
         bpparam: `rpy2.robject.methods.RS4` (default: 'default')
-            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
+            If @parallelization is 'bpmapply', first call function @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
 
         trace: `bool` (default: False)
             If True, the warning/error log and runtime for gam/gamlss will be returned.
@@ -375,8 +376,15 @@ class scDesign3:
             The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
 
         bpparam: `rpy2.robject.methods.RS4` (default: 'default')
-            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
+            If @parallelization is 'bpmapply', first call function @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
         """
+
+        # check sce and assay use
+        try:
+            sce = self.sce
+            assay_use = self.assay_use
+        except AttributeError:
+            raise SequentialError("Please run @construct_data first to get the R sce object.")
 
         # change other parameters to R form
         if family_use == "default":
@@ -414,8 +422,8 @@ class scDesign3:
             raise SequentialError("Please first run @fit_marginal.")
 
         self.fit_copula_res = self._rscdesign.fit_copula(
-            sce=self.sce,
-            assay_use=self.assay_use,
+            sce=sce,
+            assay_use=assay_use,
             input_data=input_data,
             empirical_quantile=empirical_quantile,
             marginal_list=marginal_list,
@@ -444,8 +452,8 @@ class scDesign3:
     )
     def extract_para(
         self,
-        data: Union[str, pd.DataFrame] = "dat",
-        new_covariate: Union[str, pd.DataFrame] = "newCovariate",
+        data: pd.DataFrame = "dat",
+        new_covariate: pd.DataFrame = "newCovariate",
         marginal_list: ro.vectors.ListVector = "default",
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
         n_cores: int = "default",
@@ -479,8 +487,15 @@ class scDesign3:
             The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
 
         bpparam: `rpy2.robject.methods.RS4` (default: 'default')
-            If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
+            If @parallelization is 'bpmapply', first call function @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
         """
+
+        # check sce and assay use
+        try:
+            sce = self.sce
+            assay_use = self.assay_use
+        except AttributeError:
+            raise SequentialError("Please run @construct_data first to get the R sce object.")
 
         # check what is data and new_covariate
         try:
@@ -488,19 +503,13 @@ class scDesign3:
                 data = self.construct_data_res.rx2(data)
             if new_covariate == "newCovariate":
                 new_covariate = self.construct_data_res.rx2(new_covariate)
-            ## if either is still a str
-            if isinstance(data, str) or isinstance(new_covariate, str):
-                raise InputError(
-                    "If data and new_covariate given as string, they must be part of the output of @construct_data_res"
-                )
         except AttributeError:
             raise SequentialError("Please first run @construct_data.")
 
-        if isinstance(data, pd.DataFrame):
-            with (ro.default_converter + ro.pandas2ri.converter).context():
+        with (ro.default_converter + ro.pandas2ri.converter).context():
+            if isinstance(data, pd.DataFrame):
                 data = ro.conversion.get_conversion().py2rpy(data)
-        if isinstance(new_covariate, pd.DataFrame):
-            with (ro.default_converter + ro.pandas2ri.converter).context():
+            if isinstance(new_covariate, pd.DataFrame):
                 new_covariate = ro.conversion.get_conversion().py2rpy(new_covariate)
 
         # use fit marginal res
@@ -527,8 +536,8 @@ class scDesign3:
             bpparam = _bpparamcheck(parallelization, bpparam)
 
         self.model_paras = self._rscdesign.extract_para(
-            sce=self.sce,
-            assay_use=self.assay_use,
+            sce=sce,
+            assay_use=assay_use,
             marginal_list=marginal_list,
             family_use=family_use,
             new_covariate=new_covariate,
@@ -540,10 +549,193 @@ class scDesign3:
 
         return self.model_paras
 
-    @_typecheck()
-    def simu_new():
-        pass
+    @_typecheck(
+        mean_mat=Union[str, np.ndarray],
+        sigma_mat=Union[str, np.ndarray],
+        zero_mat=Union[str, np.ndarray],
+        quantile_mat=Optional[np.ndarray],
+        copula_list=Union[ro.vectors.ListVector, str, None],
+        data=Union[str, pd.DataFrame],
+        new_covariate=Union[str, pd.DataFrame],
+        family_use=Union[str, list],
+        important_feature=Union[str, list],
+        fastmvn=bool,
+        nonnegative=bool,
+        nonzerovar=bool,
+        n_cores=Union[int, str],
+        parallelization=str,
+        bpparam=Optional[Union[ro.methods.RS4, str]],
+    )
+    def simu_new(
+        self,
+        mean_mat: np.ndarray = "mean_mat",
+        sigma_mat: np.ndarray = "sigma_mat",
+        zero_mat: np.ndarray = "zero_mat",
+        quantile_mat: Optional[np.ndarray] = None,
+        copula_list: Optional[ro.vectors.ListVector] = "default",
+        data: pd.DataFrame = "dat",
+        new_covariate: pd.DataFrame = "newCovariate",
+        family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
+        important_feature: Union[Literal["all", "auto"], list[bool]] = "all",
+        fastmvn: bool = False,
+        nonnegative: bool = True,
+        nonzerovar: bool = False,
+        n_cores: int = "default",
+        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
+        bpparam: Optional[ro.methods.RS4] = "default",
+    ):
+        """Simulate new data
+
+        Generate new simulated data based on fitted marginal and copula models.
+
+        The function takes the new covariate (if use) from @construct_data, parameter matricies from @extract_para and multivariate Unifs from @fit_copula.
+
+        Arguments:
+        ----------
+        mean_mat: `numpy.ndarray` (default: 'mean_mat')
+            A matrix of the mean parameter. Default is 'mean_mat', use the @model_paras, mean_mat output.
+
+        sigma_mat: `numpy.ndarray` (default: 'sigma_mat')
+            A matrix of the sigma parameter. Default is 'sigma_mat', use the @model_paras, sigma_mat output.
+
+        zero_mat: `numpy.ndarray` (default: 'zero_mat')
+            A matrix of the zero-inflation parameter. Default is 'zero_mat', use the @model_paras, zero_mat output.
+
+        quantile_mat: `numpy.ndarray` (default: None)
+            A matrix of the multivariate quantile. Default is None, if parameter @copula_list is provided.
+
+        copula_list: `rpy2.robject.vectors.ListVector` (default: 'default')
+            Copulas for generating the multivariate quantile matrix. Default is 'default', use the @fit_copula_res, copula_list output.
+
+        data: `str` or `pandas.DataFrame` (default: 'dat')
+            An input count matrix. Default is 'dat', use the @construct_data_res, 'dat' output.
+
+        new_covariate: `str` or `pandas.DataFrame` (default: 'newCovariate')
+            A dataframe which contains covariates of targeted simulated data from @construct_data. Default is 'newCovariate', use the @construct_data_res, 'newCovariate' output.
+
+        family_use: `str` or `list[str]` (default: 'default')
+            A string or a list of strings of the marginal distribution. Must be one of 'binomial', 'poisson', 'nb', 'zip', 'zinb' or 'gaussian'. Default is 'default', use the class property @family_use.
+
+        important_feature: `str` or `list[bool]` (default: 'all')
+            A string or list which indicates whether a gene will be used in correlation estimation or not. If this is a string, then this string must be either "all" (using all genes) or "auto", which indicates that the genes will be automatically selected based on the proportion of zero expression across cells for each gene. Gene with zero proportion greater than 0.8 will be excluded form gene-gene correlation estimation. If this is a list, then this should be a logical vector with length equal to the number of genes in @sce. True in the logical vector means the corresponding gene will be included in gene-gene correlation estimation and False in the logical vector means the corresponding gene will be excluded from the gene-gene correlation estimation.
+
+        fastmvn: `bool` (default: False)
+            If True, the sampling of multivariate Gaussian is done by R function mvnfast, otherwise by R function mvtnorm.
+
+        nonnegative: `bool` (default: True)
+            If True, values < 0 in the synthetic data will be converted to 0. Default is True, since the expression matrix is nonnegative.
+
+        nonzerovar: `bool` (default: False)
+            If True, for any gene with zero variance, a cell will be replaced with 1. This is designed for avoiding potential errors, for example, PCA.
+
+        n_cores: `int` (default: 'default')
+            The number of cores to use. Default is 'default', use the setting when initializing.
+
+        parallelization: `str` (default: 'default')
+            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
+
+        bpparam: `rpy2.robject.methods.RS4` (default: 'default')
+            If @parallelization is 'bpmapply', first call function @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing
+        """
+        # check what is data and new_covariate
+        try:
+            if data == "dat":
+                data = self.construct_data_res.rx2(data)
+            if new_covariate == "newCovariate":
+                new_covariate = self.construct_data_res.rx2(new_covariate)
+        except AttributeError:
+            raise SequentialError("Please first run @construct_data.")
+
+        with (ro.default_converter + ro.pandas2ri.converter).context():
+            if isinstance(data, pd.DataFrame):
+                data = ro.conversion.get_conversion().py2rpy(data)
+            if isinstance(new_covariate, pd.DataFrame):
+                new_covariate = ro.conversion.get_conversion().py2rpy(new_covariate)
+
+        # check the matrix
+        try:
+            if mean_mat == "mean_mat":
+                mean_mat = self.model_paras.rx2(mean_mat)
+            if sigma_mat == "sigma_mat":
+                sigma_mat = self.model_paras.rx2(sigma_mat)
+            if zero_mat == "zero_mat":
+                zero_mat = self.model_paras.rx2(zero_mat)
+        except AttributeError:
+            raise SequentialError("Please first run @extract_para.")
+
+        with (ro.default_converter + ro.numpy2ri.converter).context():
+            if isinstance(mean_mat, np.ndarray):
+                mean_mat = ro.conversion.get_conversion().py2rpy(mean_mat)
+            if isinstance(sigma_mat, np.ndarray):
+                sigma_mat = ro.conversion.get_conversion().py2rpy(sigma_mat)
+            if isinstance(zero_mat, np.ndarray):
+                zero_mat = ro.conversion.get_conversion().py2rpy(zero_mat)
+
+        # check the copula lists
+        if quantile_mat is None:
+            quantile_mat = NULL
+        else:
+            with (ro.default_converter + ro.numpy2ri.converter).context():
+                quantile_mat = ro.conversion.get_conversion().py2rpy(quantile_mat)
+        if copula_list == "default":
+            try:
+                copula_list = self.fit_copula_res.rx2("copula_list")
+            except AttributeError:
+                raise SequentialError("Please first run @fit_copula.")
+        elif copula_list is None:
+            copula_list = NULL
+
+        # check sce and assay use
+        try:
+            sce = self.sce
+            assay_use = self.assay_use
+        except AttributeError:
+            raise SequentialError("Please run @construct_data first to get the R sce object.")
+
+        # change other parameters to R form
+        if family_use == "default":
+            family_use = self.family_use
+        (family_use,) = _other2list(family_use)
+        (family_use,) = _strvec_none2ri(family_use)
+
+        # check important feature
+        if isinstance(important_feature, list):
+            important_feature = ro.vectors.BoolVector(important_feature)
+        elif not (important_feature == "all" or important_feature == "auto"):
+            raise InputError("important_feature should be 'all', 'auto', or a list.")
+
+        # check parallelization parameter
+        if parallelization == "default":
+            parallelization = self.parallelization
+        if n_cores == "default":
+            n_cores = self.n_cores
+        if bpparam == "default":
+            bpparam = self.bpparam
+        else:
+            bpparam = _bpparamcheck(parallelization, bpparam)
+
+        self.simu_res = self._rscdesign.simu_new(
+            sce=sce,
+            assay_use=assay_use,
+            mean_mat=mean_mat,
+            sigma_mat=sigma_mat,
+            zero_mat=zero_mat,
+            quantile_mat=quantile_mat,
+            copula_list=copula_list,
+            family_use=family_use,
+            fastmvn=fastmvn,
+            nonnegative=nonnegative,
+            nonzerovar=nonzerovar,
+            input_data=data,
+            new_covariate=new_covariate,
+            important_feature=important_feature,
+            n_cores=n_cores,
+            parallelization=parallelization,
+            BPPARAM=bpparam,
+        )
+
+        return self.simu_res
 
     @_typecheck()
-    def run_pipeline():
+    def whole_pipeline():
         pass
