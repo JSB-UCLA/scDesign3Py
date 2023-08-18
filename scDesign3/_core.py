@@ -26,7 +26,7 @@ class scDesign3:
     ) -> None:
         """
 
-        Properties:
+        Arguments:
         ----------
         n_cores: `int`
             The number of cores to use.
@@ -38,6 +38,8 @@ class scDesign3:
             If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', remain default None.
 
 
+        Properties:
+        ----------
         :sce:
             SingleCellExperiment R object changed from the given Anndata object
 
@@ -73,6 +75,9 @@ class scDesign3:
 
         :simu_res:
             Result of calling @simu_new
+
+        :whole_pipeline_res:
+            Result of calling @whole_pipeline
         """
         # import r package
         self._rscdesign = importr("scDesign3")
@@ -90,7 +95,7 @@ class scDesign3:
         pseudotime=Optional[Union[str, list]],
         spatial=Optional[list],
         other_covariates=Optional[Union[str, list]],
-        ncell=Optional[int],
+        ncell=Union[int, str],
         parallelization=str,
         bpparam=Optional[Union[ro.methods.RS4, str]],
     )
@@ -104,7 +109,7 @@ class scDesign3:
         pseudotime: Optional[Union[str, list[str]]] = None,
         spatial: Optional[list[str]] = None,
         other_covariates: Optional[Union[str, list[str]]] = None,
-        ncell: Optional[int] = None,
+        ncell: int = "default",
         parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
         bpparam: Optional[ro.methods.RS4] = "default",
     ) -> ro.vectors.ListVector:
@@ -129,6 +134,9 @@ class scDesign3:
             Specified only when @assay_use is None. Asign a name to your default single cell experiment.get_bpparamone)
             The name of cell type variable in the `anndata.AnnData.obs`.
 
+        celltype: `str` (default: None)
+            The name of cell type variable in the `anndata.AnnData.obs`.
+
         pseudotime: `str` or `list[str]` (default: None)
             The name of pseudotime and (if exist) multiple lineages in the `anndata.AnnData.obs`.
 
@@ -138,8 +146,8 @@ class scDesign3:
         other_covariates: `str` or `list[str]` (default: None)
             The other covaraites you want to include in the data.
 
-        ncell: `int` (default: None)
-            The number of cell you want to simulate. Default is None, which means only the provided cells in the `anndata.AnnData` object will be used. If an arbitrary number is provided, the fucntion will use Vine Copula to simulate a new covaraite matrix.
+        ncell: `int` (default: 'default')
+            The number of cell you want to simulate. Default is 'default', which means only the provided cells in the `anndata.AnnData` object will be used. If an arbitrary number is provided, the fucntion will use Vine Copula to simulate a new covaraite matrix.
 
         parallelization: `str` (default: 'default')
             The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
@@ -153,7 +161,7 @@ class scDesign3:
             corr_by, celltype, pseudotime, other_covariates
         )
 
-        if ncell is None:
+        if ncell == "default":
             ncell = anndata.n_obs
 
         self.all_covar = list(itertools.chain(*filter(None, [celltype, pseudotime, spatial, other_covariates])))
@@ -555,7 +563,7 @@ class scDesign3:
         zero_mat=Union[str, np.ndarray],
         quantile_mat=Optional[np.ndarray],
         copula_list=Union[ro.vectors.ListVector, str, None],
-        data=Union[str, pd.DataFrame],
+        input_data=Union[str, pd.DataFrame],
         new_covariate=Union[str, pd.DataFrame],
         family_use=Union[str, list],
         important_feature=Union[str, list],
@@ -573,7 +581,7 @@ class scDesign3:
         zero_mat: np.ndarray = "zero_mat",
         quantile_mat: Optional[np.ndarray] = None,
         copula_list: Optional[ro.vectors.ListVector] = "default",
-        data: pd.DataFrame = "dat",
+        input_data: pd.DataFrame = "dat",
         new_covariate: pd.DataFrame = "newCovariate",
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
         important_feature: Union[Literal["all", "auto"], list[bool]] = "all",
@@ -583,7 +591,7 @@ class scDesign3:
         n_cores: int = "default",
         parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
         bpparam: Optional[ro.methods.RS4] = "default",
-    ):
+    ) -> ro.vectors.FloatMatrix:
         """Simulate new data
 
         Generate new simulated data based on fitted marginal and copula models.
@@ -639,16 +647,16 @@ class scDesign3:
         """
         # check what is data and new_covariate
         try:
-            if data == "dat":
-                data = self.construct_data_res.rx2(data)
+            if input_data == "dat":
+                input_data = self.construct_data_res.rx2(input_data)
             if new_covariate == "newCovariate":
                 new_covariate = self.construct_data_res.rx2(new_covariate)
         except AttributeError:
             raise SequentialError("Please first run @construct_data.")
 
         with (ro.default_converter + ro.pandas2ri.converter).context():
-            if isinstance(data, pd.DataFrame):
-                data = ro.conversion.get_conversion().py2rpy(data)
+            if isinstance(input_data, pd.DataFrame):
+                input_data = ro.conversion.get_conversion().py2rpy(input_data)
             if isinstance(new_covariate, pd.DataFrame):
                 new_covariate = ro.conversion.get_conversion().py2rpy(new_covariate)
 
@@ -726,7 +734,7 @@ class scDesign3:
             fastmvn=fastmvn,
             nonnegative=nonnegative,
             nonzerovar=nonzerovar,
-            input_data=data,
+            input_data=input_data,
             new_covariate=new_covariate,
             important_feature=important_feature,
             n_cores=n_cores,
@@ -736,6 +744,221 @@ class scDesign3:
 
         return self.simu_res
 
-    @_typecheck()
-    def whole_pipeline():
-        pass
+    @_typecheck(
+        anndata=ad.AnnData,
+        corr_formula=Union[str, list],
+        mu_formula=str,
+        sigma_formula=str,
+        family_use=Union[str, list],
+        usebam=bool,
+        assay_use=Optional[str],
+        default_assay_name=Optional[str],
+        celltype=Optional[str],
+        pseudotime=Optional[Union[str, list]],
+        spatial=Optional[list],
+        other_covariates=Optional[Union[str, list]],
+        ncell=Union[int, str],
+        copula=str,
+        empirical_quantile=bool,
+        family_set=Union[str, list],
+        important_feature=Union[str, list],
+        dt=bool,
+        pseudo_obs=bool,
+        fastmvn=bool,
+        nonnegative=bool,
+        nonzerovar=bool,
+        return_model=bool,
+        n_cores=Union[int, str],
+        parallelization=str,
+        bpparam=Optional[Union[ro.methods.RS4, str]],
+        trace=bool,
+    )
+    def whole_pipeline(
+        self,
+        anndata: ad.AnnData,
+        corr_formula: Union[str, list[str]],
+        mu_formula: str,
+        sigma_formula: str,
+        family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]],
+        usebam: bool,
+        assay_use: Optional[str] = None,
+        default_assay_name: Optional[str] = None,
+        celltype: Optional[str] = None,
+        pseudotime: Optional[Union[str, list[str]]] = None,
+        spatial: Optional[list[str]] = None,
+        other_covariates: Optional[Union[str, list[str]]] = None,
+        ncell: int = "default",
+        copula: Literal["gaussian", "vine"] = "gaussian",
+        empirical_quantile: bool = False,
+        family_set: Union[str, list[str]] = ["gaussian", "indep"],
+        important_feature: Union[Literal["all", "auto"], list[bool]] = "all",
+        dt: bool = True,
+        pseudo_obs: bool = False,
+        fastmvn: bool = False,
+        nonnegative: bool = True,
+        nonzerovar: bool = False,
+        return_model: bool = False,
+        n_cores: int = "default",
+        parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
+        bpparam: Optional[ro.methods.RS4] = "default",
+        trace: bool = False,
+    ) -> ro.vectors.ListVector:
+        """The wrapper for the whole scDesign3 pipeline
+
+        Arguments:
+        ----------
+        anndata: `anndata.AnnData`
+            `anndata.AnnData` object to store the single cell experiment information.
+
+        corr_formula: `str` or `list[str]`
+            Indicates the groups for correlation structure. If '1', all cells have one estimated corr. If 'ind', no corr (features are independent). If others, this variable decides the corr structures.
+
+        assay_use: `str` (default: None)
+            Indicates the assay you will use. If None, please specify a name for the assay stored in `anndata.AnnData.X` in @default_assay_name.
+
+        default_assay_name: `str` (default: None)
+            Specified only when @assay_use is None. Asign a name to your default single cell experiment.get_bpparamone)
+            The name of cell type variable in the `anndata.AnnData.obs`.
+
+        celltype: `str` (default: None)
+            The name of cell type variable in the `anndata.AnnData.obs`.
+
+        pseudotime: `str` or `list[str]` (default: None)
+            The name of pseudotime and (if exist) multiple lineages in the `anndata.AnnData.obs`.
+
+        spatial: `list[str]` (default: None)
+            The names of spatial coordinates in the `anndata.AnnData.obs`.
+
+        other_covariates: `str` or `list[str]` (default: None)
+            The other covaraites you want to include in the data.
+
+        ncell: `int` (default: 'default')
+            The number of cell you want to simulate. Default is 'default', which means only the provided cells in the `anndata.AnnData` object will be used. If an arbitrary number is provided, the fucntion will use Vine Copula to simulate a new covaraite matrix.
+
+        mu_formula: `str`
+            A string of the mu parameter formula
+
+        sigma_formula: `str`
+            A string of the sigma parameter formula
+
+        family_use: `str` or `list[str]`
+            A string or a list of strings of the marginal distribution. Must be one of 'binomial', 'poisson', 'nb', 'zip', 'zinb' or 'gaussian', which represent 'poisson distribution', 'negative binomial distribution', 'zero-inflated poisson distribution', 'zero-inflated negative binomail distribution' and 'gaussian distribution' respectively.
+
+        usebam: `bool`
+            If True, call R function mgcv::bam for calculation acceleration.
+
+        copula: `str` (default: 'gaussian')
+            A string of the copula choice. Must be one of 'gaussian' or 'vine'. Note that vine copula may have better modeling of high-dimensions, but can be very slow when features are >1000.
+
+        empirical_quantile: `bool` (default: False)
+            Please only use it if you clearly know what will happen! If True, DO NOT fit the copula and use the EMPIRICAL CDF values of the original data; it will make the simulated data fixed (no randomness). Only works if ncell is the same as your original data.
+
+        family_set: `str` or `list[str]` (default: ['gaussian', 'indep'])
+            A string or a string list of the bivariate copula families.
+
+        important_feature: `str` or `list[bool]` (default: 'all')
+            A string or list which indicates whether a gene will be used in correlation estimation or not. If this is a string, then this string must be either "all" (using all genes) or "auto", which indicates that the genes will be automatically selected based on the proportion of zero expression across cells for each gene. Gene with zero proportion greater than 0.8 will be excluded form gene-gene correlation estimation. If this is a list, then this should be a logical vector with length equal to the number of genes in @sce. True in the logical vector means the corresponding gene will be included in gene-gene correlation estimation and False in the logical vector means the corresponding gene will be excluded from the gene-gene correlation estimation.
+
+        dt: `bool` (default: True)
+            If True, perform the distributional transformation to make the discrete data continuous. This is useful for discrete distributions (e.g., Poisson, NB). Note that for continuous data (e.g., Gaussian), DT does not make sense and should be set as False.
+
+        pseudo_obs: `bool` (default: False)
+            If True, use the empirical quantiles instead of theoretical quantiles for fitting copula.
+
+        fastmvn: `bool` (default: False)
+            If True, the sampling of multivariate Gaussian is done by R function mvnfast, otherwise by R function mvtnorm.
+
+        nonnegative: `bool` (default: True)
+            If True, values < 0 in the synthetic data will be converted to 0. Default is True, since the expression matrix is nonnegative.
+
+        nonzerovar: `bool` (default: False)
+            If True, for any gene with zero variance, a cell will be replaced with 1. This is designed for avoiding potential errors, for example, PCA.
+
+        return_model: `bool` (default: False)
+            If True, the marginal models and copula models will be returned.
+
+        n_cores: `int` (default: 'default')
+            The number of cores to use. Default is 'default', use the setting when initializing.
+
+        parallelization: `str` (default: 'default')
+            The specific parallelization function to use. If 'bpmapply', first call method @get_bpparam. Default is 'default', use the setting when initializing.
+
+        bpparam: `rpy2.robject.methods.RS4` (default: 'default')
+            If @parallelization is 'bpmapply', first call function @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', it should be None. Default is 'default', use the setting when initializing.
+
+        trace: `bool` (default: False)
+            If True, the warning/error log and runtime for gam/gamlss will be returned.
+
+        """
+        # modify input
+        self.family_use = family_use
+        corr_formula, celltype, pseudotime, other_covariates, family_use, family_set = _other2list(
+            corr_formula, celltype, pseudotime, other_covariates, family_use, family_set
+        )
+
+        if ncell == "default":
+            ncell = anndata.n_obs
+
+        self.all_covar = list(itertools.chain(*filter(None, [celltype, pseudotime, spatial, other_covariates])))
+        if not self.all_covar:
+            raise InputError("At least one covariate should be specified.")
+
+        # Construct R SingleCellExperiment object
+        self.sce, self.assay_use = _anndata2sce(
+            data=anndata,
+            assay_use=assay_use,
+            default_assay_name=default_assay_name,
+            covar=self.all_covar,
+        )
+
+        # change other parameters to R form
+        celltype, pseudotime, spatial, other_covariates, corr_formula, family_use, family_set = _strvec_none2ri(
+            celltype, pseudotime, spatial, other_covariates, corr_formula, family_use, family_set
+        )
+
+        # check important feature
+        if isinstance(important_feature, list):
+            important_feature = ro.vectors.BoolVector(important_feature)
+        elif not (important_feature == "all" or important_feature == "auto"):
+            raise InputError("important_feature should be 'all', 'auto', or a list.")
+
+        # check parallelization parameter
+        if parallelization == "default":
+            parallelization = self.parallelization
+        if n_cores == "default":
+            n_cores = self.n_cores
+        if bpparam == "default":
+            bpparam = self.bpparam
+        else:
+            bpparam = _bpparamcheck(parallelization, bpparam)
+
+        self.whole_pipeline_res = self._rscdesign.scdesign3(
+            sce=self.sce,
+            assay_use=self.assay_use,
+            corr_formula=corr_formula,
+            celltype=celltype,
+            pseudotime=pseudotime,
+            spatial=spatial,
+            other_covariates=other_covariates,
+            ncell=ncell,
+            mu_formula=mu_formula,
+            sigma_formula=sigma_formula,
+            family_use=family_use,
+            usebam=usebam,
+            empirical_quantile=empirical_quantile,
+            copula=copula,
+            fastmvn=fastmvn,
+            DT=dt,
+            pseudo_obs=pseudo_obs,
+            family_set=family_set,
+            important_feature=important_feature,
+            nonnegative=nonnegative,
+            nonzerovar=nonzerovar,
+            return_model=return_model,
+            n_cores=n_cores,
+            parallelization=parallelization,
+            BPPARAM=bpparam,
+            trace=trace,
+        )
+
+        return self.whole_pipeline_res
