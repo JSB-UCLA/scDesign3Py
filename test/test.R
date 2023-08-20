@@ -83,3 +83,15 @@ newcount <- simu_new(
   important_feature = copula$important_feature
 )
 newcount
+
+whole <- scdesign3(sce = sce, corr_formula = "1",
+                   celltype = "cell_type",
+                   spatial = c("spatial1", "spatial2"),
+                   pseudotime = NULL,
+                   other_covariates = NULL,mu_formula = "s(spatial1,spatial2,bs='gp',k=2)",
+                   sigma_formula = "1",
+                   family_use = "nb",
+                   n_cores = 1,
+                   usebam = FALSE,
+                   return_model = TRUE)
+whole

@@ -8,7 +8,8 @@
     - [2.2.2. 查看当前的 R 环境](#222-查看当前的-r-环境)
     - [2.2.3. `rpy2.robjects.r`函数](#223-rpy2robjectsr函数)
     - [2.2.4. `rpy2.robjects.packages`函数](#224-rpy2robjectspackages函数)
-    - [2.2.5. `rpy2.robjects.converter`相关函数](#225-rpy2robjectsconverter相关函数)
+    - [2.2.5. python 与 R 之间的类型转换](#225-python-与-r-之间的类型转换)
+      - [2.2.5.1. `rpy2.robjects.converter`相关函数](#2251-rpy2robjectsconverter相关函数)
   - [2.3. R 相关](#23-r-相关)
     - [2.3.1. 经验](#231-经验)
     - [2.3.2. API](#232-api)
@@ -75,8 +76,9 @@
     - 建议`fit_marginal`时间不要转换成 numeric，转换之后就没有办法看出真实的时间了，特别是运行时间超过 1 min 的时候
     - 挑选了全实验中 RMSE 最大的 20 个基因作为研究对象，因为感觉这些基因总体的预测难度会比较大
 
-- [ ] 完成一个从 R list 转换成 python dict 的函数作为 interface，则只要留一个 return 的 API，如果有需要就转换成 python dict 的形式
-- [ ] scDesign 最后是一个类，各个数据以类属性的方式继承，默认这些类属性都是不可修改的，并且就保留着 Rdata 的形式
+- [x] 完成一个从 R list 转换成 python dict 的函数作为 interface，则只要留一个 return 的 API，如果有需要就转换成 python dict 的形式
+- [x] scDesign 最后是一个类，各个数据以类属性的方式继承，默认这些类属性都是不可修改的，并且就保留着 Rdata 的形式
+- [ ] 如何返回带行列名的 Matrix，以及把 dict 对象的转换要搞明白
 
 ---
 
@@ -144,23 +146,27 @@ print(lm(ro.Formula('y~x'),data=data))
 print(r.lm(ro.Formula('y~x'),data=data))
 ```
 
-3. 从 R 拿到的函数一般要用 R 对象（即经过 rpy2 处理过后，从 python 对象变为 r 对象）作为输入才能进行调用，拿到的结果也是 R 对象，如果有必要再手动转换为 python 对象。
-   - `str`对象是直接兼容的，但是返回的`str`对象也是封装在`np.array`中的；`bool`对象也是直接兼容的，返回的对象封装在 BoolVector 中；普通的数字对象也是兼容的
-   - python 中的`list`对应到 R 中也是`list`，而不是直观上的 vector，要得到 vector 类型的输入必须先用`rpy2.robjects.vectors`中的对应函数对`list`进行转换
-   - `dict`是不兼容的
-   - `None`是不兼容的，专门有`rpy2.robjects.NULL`对象对应的是`NULL`，但是这个`NULL`的布尔类型是`False`
-   - 使用`pandas2ri.activate()`和`numpy2ri.activate()`后不需要显式地将 pandas 和 numpy 对象转换为 R 对象，rpy2 会自动将这两种对象转换为 R 对象，返回值如果是可以转换为 numpy(如 vector,matrix) 的类型也可以直接从 R 对象转换为 Python 对象，但是返回值是`data.frame`或者`list`就会直接存成 rpy2 中对应的 R object，不会自动转成`pd.DataFrame`或者`dict`
-   - **拿到的 matrix 对象是没有行名和列名的！**直接转换成 np 格式了
-   - python 命名的`_`和 R 中的`.`是可以被 rpy2 自动转换的
-
 #### 2.2.4. `rpy2.robjects.packages`函数
 
 1. `packages.isinstalled()`函数可以检查函数包是否已经被下载，返回 python bool 对象，并且不会像 r 的`require()`函数一样自动就把包 attach 了
 2. `packages.importr()`函数一方面把 R 对应包的命名空间拿到 python 中供 python 调用，一方面在对应的 R 进程中会把对应的包 attach 上，因此运行`packages.importr()`以后就能用`r['func_name']`拿到对应的包里的函数了
 
-#### 2.2.5. `rpy2.robjects.converter`相关函数
+#### 2.2.5. python 与 R 之间的类型转换
 
-主要功能是实现 python object 和 R object 的相互转换，默认是`default_converter`并且设置全局，其他的内置 converter 就包括`pandas2ri`和`numpy2ri`，`pandas2ri`和`numpy2ri`只包含对应的类型的转换，但对于简单的`str`的转换又是只有`default_converter`才含有的，因此要转换含有字符串的`pd.DataFrame`时要把两种 converter 连用
+主要功能是实现 python object 和 R object 的相互转换，默认是`default_converter`并且设置全局，其他的内置 converter 就包括`pandas2ri`和`numpy2ri`，`pandas2ri`和`numpy2ri`只包含对应的类型的转换
+
+三种 converter 中，`numpy2ri`是功能最强的，基本上可以实现所有的 py2rpy 和 rpy2py 的功能，但是慎用将 rpy2py，因为会导致所有数据类型都变成 np 下的数据类型，此外无法实现 DataFrame 的转换，但是 py2rpy 时几乎就是啥都能转换，特别方便；`default_converter`可以应付大多数的情况，但是大部分的结果不太 pythonic；`pandas2ri`主要解决 DataFrame 的转换，在 rpy2py 时候可以把数字类型的 vector 转换成 array，但是 py2rpy 时就不能转换 array 相关的内容。
+
+**注意**
+
+- python 中的`list`对应到 R 中也是`list`，而不是直观上的 vector，要得到 vector 类型的输入必须先用`rpy2.robjects.vectors`中的对应函数对`list`进行转换
+- `dict`目前所有的 converter 都是不兼容的
+- `None`是不兼容的，专门有`rpy2.robjects.NULL`对象对应的是`NULL`，但是这个`NULL`的布尔类型是`False`
+- **拿到的 matrix 对象是没有行名和列名的！**直接转换成 np 格式了
+- python 命名的`_`和 R 中的`.`是可以被 rpy2 自动转换的
+- `pandas2ri`和`numpy2ri`可以实现 R list 的 rpy2py，类型是 `rpy2.rlike.container.OrdDict`，但这个数据类型也无法 py2rpy，有点扯淡
+
+##### 2.2.5.1. `rpy2.robjects.converter`相关函数
 
 - 如果需要在一个 local 的地方实现特殊的 convert 需求，可以使用
 
@@ -182,6 +188,10 @@ with (default_converter + pandas2ri.converter).context():
 with (default_converter+pandas2ri.converter).context():
     test = ro.conversion.get_conversion().py2rpy(test)
 ```
+
+- py2rpy 时候需要`pandas2ri.converter+numpy2ri.converter`，这样才能正确把 matrix 和 dataframe 都转换过去（实际上不转换 dataframe 的话都不需要`pandas2ri`）；从 rpy2py 的时候要`default_converter+pandas2ri.converter`，不带`numpy2ri`否则一切都会变成 numpy 的下属属性
+
+- 定义一个自定义的 converter 的方式（再看看 document，原来的 document 可能有问题）
 
 ### 2.3. R 相关
 

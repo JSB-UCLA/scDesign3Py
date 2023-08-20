@@ -8,3 +8,6 @@ class InputError(RuntimeError):
 
 class SequentialError(RuntimeError):
     pass
+
+class NotInplementedError(RuntimeError):
+    pass
