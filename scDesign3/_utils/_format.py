@@ -1,5 +1,4 @@
 import warnings
-from collections import OrderedDict
 from functools import wraps
 from inspect import signature
 from typing import Optional, Union, get_args, get_origin
@@ -7,34 +6,23 @@ from typing import Optional, Union, get_args, get_origin
 import anndata as ad
 import numpy as np
 import pandas as pd
-from rpy2.robjects import NULL, default_converter, numpy2ri, pandas2ri, r
-from rpy2.robjects.vectors import DataFrame, FloatVector, IntVector, ListVector, Matrix, StrVector
+from rpy2.rlike.container import OrdDict
+from rpy2.robjects import NULL, ListVector, StrVector, conversion, default_converter, numpy2ri, pandas2ri, r
 
 from ._errors import ConvertionError, InputError
 
-# def _recurse_r_tree(data):
-#     """
-#     step through an R object recursively and convert the types to python types as appropriate.
-#     Leaves will be converted to e.g. numpy arrays or lists as appropriate and the whole tree to a dictionary.
-#     """
-#     r_dict_types = [DataFrame, ListVector]
-#     r_array_types = [FloatVector, IntVector, Matrix]
-#     r_list_types = [StrVector]
-#     if type(data) in r_dict_types:
-#         return OrderedDict(zip(data.names, [_recurse_r_tree(elt) for elt in data]))
-#     elif type(data) in r_list_types:
-#         return [_recurse_r_tree(elt) for elt in data]
-#     elif type(data) in r_array_types:
-#         return np.array(data)
-#     else:
-#         if hasattr(data, "rclass"):  # An unsupported r class
-#             raise KeyError(
-#                 "Could not proceed, type {} is not defined to add support for this type, just add it to the imports and to the appropriate type list above".format(
-#                     type(data)
-#                 )
-#             )
-#         else:
-#             return data  # We reached the end of recursion
+
+# Conversion for OrdDict
+# rpy2 3.5.13 version has bug for changing Orddict back to ListVector, this function is used for currently fixing this bug
+# This bug has been fixed and this change has been merged to numpy2ri.converter, hopefully in rpy2 3.5.14, this code can be deleted
+@default_converter.py2rpy.register(OrdDict)
+def convert_ord_dict(ord_dict):
+    with (default_converter + pandas2ri.converter + numpy2ri.converter).context():
+        ord_dict = {k: conversion.get_conversion().py2rpy(v) for k, v in ord_dict.items()}
+    return ListVector(ord_dict)
+
+
+convert = numpy2ri.converter + default_converter + pandas2ri.converter
 
 
 def _anndata2sce(data: ad.AnnData, assay_use=None, default_assay_name=None, covar=None):
@@ -95,7 +83,7 @@ def _anndata2sce(data: ad.AnnData, assay_use=None, default_assay_name=None, cova
         except:
             raise ConvertionError("The specified assay name doesn't exist in anndata object. Please check.")
 
-    with (default_converter + pandas2ri.converter + numpy2ri.converter).context():
+    with convert.context():
         sce = r("SingleCellExperiment::SingleCellExperiment")(
             assay=ListVector({assay_use: count_matrix}),
             colData=cell_info,

@@ -189,7 +189,7 @@ with (default_converter+pandas2ri.converter).context():
     test = ro.conversion.get_conversion().py2rpy(test)
 ```
 
-- py2rpy 时候需要`pandas2ri.converter+numpy2ri.converter`，这样才能正确把 matrix 和 dataframe 都转换过去（实际上不转换 dataframe 的话都不需要`pandas2ri`）；从 rpy2py 的时候要`default_converter+pandas2ri.converter`，不带`numpy2ri`否则一切都会变成 numpy 的下属属性
+- 转换的时候 converter 的顺序是有关系的，个人理解是从最后往前看，如果最后一个能够处理，就返回处理结果，如果不能处理，则往前推一个 converter，看能不能处理，不行就再往前以此类推，因此如果将`numpy2ri`放在最后，就会导致所有的东西都能用其进行转换，导致结果都是 numpy 的类型。因此总体的规则应该是`my_converter = numpy2ri.converter+ default_converter+pandas2ri.converter`比较合适
 
 - 定义一个自定义的 converter 的方式（再看看 document，原来的 document 可能有问题）
 
