@@ -78,7 +78,8 @@
 
 - [x] 完成一个从 R list 转换成 python dict 的函数作为 interface，则只要留一个 return 的 API，如果有需要就转换成 python dict 的形式
 - [x] scDesign 最后是一个类，各个数据以类属性的方式继承，默认这些类属性都是不可修改的，并且就保留着 Rdata 的形式
-- [ ] 如何返回带行列名的 Matrix，以及把 dict 对象的转换要搞明白
+- [ ] 如何返回带行列名的 Matrix，None 的转换，只有一个元素时只要那个元素
+- [ ] 画图函数的 interface
 
 ---
 
@@ -191,7 +192,13 @@ with (default_converter+pandas2ri.converter).context():
 
 - 转换的时候 converter 的顺序是有关系的，个人理解是从最后往前看，如果最后一个能够处理，就返回处理结果，如果不能处理，则往前推一个 converter，看能不能处理，不行就再往前以此类推，因此如果将`numpy2ri`放在最后，就会导致所有的东西都能用其进行转换，导致结果都是 numpy 的类型。因此总体的规则应该是`my_converter = numpy2ri.converter+ default_converter+pandas2ri.converter`比较合适
 
-- 定义一个自定义的 converter 的方式（再看看 document，原来的 document 可能有问题）
+- 定义一个自定义的 converter 的方式，装饰器实现，对于一个 converter 对象，py2rpy 或者 rpy2py 方向对某一个需要转换的 type 做装饰器，返回值是函数的返回值
+
+```python
+@Converter.py2rpy.register(type)
+def func(arg):
+    return changed_type
+```
 
 ### 2.3. R 相关
 

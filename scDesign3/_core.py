@@ -234,7 +234,7 @@ class scDesign3:
         sigma_formula=str,
         family_use=Union[str, list],
         usebam=bool,
-        data=Union[ro.vectors.ListVector, OrdDict, str],
+        data=Union[ro.vectors.ListVector, OrdDict, str, dict],
         predictor=str,
         n_cores=Union[int, str],
         parallelization=str,
@@ -248,7 +248,7 @@ class scDesign3:
         sigma_formula: str,
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]],
         usebam: bool,
-        data: Union[ro.vectors.ListVector, OrdDict] = "default",
+        data: Union[ro.vectors.ListVector, OrdDict, dict] = "default",
         predictor: str = "gene",
         n_cores: int = "default",
         parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
@@ -276,7 +276,7 @@ class scDesign3:
         usebam: `bool`
             If True, call R function mgcv::bam for calculation acceleration.
 
-        data: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` (default: 'default')
+        data: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
             The result of @construct_data. Default is 'default', using the class property @construct_data_res.
 
         predictor: `str` (default: 'gene')
@@ -305,7 +305,7 @@ class scDesign3:
         try:
             if data == "default":
                 data = self.construct_data_res
-            elif isinstance(data, OrdDict):
+            elif isinstance(data, OrdDict) or isinstance(data, dict):
                 with convert.context():
                     data = ro.conversion.get_conversion().py2rpy(data)
         except AttributeError:
@@ -351,7 +351,7 @@ class scDesign3:
         input_data=Union[str, pd.DataFrame],
         copula=str,
         empirical_quantile=bool,
-        marginal_list=Union[ro.vectors.ListVector, str, OrdDict],
+        marginal_list=Union[ro.vectors.ListVector, str, OrdDict, dict],
         family_use=Union[str, list],
         dt=bool,
         pseudo_obs=bool,
@@ -368,7 +368,7 @@ class scDesign3:
         input_data: Union[Literal["count_mat", "dat", "newCovariate"], pd.DataFrame] = "dat",
         copula: Literal["gaussian", "vine"] = "gaussian",
         empirical_quantile: bool = False,
-        marginal_list: Union[ro.vectors.ListVector, OrdDict] = "default",
+        marginal_list: Union[ro.vectors.ListVector, OrdDict, dict] = "default",
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
         dt: bool = True,
         pseudo_obs: bool = False,
@@ -397,7 +397,7 @@ class scDesign3:
         empirical_quantile: `bool` (default: False)
             Please only use it if you clearly know what will happen! If True, DO NOT fit the copula and use the EMPIRICAL CDF values of the original data; it will make the simulated data fixed (no randomness). Only works if ncell is the same as your original data.
 
-        marginal_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` (default: 'default')
+        marginal_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
             The result of @fit_marginal. Default is 'default', using the class property @fit_marginal_res.
 
         family_use: `str` or `list[str]` (default: 'default')
@@ -477,7 +477,7 @@ class scDesign3:
         try:
             if marginal_list == "default":
                 marginal_list = self.fit_marginal_res
-            elif isinstance(marginal_list, OrdDict):
+            elif isinstance(marginal_list, OrdDict) or isinstance(marginal_list, dict):
                 with convert.context():
                     marginal_list = ro.conversion.get_conversion().py2rpy(marginal_list)
         except AttributeError:
@@ -511,7 +511,7 @@ class scDesign3:
     @_typecheck(
         data=Union[str, pd.DataFrame],
         new_covariate=Union[str, pd.DataFrame],
-        marginal_list=Union[ro.vectors.ListVector, str, OrdDict],
+        marginal_list=Union[ro.vectors.ListVector, str, OrdDict, dict],
         family_use=Union[str, list],
         n_cores=Union[int, str],
         parallelization=str,
@@ -522,7 +522,7 @@ class scDesign3:
         self,
         data: pd.DataFrame = "dat",
         new_covariate: pd.DataFrame = "newCovariate",
-        marginal_list: Union[ro.vectors.ListVector, OrdDict] = "default",
+        marginal_list: Union[ro.vectors.ListVector, OrdDict, dict] = "default",
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
         n_cores: int = "default",
         parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
@@ -543,7 +543,7 @@ class scDesign3:
         new_covariate: `str` or `pandas.DataFrame` (default: 'newCovariate')
             The new covariates to simulate new gene expression data using the gene marginal models. Default is 'newCovariate', use the @construct_data_res, 'newCovariate' output.
 
-        marginal_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` (default: 'default')
+        marginal_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
             The result of @fit_marginal. Default is 'default', using the class property @fit_marginal_res.
 
         family_use: `str` or `list[str]` (default: 'default')
@@ -595,7 +595,7 @@ class scDesign3:
         try:
             if marginal_list == "default":
                 marginal_list = self.fit_marginal_res
-            elif isinstance(marginal_list, OrdDict):
+            elif isinstance(marginal_list, OrdDict) or isinstance(marginal_list, dict):
                 with convert.context():
                     marginal_list = ro.conversion.get_conversion().py2rpy(marginal_list)
         except AttributeError:
@@ -641,7 +641,7 @@ class scDesign3:
         sigma_mat=Union[str, np.ndarray],
         zero_mat=Union[str, np.ndarray],
         quantile_mat=Optional[np.ndarray],
-        copula_list=Union[ro.vectors.ListVector, str, None, OrdDict],
+        copula_list=Union[ro.vectors.ListVector, str, None, OrdDict, dict],
         input_data=Union[str, pd.DataFrame],
         new_covariate=Union[str, pd.DataFrame],
         family_use=Union[str, list],
@@ -660,7 +660,7 @@ class scDesign3:
         sigma_mat: np.ndarray = "sigma_mat",
         zero_mat: np.ndarray = "zero_mat",
         quantile_mat: Optional[np.ndarray] = None,
-        copula_list: Optional[Union[ro.vectors.ListVector, OrdDict]] = "default",
+        copula_list: Optional[Union[ro.vectors.ListVector, OrdDict, dict]] = "default",
         input_data: pd.DataFrame = "dat",
         new_covariate: pd.DataFrame = "newCovariate",
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
@@ -693,7 +693,7 @@ class scDesign3:
         quantile_mat: `numpy.ndarray` (default: None)
             A matrix of the multivariate quantile. Default is None, if parameter @copula_list is provided.
 
-        copula_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict`(default: 'default')
+        copula_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
             Copulas for generating the multivariate quantile matrix. Default is 'default', use the @fit_copula_res, copula_list output.
 
         data: `str` or `pandas.DataFrame` (default: 'dat')
@@ -782,7 +782,7 @@ class scDesign3:
             if copula_list == "default":
                 copula_list = self.fit_copula_res.rx2("copula_list")
 
-            elif isinstance(copula_list, OrdDict):
+            elif isinstance(copula_list, OrdDict) or isinstance(copula_list, dict):
                 with convert.context():
                     copula_list = ro.conversion.get_conversion().py2rpy(copula_list)
             elif copula_list is None:
