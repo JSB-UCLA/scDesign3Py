@@ -80,7 +80,10 @@ def _anndata2sce(data: ad.AnnData, assay_use=None, default_assay_name=None, cova
 
     else:
         try:
-            count_matrix = data.layers[assay_use].toarray().T
+            if isinstance(data.layers[assay_use], np.ndarray):
+                count_matrix = data.layers[assay_use].T
+            else:
+                count_matrix = data.layers[assay_use].toarray().T
         except:
             raise ConvertionError("The specified assay name doesn't exist in anndata object. Please check.")
 

@@ -143,8 +143,7 @@ class scDesign3:
             Indicates the assay you will use. If None, please specify a name for the assay stored in `anndata.AnnData.X` in @default_assay_name.
 
         default_assay_name: `str` (default: None)
-            Specified only when @assay_use is None. Asign a name to your default single cell experiment.get_bpparamone)
-            The name of cell type variable in the `anndata.AnnData.obs`.
+            Specified only when @assay_use is None. Asign a name to your default single cell experiment.
 
         celltype: `str` (default: None)
             The name of cell type variable in the `anndata.AnnData.obs`.

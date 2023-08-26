@@ -18,10 +18,11 @@
     - [2.5.1. 经验](#251-经验)
     - [2.5.2. API](#252-api)
   - [2.6. matplotlib 相关](#26-matplotlib-相关)
-    - [2.6.1. 子图作图](#261-子图作图)
-    - [2.6.2. 添加文字](#262-添加文字)
-    - [2.6.3. scatter 函数](#263-scatter-函数)
-    - [2.6.4. 样例](#264-样例)
+    - [2.6.1. 颜色](#261-颜色)
+    - [2.6.2. 子图作图](#262-子图作图)
+    - [2.6.3. 添加文字](#263-添加文字)
+    - [2.6.4. scatter 函数](#264-scatter-函数)
+    - [2.6.5. 样例](#265-样例)
   - [2.7. sklearn 相关](#27-sklearn-相关)
   - [2.8. scipy 相关](#28-scipy-相关)
   - [2.9. anndata 相关](#29-anndata-相关)
@@ -423,27 +424,31 @@ res = compare.style.applymap(set_cell_color)
 
 ### 2.6. matplotlib 相关
 
+#### 2.6.1. 颜色
+
 [matplotib 颜色](https://matplotlib.org/stable/tutorials/colors/colormaps.html#lightness-of-matplotlib-colormaps)
 
-#### 2.6.1. 子图作图
+[如何 mapping 颜色](https://stackoverflow.com/questions/52108558/how-do-parameters-c-and-cmap-behave)
+
+#### 2.6.2. 子图作图
 
 - `fig, axes = plt.subplots(a, b, figsize=(b * 5, a * 5))`得到一张有 n 张子图的一个大图，通过前两个参数将整个大图分割成 $a \times b$个子图，通过`figsize`相当于得到每个子图的大小，但是要注意参数是反过来的
 - 进一步用`row, col = np.unravel_index(i, axes.shape)`和`ax = axes[row, col]`来得到一张子图的位置，其中`i`是第`i`张子图
 - 使用`ax.scatter`对于该子图进行绘图，理论上任何可以画的子图函数都可以调用，调用就像普通的`plt`调用方法一样
 - `fig.suptitle()`指明全图的标题，`ax.set_title()`得到小标题
 
-#### 2.6.2. 添加文字
+#### 2.6.3. 添加文字
 
 - `ax.text()`自定义添加文字，文字位置如果都是 0-1 之间的数字就是按比例放置，超过范围的就会转换成在对应的坐标处放文字
 - `ax.legend()`添加图例
 
-#### 2.6.3. scatter 函数
+#### 2.6.4. scatter 函数
 
 - `c`参数代表颜色，是一种数值上的对应，和`cmap`对应使用，前者给一个数值，后者拿到这个数值后在对应的 map 上找对应的颜色
 - `s`参数给出点的大小，可以是一个可迭代对象给每个点一个特定的大小
 - `plt.colorbar(scatter_plt_object)`可以把对应的颜色柱对应的图例显示在边上
 
-#### 2.6.4. 样例
+#### 2.6.5. 样例
 
 ```python
 ## 作图样例
