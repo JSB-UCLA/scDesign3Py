@@ -1,4 +1,5 @@
 import itertools
+import warnings
 from typing import Literal, Optional, Union
 
 import anndata as ad
@@ -339,9 +340,13 @@ class scDesign3:
         )
 
         if return_py:
-            with convert.context():
-                res = ro.conversion.get_conversion().rpy2py(self.fit_marginal_res)
-                return res
+            # with convert.context():
+            #     res = ro.conversion.get_conversion().rpy2py(self.fit_marginal_res)
+            #     return res
+            warnings.warn(
+                "There's an unfixed problem in changing the @fit_marginal_res back to a more pythonic version. The return type is rpy2.robjects.vectors.ListVector, which is assigned method @items which is similar to dict. If you want to get the value using the key name, instead of using res[key_name], please use res.rx2(key_name)."
+            )
+            return self.fit_marginal_res
         else:
             return self.fit_marginal_res
 
