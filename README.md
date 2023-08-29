@@ -47,6 +47,11 @@
   - [2.14. GitHub](#214-github)
   - [2.15. 其他](#215-其他)
   - [2.16. 简单 linux](#216-简单-linux)
+  - [2.17. 使用 Sphinx 创建 document 文档](#217-使用-sphinx-创建-document-文档)
+    - [2.17.1. set-up](#2171-set-up)
+    - [2.17.2. 结构](#2172-结构)
+    - [2.17.3. 基本文件](#2173-基本文件)
+    - [2.17.4. 其他](#2174-其他)
 - [3. 老版本(不用 rpy2 版本)的相关记录](#3-老版本不用-rpy2-版本的相关记录)
   - [3.1. 未来的下一步功能:](#31-未来的下一步功能)
   - [3.2. Questions](#32-questions)
@@ -800,6 +805,8 @@ import os
 os.chdir(os.path.dirname(__file__))
 ```
 
+- `os.path.abspath(path)` 获取绝对路径，比如 `os.path.abspath('../..')` 就是返回上两级的绝对路径
+
 ##### 2.13.2.7. 其他
 
 - 判断 None Type 时，必须要用`variable is None`进行判断
@@ -848,6 +855,86 @@ os.chdir(os.path.dirname(__file__))
   - `ps -ef|grep python|grep -v grep|grep -v jupyter|cut -c 9-15|xargs kill -9`尝试关闭所有多进程的任务（9-15 是 PID），多进程中杀死父进程子进程还是会继续运行并且占用资源，所以要一起杀光
 - 貌似使用`apt`在线下载软件和使用`dpkg -i`安装下载好的`.deb`文件，最后都是用 apt 管理的
 - ***
+
+### 2.17. 使用 Sphinx 创建 document 文档
+
+[视频教程](https://www.bilibili.com/video/BV1BP4y1n79y/?spm_id_from=333.337.search-card.all.click&vd_source=44ff757ed2fdadeadf410d10bde17c2c)
+
+[中文翻译使用手册](https://zh-sphinx-doc.readthedocs.io/en/latest/index.html)
+
+#### 2.17.1. set-up
+
+```powershell
+# set-up
+sphinx-quickstart
+# build html
+make html
+# delete constructed html
+make clean
+```
+
+#### 2.17.2. 结构
+
+- build 文件夹存储生成的 html 文件
+
+- source 文件夹存储用来生成 html 文件的文件内容
+  - \_static 对应 `conf.py` 中的 `html_static_path` 位置，主要用来存储 html 中的静态图片文件
+  - \_templates 对应 `conf.py` 中的 `templates_path` 位置，主要存储一些 template 文件
+  - `conf.py` 文件是 configure 设置
+  - `index.rst` 是默认的 homepage（可能可以在 `conf.py` 中用`master_doc = 'index'` 调整）
+  - 如果需要创建多级目录，在上一级目录的 toctree 中引用下一级目录的 index 文件，下一级的 index 文件就可以引用自己更下游的子文件即可
+  - 可以创建额外的文件夹用来存储对应的文件内容
+
+#### 2.17.3. 基本文件
+
+- `.rst` 文件为基本文件类型，为原生的文件类型，但是也可以在`.rst` 文件中 nest 一个 markdown 文件的方式来实现目的
+
+```
+.. scReadSim for 10X scATAC-seq with user-designed open chromatin regions
+.. ======================================================================
+
+.. include:: tutorials/scATACseq_Input_10X.md
+   :parser: myst_parser.sphinx_
+```
+
+- 用 `toctree` 确定文件结构
+
+```
+.. toctree::
+   :maxdepth: 1
+   :caption: Overview
+
+   API
+   About scReadSim
+
+# 命令
+.. toctree::
+   # 命令参数
+   :maxdepth: 1
+   :caption: Tutorials
+
+   Install required softwares of scReadSim<InstallTools>
+```
+
+- `make.bat` 和 `Makefile` 文件不用管，命令行用来 make html 用的
+
+#### 2.17.4. 其他
+
+- 支持 markdown 的插件是 `myst_parser`，也要用 pip 下载，添加这个 extension 后才能正确识别和渲染 markdown 文件。在 include 这个 extension 的时候会自动配置识别后缀名 rst 和 md（in `conf.py` `source_suffix` 配置后缀名-对应文件的字典如`{".md":markdown}`）
+- 貌似支持直接读取 python script 中的函数名字并且直接给出对应的 parameter 和 source code，用 `autosummary` 功能
+- 使用 Sphinx 自带的 autodoc 功能的时候需要注意，所有 import 的包（非 python 自带的包）需要添加到一个 mock list（一个只 import 不运行的环境），否则无法进行读取和自动渲染，在 `conf.py` 文件中进行添加即可
+
+```python
+# method 1
+import mock
+
+MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'matplotlib.pyplot', 'scipy.interpolate']
+for mod_name in MOCK_MODULES:
+sys.modules[mod_name] = mock.Mock()
+
+# method 2
+autodoc_mock_imports = ["rpy2", "numpy", "pandas", "pysam", "tqdm", "joblib", "pathlib", "Bio", "gffpandas"] # Mock import these dependent pacakges
+```
 
 ## 3. 老版本(不用 rpy2 版本)的相关记录
 

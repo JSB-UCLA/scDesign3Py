@@ -19,7 +19,7 @@ r("invisible(suppressWarnings(Sys.setlocale('LC_ALL', 'en_US.UTF-8')))")
 
 # check if all dependencies installed
 r_requirements = {
-    "cran": ["devtools", "ggplot2"],
+    "cran": ["devtools"],
     "dev": ["scDesign3"],
     "bioc": [],
 }

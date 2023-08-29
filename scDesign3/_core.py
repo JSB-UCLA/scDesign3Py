@@ -45,7 +45,7 @@ class scDesign3:
             If True, functions will return a result easy for manipulation in python.
 
 
-        Properties:
+        Attributes:
         ----------
         :sce:
             SingleCellExperiment R object changed from the given Anndata object
