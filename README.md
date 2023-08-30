@@ -929,6 +929,18 @@ make clean
 - `html_theme_options = {"navigation_depth": 2,}` 使得侧边栏可以索引为 2，可以 host 多级索引标题
 - 在 markdown 中可以在 code 环境中 include eval-rst 来实现在 rst 中才能实现的一些功能，比如颜色块
 
+```{eval-rst}
+.. Note::
+  Special in rst
+```
+
+- 在 rst 中插入内部链接的方式如下，利用`:doc:`关键字
+
+```{eval-rst}
+.. Note::
+  Special in rst, :doc:`shown in another section <./sec_name>`
+```
+
 ```python
 # method 1
 import mock

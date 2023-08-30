@@ -62,6 +62,26 @@ class scDesign3:
 
     :whole_pipeline_res:
         Result of calling @scdesign3
+
+    Methods:
+    -----------
+    :construct_data:
+        Construct the input data for downstream analysis.
+
+    :fit_marginal:
+        Fit the marginal models.
+
+    :fit_copula:
+        Fit the copula model.
+
+    :extract_para:
+        Extract the parameters of each cell's distribution.
+
+    :simu_new:
+        Simulate new data.
+
+    :scdesign3:
+        The wrapper for the whole scDesign3 pipeline.
     """
 
     @_typecheck(

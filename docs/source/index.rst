@@ -41,7 +41,7 @@ To find out more details about **scDesign3**, you can check out manuscript on Na
    All in one simulation <tutorial/all_in_one>
    Step by step simulation <tutorial/stepwise>
    Get BPPARAM <tutorial/bpparam>
-   Perform liklihood ratio test <tutorial/lrt>
+   Perform likelihood ratio test <tutorial/lrt>
    Plot results <tutorial/plot>
 
 .. toctree::
