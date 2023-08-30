@@ -897,7 +897,7 @@ make clean
    :parser: myst_parser.sphinx_
 ```
 
-- 用 `toctree` 确定文件结构
+- 用 `toctree` 确定文件结构（默认是会打印在当前页面上，如果不要可以用 `hidden` 参数关闭）
 
 ```
 .. toctree::
@@ -920,9 +920,14 @@ make clean
 
 #### 2.17.4. 其他
 
+- 如果要使用直接将 jupyter 改变的话，使用的插件是`myst_nb`，在添加这个插件的时候**不能**再单独加载 `myst_parser`，这个插件自己已经把 markdown 和 jupyter 输出都解决了
+- 在 jupyter 中设置 cell tag 为 `remove(hide)-cell(input/output)` 就可以实现在 render 的时候不显示部分的 cell 内容
 - 支持 markdown 的插件是 `myst_parser`，也要用 pip 下载，添加这个 extension 后才能正确识别和渲染 markdown 文件。在 include 这个 extension 的时候会自动配置识别后缀名 rst 和 md（in `conf.py` `source_suffix` 配置后缀名-对应文件的字典如`{".md":markdown}`）
 - 貌似支持直接读取 python script 中的函数名字并且直接给出对应的 parameter 和 source code，用 `autosummary` 功能
 - 使用 Sphinx 自带的 autodoc 功能的时候需要注意，所有 import 的包（非 python 自带的包）需要添加到一个 mock list（一个只 import 不运行的环境），否则无法进行读取和自动渲染，在 `conf.py` 文件中进行添加即可
+- `maxdepth` 参数限制了如果打印数据的引用树，最多显示到几级标题
+- `html_theme_options = {"navigation_depth": 2,}` 使得侧边栏可以索引为 2，可以 host 多级索引标题
+- 在 markdown 中可以在 code 环境中 include eval-rst 来实现在 rst 中才能实现的一些功能，比如颜色块
 
 ```python
 # method 1

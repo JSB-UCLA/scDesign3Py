@@ -15,6 +15,55 @@ from ._utils._format import _anndata2sce, _bpparamcheck, _other2list, _strvec_no
 
 
 class scDesign3:
+    """Python interface for scDesign3
+
+    All functions are arranged in scDesign3 class for easy reuse generated results.
+
+    Attributes:
+    -----------
+    :sce:
+        SingleCellExperiment R object changed from the given Anndata object
+
+    :assay_use:
+        The name of the assay used for modeling
+
+    :all_covar:
+        All covariates (explainary variables) used to model gene expression pattern
+
+    :family_use:
+        The set marginal distribution of each gene.
+
+    :n_cores:
+        The number of cores used for model fitting.
+
+    :parallelization:
+        The parallelization method.
+
+    :bpparam:
+        If @parallelization is 'bpmapply', the corresponding R object to set the parallelization parameters.
+
+    :return_py:
+        Whether the functions will return a result easy for manipulation.
+
+    :construct_data_res:
+        Result of calling @construct_data
+
+    :fit_marginal_res:
+        Result of calling @fit_marginal
+
+    :fit_copula_res:
+        Result of calling @fit_copula
+
+    :model_paras:
+        Result of calling @extract_para
+
+    :simu_res:
+        Result of calling @simu_new
+
+    :whole_pipeline_res:
+        Result of calling @scdesign3
+    """
+
     @_typecheck(
         n_cores=int,
         parallelization=str,
@@ -28,7 +77,7 @@ class scDesign3:
         bpparam: Optional[ro.methods.RS4] = None,
         return_py: bool = True,
     ) -> None:
-        """
+        """Decide basic settings
 
         Arguments:
         ----------
@@ -43,51 +92,6 @@ class scDesign3:
 
         return_py: `bool` (default: True)
             If True, functions will return a result easy for manipulation in python.
-
-
-        Attributes:
-        ----------
-        :sce:
-            SingleCellExperiment R object changed from the given Anndata object
-
-        :assay_use:
-            The name of the assay used for modeling
-
-        :all_covar:
-            All covariates (explainary variables) used to model gene expression pattern
-
-        :family_use:
-            The set marginal distribution of each gene.
-
-        :n_cores:
-            The number of cores used for model fitting.
-
-        :parallelization:
-            The parallelization method.
-
-        :bpparam:
-            If @parallelization is 'bpmapply', the corresponding R object to set the parallelization parameters.
-
-        :return_py:
-            Whether the functions will return a result easy for manipulation.
-
-        :construct_data_res:
-            Result of calling @construct_data
-
-        :fit_marginal_res:
-            Result of calling @fit_marginal
-
-        :fit_copula_res:
-            Result of calling @fit_copula
-
-        :model_paras:
-            Result of calling @extract_para
-
-        :simu_res:
-            Result of calling @simu_new
-
-        :whole_pipeline_res:
-            Result of calling @scdesign3
         """
         # import r package
         self._rscdesign = importr("scDesign3")
@@ -126,9 +130,9 @@ class scDesign3:
         bpparam: Optional[ro.methods.RS4] = "default",
         return_py: bool = "default",
     ) -> ro.vectors.ListVector:
-        """Construct the input data (covaraite matrix and expression matrix)
+        """Construct the input data
 
-        This function constructs the input data for @fit_marginal.
+        This function constructs the input data  (covaraite matrix and expression matrix) for @fit_marginal.
 
         This function takes a `anndata.AnnData` object as the input. Based on users' choice, it constructs the matrix of covaraites (explainary variables) and the expression matrix (e.g., count matrix for scRNA-seq).
 

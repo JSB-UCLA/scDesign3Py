@@ -6,7 +6,7 @@ from .._utils._errors import InputError
 
 
 def get_bpparam(name=Literal["MulticoreParam", "SnowParam"], show=True, **kwargs):
-    """Get your parallelization parameters robject.
+    """Get your parallelization parameters robject
 
     Check R function `BiocParallel::MulticoreParam` and `BiocParallel::SnowParam` for more informarion on how to set the parameters.
 

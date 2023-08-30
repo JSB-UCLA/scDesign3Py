@@ -3,22 +3,47 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to pyscDesign3's documentation!
-=======================================
+pyscDesign3: python interface for scDesign3 R package
+=====================================================
+
+The R package scDesign3 is a unified probabilistic framework that generates realistic in silico high-dimensional single-cell omics data of various cell states, including discrete cell types, continuous trajectories, and spatial locations by learning from real datasets. 
+
+pyscDesign3 is the python interface of the R package scDesign3, enabling python users to easily use the scDesign3 functions.
+
+Summary of usage of scDesign3
+-----------------------------
+
+.. figure:: _static/scDesign3_illustration.png
+   :align: center
+   :width: 600  
+   :alt: scDesign3 overview
+
+|
+
+To find out more details about **scDesign3**, you can check out manuscript on Nature Biotechnology:
+
+`Song, D., Wang, Q., Yan, G. et al. scDesign3 generates realistic in silico data for multimodal single-cell and spatial omics. Nat Biotechnol (2023). <https://www.nature.com/articles/s41587-023-01772-1>`_
+
 
 .. toctree::
+   :maxdepth: 1
    :caption: Get Started
    
    Installation <set_up/Installation>
    API <set_up/API>
+   About pyscDesign3 <set_up/info>
 
 .. toctree::
+   :maxdepth: 1
    :caption: Tutorial
    
    Quick Start <tutorial/quick_start> 
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
+.. toctree::
+   :maxdepth: 2
+   :caption: More examples
+   
+   Data simulation <examples/data_simu/index> 
+   Model parameter <examples/model_para/index> 
+   Model selection <examples/model_select/index> 
+   Model alteration <examples/model_alter/index> 
