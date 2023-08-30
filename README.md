@@ -953,6 +953,8 @@ sys.modules[mod_name] = mock.Mock()
 autodoc_mock_imports = ["rpy2", "numpy", "pandas", "pysam", "tqdm", "joblib", "pathlib", "Bio", "gffpandas"] # Mock import these dependent pacakges
 ```
 
+- 网页托管可以使用[read the docs](https://about.readthedocs.com/)
+
 ## 3. 老版本(不用 rpy2 版本)的相关记录
 
 ### 3.1. 未来的下一步功能:
