@@ -37,7 +37,7 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "sphinx.ext.viewcode",
-    "sphinx.ext.viewcode",
+    "sphinx.ext.githubpages",
     "sphinx_copybutton",
     "myst_nb",
 ]
@@ -47,7 +47,7 @@ autosummary_generate = True  # Turn on sphinx.ext.autosummary
 templates_path = ["_templates"]
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
