@@ -1,0 +1,58 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "import sys\n",
+    "\n",
+    "sys.path.append(\"../../../../\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Evaluate clustering goodness-of-fit\n",
+    "\n",
+    "## Introduction\n",
+    "\n",
+    "In this example, we will show how to use pyscDesign3 to evaluate the clustering goodness-of-fit for different cell-type assignments. If the true labels are unavailable and we have little prior knowledge, the pyscDesign3 BIC can serve as an unsupervised metric.\n",
+    "\n",
+    "## Step 1: Import packages and Read in data\n",
+    "\n",
+    "### import pacakges"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import anndata as ad"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "scrpy",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "name": "python",
+   "version": "3.9.17"
+  },
+  "orig_nbformat": 4
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

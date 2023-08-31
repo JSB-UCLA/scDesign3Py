@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyscDesign3.tools.plot &mdash; pyscDesign3  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyscDesign3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up/Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up/API.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up/info.html">About pyscDesign3</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/all_in_one.html">All in one simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/stepwise.html">Step by step simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/bpparam.html">Get BPPARAM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/lrt.html">Perform likelihood ratio test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/plot.html">Plot results</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/data_simu/index.html">Data simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/model_select/index.html">Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/model_alter/index.html">Model alteration</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyscDesign3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyscDesign3.tools.plot</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyscDesign3.tools.plot</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">rpy2.robjects</span> <span class="k">as</span> <span class="nn">ro</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Patch</span>
+
+<span class="kn">from</span> <span class="nn">.._utils._format</span> <span class="kn">import</span> <span class="n">_anndata2sce</span><span class="p">,</span> <span class="n">_other2list</span><span class="p">,</span> <span class="n">_strvec_none2ri</span><span class="p">,</span> <span class="n">convert</span>
+
+
+<div class="viewcode-block" id="plot_reduceddim"><a class="viewcode-back" href="../../../set_up/_autosummary/pyscDesign3.tools.plot.plot_reduceddim.html#pyscDesign3.tools.plot.plot_reduceddim">[docs]</a><span class="k">def</span> <span class="nf">plot_reduceddim</span><span class="p">(</span>
+    <span class="n">ref_anndata</span><span class="p">:</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">,</span>
+    <span class="n">anndata_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">name_list</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span>
+    <span class="n">color_by</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">assay_use</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">n_pc</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="n">pc_umap</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">center</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">if_plot</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">shape_by</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">point_size</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dimensionality reduction and visualization</span>
+
+<span class="sd">    This function takes a reference sce and a list of new sces, performs the dimensionality reduction on the reference data, projects the synthetic datasets on the same low dimensional space, then visualize the results.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ref_anndata: `anndata.AnnData`</span>
+<span class="sd">        The reference `anndata.AnnData`</span>
+
+<span class="sd">    anndata_dict: `dict`</span>
+<span class="sd">        A dict of `anndata.AnnData` which is synthetic</span>
+
+<span class="sd">    name_list: `list`</span>
+<span class="sd">        A list of the names of each dataset. The length should be len(anndata_dict)+1, where the first name is for ref_sce.</span>
+
+<span class="sd">    color_by: `str`</span>
+<span class="sd">        The name in the `anndata.AnnData.obs` used for color.</span>
+
+<span class="sd">    assay_use: `str` (default: None)</span>
+<span class="sd">        Indicates the assay you will use. If None, please specify a name for the assay stored in `anndata.AnnData.X` in @default_assay_name. The @assay_use is both used in @ref_anndata and @anndata_dict.</span>
+
+<span class="sd">    default_assay_name: `str` (default: None)</span>
+<span class="sd">        Specified only when @assay_use is None. Asign a name to your default single cell experiment.</span>
+
+<span class="sd">    n_pc: `int` (default: 50)</span>
+<span class="sd">        The number of PCs.</span>
+
+<span class="sd">    pc_umap: `bool` (default: True)</span>
+<span class="sd">        Whether using PCs as the input of UMAP.</span>
+
+<span class="sd">    center: `bool` (default: True)</span>
+<span class="sd">        Whether centering the data before PCA.</span>
+
+<span class="sd">    scale: `bool` (default: True)</span>
+<span class="sd">        Whether scaling the data before PCA.</span>
+
+<span class="sd">    if_plot: `bool` (default: True)</span>
+<span class="sd">        Whether returning the plot. If False, return the reduced dimensions of each dataset.</span>
+
+<span class="sd">    shape_by: `str` (default: None)</span>
+<span class="sd">        The name in the `anndata.AnnData.obs` used for shape.</span>
+
+<span class="sd">    point_size: `int` or `float` (default: 1)</span>
+<span class="sd">        The point size in the final plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ref_sce</span><span class="p">,</span> <span class="n">final_assay_use</span> <span class="o">=</span> <span class="n">_anndata2sce</span><span class="p">(</span>
+        <span class="n">data</span><span class="o">=</span><span class="n">ref_anndata</span><span class="p">,</span>
+        <span class="n">assay_use</span><span class="o">=</span><span class="n">assay_use</span><span class="p">,</span>
+        <span class="n">default_assay_name</span><span class="o">=</span><span class="n">default_assay_name</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">sce_list</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">ListVector</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="n">key</span><span class="p">:</span> <span class="n">_anndata2sce</span><span class="p">(</span>
+                <span class="n">data</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">assay_use</span><span class="o">=</span><span class="n">assay_use</span><span class="p">,</span>
+                <span class="n">default_assay_name</span><span class="o">=</span><span class="n">default_assay_name</span><span class="p">,</span>
+            <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">anndata_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="n">name_list_</span><span class="p">,</span> <span class="n">shape_by_</span><span class="p">,</span> <span class="n">color_by_</span> <span class="o">=</span> <span class="n">_other2list</span><span class="p">(</span><span class="n">name_list</span><span class="p">,</span> <span class="n">shape_by</span><span class="p">,</span> <span class="n">color_by</span><span class="p">)</span>
+    <span class="n">name_list_</span><span class="p">,</span> <span class="n">shape_by_</span><span class="p">,</span> <span class="n">color_by_</span> <span class="o">=</span> <span class="n">_strvec_none2ri</span><span class="p">(</span><span class="n">name_list_</span><span class="p">,</span> <span class="n">shape_by_</span><span class="p">,</span> <span class="n">color_by_</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">convert</span><span class="o">.</span><span class="n">context</span><span class="p">():</span>
+        <span class="n">plot_reduceddim_func</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">r</span><span class="p">(</span><span class="s2">&quot;scDesign3::plot_reduceddim&quot;</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">plot_reduceddim_func</span><span class="p">(</span>
+            <span class="n">ref_sce</span><span class="o">=</span><span class="n">ref_sce</span><span class="p">,</span>
+            <span class="n">sce_list</span><span class="o">=</span><span class="n">sce_list</span><span class="p">,</span>
+            <span class="n">name_vec</span><span class="o">=</span><span class="n">name_list_</span><span class="p">,</span>
+            <span class="n">assay_use</span><span class="o">=</span><span class="n">final_assay_use</span><span class="p">,</span>
+            <span class="n">n_pc</span><span class="o">=</span><span class="n">n_pc</span><span class="p">,</span>
+            <span class="n">pc_umap</span><span class="o">=</span><span class="n">pc_umap</span><span class="p">,</span>
+            <span class="n">center</span><span class="o">=</span><span class="n">center</span><span class="p">,</span>
+            <span class="n">scale_</span><span class="o">=</span><span class="n">scale</span><span class="p">,</span>
+            <span class="n">if_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">shape_by</span><span class="o">=</span><span class="n">shape_by_</span><span class="p">,</span>
+            <span class="n">color_by</span><span class="o">=</span><span class="n">color_by_</span><span class="p">,</span>
+            <span class="n">point_size</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">if_plot</span><span class="p">:</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+        <span class="n">methods</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Method&quot;</span><span class="p">)</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+
+        <span class="n">fig_umap</span><span class="p">,</span> <span class="n">axes_umap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">methods</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">methods</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">fig_umap</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+        <span class="n">fig_pca</span><span class="p">,</span> <span class="n">axes_pca</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span>
+            <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">methods</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">methods</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="n">fig_pca</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">shape_by</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+            <span class="n">shape_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="s2">&quot;P&quot;</span><span class="p">,</span> <span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">,</span> <span class="s2">&quot;H&quot;</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;D&quot;</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">12</span><span class="p">)]</span>
+            <span class="n">shape_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">shape_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">())}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shape_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># discrete</span>
+        <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="n">color_by</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="s2">&quot;category&quot;</span><span class="p">:</span>
+            <span class="c1"># plot for umap</span>
+            <span class="n">leg_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">methods</span><span class="p">):</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">axes_umap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">categories</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">color_by</span><span class="p">)</span>
+                <span class="n">color_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">categories</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">shape_dict</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+                        <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                            <span class="n">value</span><span class="p">[</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">],</span>
+                            <span class="n">value</span><span class="p">[</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">],</span>
+                            <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">(</span><span class="n">color_list</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span>
+                            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                            <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">leg_dict</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors</span><span class="p">(</span><span class="n">color_list</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">value</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                            <span class="n">tmp</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
+                            <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                                <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">],</span>
+                                <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">],</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">(</span><span class="n">color_list</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span>
+                                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                                <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                                <span class="n">marker</span><span class="o">=</span><span class="n">shape_dict</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                            <span class="p">)</span>
+                        <span class="n">leg_dict</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors</span><span class="p">(</span><span class="n">color_list</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+
+            <span class="c1"># legend</span>
+            <span class="n">leg_patch</span> <span class="o">=</span> <span class="p">[</span><span class="n">Patch</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">leg_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                <span class="n">handles</span><span class="o">=</span><span class="n">leg_patch</span><span class="p">,</span>
+                <span class="n">loc</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">ncol</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">shape_dict</span><span class="p">:</span>
+                <span class="n">fig_umap</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                    <span class="n">handles</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">marker</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#74add1&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">shape_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="p">],</span>
+                    <span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                    <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">shape_by</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># text</span>
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;UMAP1&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;UMAP2&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="n">color_by</span><span class="p">)</span>
+
+            <span class="c1"># plot for PCA</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">methods</span><span class="p">):</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">axes_pca</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">categories</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">color_by</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">shape_dict</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+                        <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                            <span class="n">value</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">],</span>
+                            <span class="n">value</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">],</span>
+                            <span class="n">color</span><span class="o">=</span><span class="n">leg_dict</span><span class="p">[</span><span class="n">category</span><span class="p">],</span>
+                            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                            <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">value</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                            <span class="n">tmp</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
+                            <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                                <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">],</span>
+                                <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">],</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">leg_dict</span><span class="p">[</span><span class="n">category</span><span class="p">],</span>
+                                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                                <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                                <span class="n">marker</span><span class="o">=</span><span class="n">shape_dict</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                            <span class="p">)</span>
+
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+
+            <span class="c1"># legend</span>
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                <span class="n">handles</span><span class="o">=</span><span class="n">leg_patch</span><span class="p">,</span>
+                <span class="n">loc</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">ncol</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">shape_dict</span><span class="p">:</span>
+                <span class="n">fig_pca</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                    <span class="n">handles</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">marker</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#74add1&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">shape_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="p">],</span>
+                    <span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                    <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">shape_by</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># text</span>
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;PCA1&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;PCA2&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="n">color_by</span><span class="p">)</span>
+
+        <span class="c1"># continuous</span>
+        <span class="k">elif</span> <span class="n">np</span><span class="o">.</span><span class="n">issubdtype</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="n">color_by</span><span class="p">]</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">number</span><span class="p">):</span>
+            <span class="c1"># plot for UMAP</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">methods</span><span class="p">):</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">axes_umap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="c1"># get color range</span>
+                <span class="n">norm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmax</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">color_by</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">vmin</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">color_by</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">shape_dict</span><span class="p">:</span>
+                    <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">],</span>
+                        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">],</span>
+                        <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">color_by</span><span class="p">])),</span>
+                        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                        <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
+                        <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                            <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">],</span>
+                            <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">],</span>
+                            <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="n">color_by</span><span class="p">])),</span>
+                            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                            <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                            <span class="n">marker</span><span class="o">=</span><span class="n">shape_dict</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                        <span class="p">)</span>
+
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;UMAP1&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;UMAP2&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+            <span class="n">position</span> <span class="o">=</span> <span class="n">fig_umap</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.60</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">])</span>
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span>
+                <span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">colors</span><span class="p">),</span>
+                <span class="n">cax</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+                <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">color_by</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">shape_dict</span><span class="p">:</span>
+                <span class="n">fig_umap</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                    <span class="n">handles</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">marker</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#74add1&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">shape_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="p">],</span>
+                    <span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                    <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">shape_by</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="c1"># fig_umap.text(0.1, -0.07, color_by)</span>
+
+            <span class="c1"># plot for PCA</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">methods</span><span class="p">):</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">axes_pca</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="c1"># get color range</span>
+                <span class="n">norm</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmax</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">color_by</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">vmin</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="n">color_by</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">shape_dict</span><span class="p">:</span>
+                    <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">],</span>
+                        <span class="n">data</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">],</span>
+                        <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">color_by</span><span class="p">])),</span>
+                        <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                        <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                        <span class="n">tmp</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
+                        <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                            <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">],</span>
+                            <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">],</span>
+                            <span class="n">c</span><span class="o">=</span><span class="n">colors</span><span class="p">(</span><span class="n">norm</span><span class="p">(</span><span class="n">tmp</span><span class="p">[</span><span class="n">color_by</span><span class="p">])),</span>
+                            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                            <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                            <span class="n">marker</span><span class="o">=</span><span class="n">shape_dict</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                        <span class="p">)</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;PCA1&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;PCA2&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+            <span class="n">position</span> <span class="o">=</span> <span class="n">fig_pca</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.60</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">])</span>
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span>
+                <span class="n">mpl</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">colors</span><span class="p">),</span>
+                <span class="n">cax</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+                <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="n">color_by</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">shape_dict</span><span class="p">:</span>
+                <span class="n">fig_pca</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                    <span class="n">handles</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">marker</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#74add1&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">shape_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="p">],</span>
+                    <span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                    <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">shape_by</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="c1"># fig_pca.text(0.1, -0.07, color_by)</span>
+
+        <span class="c1"># if not numeric or factor, then try to handle as the discrete one</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># plot for umap</span>
+            <span class="n">leg_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">methods</span><span class="p">):</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">axes_umap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">categories</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">color_by</span><span class="p">)</span>
+                <span class="n">color_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">categories</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">shape_dict</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+                        <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                            <span class="n">value</span><span class="p">[</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">],</span>
+                            <span class="n">value</span><span class="p">[</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">],</span>
+                            <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">(</span><span class="n">color_list</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span>
+                            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                            <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                        <span class="p">)</span>
+                        <span class="n">leg_dict</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors</span><span class="p">(</span><span class="n">color_list</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">value</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                            <span class="n">tmp</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
+                            <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                                <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">],</span>
+                                <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">],</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">(</span><span class="n">color_list</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span>
+                                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                                <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                                <span class="n">marker</span><span class="o">=</span><span class="n">shape_dict</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                            <span class="p">)</span>
+                        <span class="n">leg_dict</span><span class="p">[</span><span class="n">category</span><span class="p">]</span> <span class="o">=</span> <span class="n">colors</span><span class="p">(</span><span class="n">color_list</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+
+            <span class="c1"># legend</span>
+            <span class="n">leg_patch</span> <span class="o">=</span> <span class="p">[</span><span class="n">Patch</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">value</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">leg_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                <span class="n">handles</span><span class="o">=</span><span class="n">leg_patch</span><span class="p">,</span>
+                <span class="n">loc</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">ncol</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">shape_dict</span><span class="p">:</span>
+                <span class="n">fig_umap</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                    <span class="n">handles</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">marker</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#74add1&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">shape_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="p">],</span>
+                    <span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                    <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">shape_by</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># text</span>
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;UMAP1&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;UMAP2&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+            <span class="n">fig_umap</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="n">color_by</span><span class="p">)</span>
+
+            <span class="c1"># plot for PCA</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">methods</span><span class="p">):</span>
+                <span class="n">ax</span> <span class="o">=</span> <span class="n">axes_pca</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">categories</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">color_by</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">shape_dict</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+                        <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                            <span class="n">value</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">],</span>
+                            <span class="n">value</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">],</span>
+                            <span class="n">color</span><span class="o">=</span><span class="n">leg_dict</span><span class="p">[</span><span class="n">category</span><span class="p">],</span>
+                            <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                            <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="p">(</span><span class="n">category</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">categories</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">value</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">():</span>
+                            <span class="n">tmp</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="n">shape_by</span><span class="p">]</span> <span class="o">==</span> <span class="n">name</span><span class="p">]</span>
+                            <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                                <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;PC1&quot;</span><span class="p">],</span>
+                                <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;PC2&quot;</span><span class="p">],</span>
+                                <span class="n">color</span><span class="o">=</span><span class="n">leg_dict</span><span class="p">[</span><span class="n">category</span><span class="p">],</span>
+                                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                                <span class="n">s</span><span class="o">=</span><span class="n">point_size</span><span class="p">,</span>
+                                <span class="n">marker</span><span class="o">=</span><span class="n">shape_dict</span><span class="p">[</span><span class="n">name</span><span class="p">],</span>
+                            <span class="p">)</span>
+
+                <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+
+            <span class="c1"># legend</span>
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                <span class="n">handles</span><span class="o">=</span><span class="n">leg_patch</span><span class="p">,</span>
+                <span class="n">loc</span><span class="o">=</span><span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                <span class="n">ncol</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="n">shape_dict</span><span class="p">:</span>
+                <span class="n">fig_pca</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span>
+                    <span class="n">handles</span><span class="o">=</span><span class="p">[</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">marker</span><span class="o">=</span><span class="n">v</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#74add1&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">shape_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="p">],</span>
+                    <span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span>
+                    <span class="n">framealpha</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                    <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+                    <span class="n">title</span><span class="o">=</span><span class="n">shape_by</span><span class="p">,</span>
+                <span class="p">)</span>
+
+            <span class="c1"># text</span>
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;PCA1&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;PCA2&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+            <span class="n">fig_pca</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="n">color_by</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;p_pca&quot;</span><span class="p">:</span> <span class="n">fig_pca</span><span class="p">,</span> <span class="s2">&quot;p_umap&quot;</span><span class="p">:</span> <span class="n">fig_umap</span><span class="p">}</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">res</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Di Liu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "import sys\n",
+    "\n",
+    "sys.path.append(\"../../../\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Quick Start\n",
+    "\n",
+    "## Introduction\n",
+    "\n",
+    "The R package scDesign3 is a unified probabilistic framework that generates realistic in silico high-dimensional single-cell omics data of various cell states, including discrete cell types, continuous trajectories, and spatial locations by learning from real datasets. \n",
+    "\n",
+    "As a quick start, we demonstrate how to use pyscDesign3 to simulate an scRNA-seq dataset with one continuous developmental trajectory.\n",
+    "\n",
+    "## Step 1: Import packages and Read in data\n",
+    "\n",
+    "### import pacakges"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import anndata as ad\n",
+    "import numpy as np\n",
+    "import pyscDesign3"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Read in data\n",
+    "\n",
+    "The raw data is from the [scvelo](https://scvelo.readthedocs.io/scvelo.datasets.pancreas/), which describes pancreatic endocrinogenesis. We pre-select the top 1000 highly variable genes and filter out some cell types to ensure a **single trajectory**.\n",
+    "\n",
+    "To save time, we only use the top 50 genes."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data = ad.read_h5ad(\"../../../test/test_data/PANCREAS.h5ad\")\n",
+    "data = data[:,0:30]\n",
+    "data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Step 2: `scdesign3()` performs all-in-one simulation\n",
+    "\n",
+    "The function `scdesign3()` takes in an `anndata.AnnData` object with the cell covariates (such as cell types, pesudotime, or spatial coordinates) stored in the `anndata.AnnData.obs`.\n",
+    "\n",
+    "First create an instance of the `scDesign` class to use all methods."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "hide-output"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "test = pyscDesign3.scDesign3(n_cores=1)\n",
+    "simu_res = test.scdesign3(\n",
+    "    anndata=data,\n",
+    "    default_assay_name=\"counts\",\n",
+    "    celltype = \"cell_type\",\n",
+    "    pseudotime = \"pseudotime\",\n",
+    "    mu_formula = \"s(pseudotime, k = 10, bs = 'cr')\",\n",
+    "    sigma_formula = \"s(pseudotime, k = 5, bs = 'cr')\",\n",
+    "    family_use = \"nb\",\n",
+    "    usebam = True,\n",
+    "    corr_formula = \"1\",\n",
+    "    copula = \"gaussian\",\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "```{eval-rst}\n",
+    ".. Note::\n",
+    "    Details of the input and output of the `scdesign3` will be shown in :doc:`tutorial <./all_in_one>` section.\n",
+    "```\n",
+    "\n",
+    "## Step 3: Construct new `anndata.AnnData` object with the simulated result\n",
+    "\n",
+    "Besides constructing the simulated `anndata.AnnData` object, we can also calculate the log transformed data for visualization."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "simu_data = ad.AnnData(X=simu_res[\"new_count\"].T,obs=simu_res[\"new_covariate\"])\n",
+    "simu_data.layers['log_transformed'] = np.log1p(simu_data.X)\n",
+    "data.layers['log_transformed'] = np.log1p(data.X)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Step 4: Visualization"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-output"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "plot = pyscDesign3.plot_reduceddim(\n",
+    "    ref_anndata=data,\n",
+    "    anndata_dict={\"0\": simu_data},\n",
+    "    name_list=[\"Reference\", \"scDesign3\"],\n",
+    "    assay_use=\"log_transformed\",\n",
+    "    if_plot=True,\n",
+    "    color_by=\"pseudotime\",\n",
+    "    n_pc=20,\n",
+    "    point_size=5,\n",
+    ")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "UMAP plot"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plot[\"p_umap\"]"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "PCA plot"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "plot[\"p_pca\"]"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "scrpy",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.17"
+  },
+  "orig_nbformat": 4
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

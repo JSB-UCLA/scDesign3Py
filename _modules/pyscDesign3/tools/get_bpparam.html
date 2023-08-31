@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyscDesign3.tools.get_bpparam &mdash; pyscDesign3  documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+        <script src="../../../_static/clipboard.min.js"></script>
+        <script src="../../../_static/copybutton.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            pyscDesign3
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up/Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up/API.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../set_up/info.html">About pyscDesign3</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/all_in_one.html">All in one simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/stepwise.html">Step by step simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/bpparam.html">Get BPPARAM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/lrt.html">Perform likelihood ratio test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorial/plot.html">Plot results</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/data_simu/index.html">Data simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/model_select/index.html">Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/model_alter/index.html">Model alteration</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">pyscDesign3</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyscDesign3.tools.get_bpparam</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyscDesign3.tools.get_bpparam</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Literal</span>
+
+<span class="kn">from</span> <span class="nn">rpy2.robjects</span> <span class="kn">import</span> <span class="n">r</span>
+
+<span class="kn">from</span> <span class="nn">.._utils._errors</span> <span class="kn">import</span> <span class="n">InputError</span>
+
+
+<div class="viewcode-block" id="get_bpparam"><a class="viewcode-back" href="../../../set_up/_autosummary/pyscDesign3.tools.get_bpparam.get_bpparam.html#pyscDesign3.tools.get_bpparam.get_bpparam">[docs]</a><span class="k">def</span> <span class="nf">get_bpparam</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;MulticoreParam&quot;</span><span class="p">,</span> <span class="s2">&quot;SnowParam&quot;</span><span class="p">],</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get your parallelization parameters robject</span>
+
+<span class="sd">    Check R function `BiocParallel::MulticoreParam` and `BiocParallel::SnowParam` for more informarion on how to set the parameters.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    name: `str`</span>
+<span class="sd">        The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.</span>
+
+<span class="sd">    show: `bool` (default: True)</span>
+<span class="sd">        Whether to print the constructed onject information on the screen.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;MulticoreParam&quot;</span><span class="p">:</span>
+        <span class="n">para_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;workers&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tasks&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;stop_on_error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;progressbar&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;RNGseed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;exportglobals&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;log&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;threshold&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;logdir&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;resultdir&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jobname&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;force_GC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fallback&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;manager_hostname&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;manager_port&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;SnowParam&quot;</span><span class="p">:</span>
+        <span class="n">para_list</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;workers&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;tasks&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;stop_on_error&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;progressbar&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;RNGseed&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;timeout&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;exportglobals&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;exportvariables&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;log&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;threshold&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;logdir&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;resultdir&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;jobname&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;force_GC&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;fallback&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;manager_hostname&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;manager_port&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s2">&quot;Currently only support MulticoreParam for linux/mac and SnowParam for windows.&quot;</span><span class="p">)</span>
+
+    <span class="n">para_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">para_list</span><span class="p">}</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">para_dict</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span>
+            <span class="s2">&quot;Please check R document BiocParallel for argument details. https://www.bioconductor.org/packages/devel/bioc/manuals/BiocParallel/man/BiocParallel.pdf&quot;</span>
+        <span class="p">)</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;MulticoreParam&quot;</span><span class="p">:</span>
+        <span class="n">para_object</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="s2">&quot;BiocParallel::MulticoreParam&quot;</span><span class="p">)(</span><span class="o">**</span><span class="n">para_dict</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;SnowParam&quot;</span><span class="p">:</span>
+        <span class="n">para_object</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="s2">&quot;BiocParallel::SnowParam&quot;</span><span class="p">)(</span><span class="o">**</span><span class="n">para_dict</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">para_object</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">para_object</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Di Liu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
