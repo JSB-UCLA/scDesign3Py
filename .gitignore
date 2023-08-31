@@ -1,2 +1,7 @@
 # ignore pycache
 **/__pycache__
+
+# ignore doc local build
+docs/build/
+
+test/test
