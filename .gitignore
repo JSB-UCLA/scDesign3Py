@@ -3,5 +3,3 @@
 
 # ignore doc local build
 docs/build/
-
-test/test
