@@ -13,7 +13,8 @@
     "import os\n",
     "import sys\n",
     "\n",
-    "sys.path.append(\"../../../\")"
+    "os.chdir(\"..\")\n",
+    "sys.path.append(\"../../\")"
    ]
   },
   {
@@ -52,7 +53,7 @@
     "\n",
     "The raw data is from the [scvelo](https://scvelo.readthedocs.io/scvelo.datasets.pancreas/), which describes pancreatic endocrinogenesis. We pre-select the top 1000 highly variable genes and filter out some cell types to ensure a **single trajectory**.\n",
     "\n",
-    "To save time, we only use the top 50 genes."
+    "To save time, we only use the top 30 genes."
    ]
   },
   {
@@ -61,7 +62,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "data = ad.read_h5ad(\"../../../test/test_data/PANCREAS.h5ad\")\n",
+    "data = ad.read_h5ad(\"data/PANCREAS.h5ad\")\n",
     "data = data[:,0:30]\n",
     "data"
    ]
@@ -72,9 +73,25 @@
    "source": [
     "## Step 2: `scdesign3()` performs all-in-one simulation\n",
     "\n",
-    "The function `scdesign3()` takes in an `anndata.AnnData` object with the cell covariates (such as cell types, pesudotime, or spatial coordinates) stored in the `anndata.AnnData.obs`.\n",
-    "\n",
-    "First create an instance of the `scDesign` class to use all methods."
+    "First create an instance of the `scDesign` class to use the `scdesign3()` class method."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": []
+   },
+   "outputs": [],
+   "source": [
+    "test = pyscDesign3.scDesign3(n_cores=1)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "The function `scdesign3()` takes in an `anndata.AnnData` object with the cell covariates (such as cell types, pesudotime, or spatial coordinates) stored in the `anndata.AnnData.obs`, and performs the all-in-one simulation."
    ]
   },
   {
@@ -87,7 +104,6 @@
    },
    "outputs": [],
    "source": [
-    "test = pyscDesign3.scDesign3(n_cores=1)\n",
     "simu_res = test.scdesign3(\n",
     "    anndata=data,\n",
     "    default_assay_name=\"counts\",\n",

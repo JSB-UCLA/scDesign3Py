@@ -123,10 +123,10 @@
 <section id="read-in-data">
 <h3>Read in data<a class="headerlink" href="#read-in-data" title="Permalink to this heading"></a></h3>
 <p>The raw data is from the <a class="reference external" href="https://scvelo.readthedocs.io/scvelo.datasets.pancreas/">scvelo</a>, which describes pancreatic endocrinogenesis. We pre-select the top 1000 highly variable genes and filter out some cell types to ensure a <strong>single trajectory</strong>.</p>
-<p>To save time, we only use the top 50 genes.</p>
+<p>To save time, we only use the top 30 genes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;../../../test/test_data/PANCREAS.h5ad&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/PANCREAS.h5ad&quot;</span><span class="p">)</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span>
 <span class="n">data</span>
 </pre></div>
@@ -145,12 +145,18 @@
 </section>
 <section id="step-2-scdesign3-performs-all-in-one-simulation">
 <h2>Step 2: <code class="docutils literal notranslate"><span class="pre">scdesign3()</span></code> performs all-in-one simulation<a class="headerlink" href="#step-2-scdesign3-performs-all-in-one-simulation" title="Permalink to this heading"></a></h2>
-<p>The function <code class="docutils literal notranslate"><span class="pre">scdesign3()</span></code> takes in an <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object with the cell covariates (such as cell types, pesudotime, or spatial coordinates) stored in the <code class="docutils literal notranslate"><span class="pre">anndata.AnnData.obs</span></code>.</p>
-<p>First create an instance of the <code class="docutils literal notranslate"><span class="pre">scDesign</span></code> class to use all methods.</p>
+<p>First create an instance of the <code class="docutils literal notranslate"><span class="pre">scDesign</span></code> class to use the <code class="docutils literal notranslate"><span class="pre">scdesign3()</span></code> class method.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The function <code class="docutils literal notranslate"><span class="pre">scdesign3()</span></code> takes in an <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object with the cell covariates (such as cell types, pesudotime, or spatial coordinates) stored in the <code class="docutils literal notranslate"><span class="pre">anndata.AnnData.obs</span></code>, and performs the all-in-one simulation.</p>
 <div class="cell tag_hide-output docutils container">
 <div class="cell_input above-output-prompt docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">simu_res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span>
     <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
     <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
     <span class="n">celltype</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
@@ -264,7 +270,7 @@ Extraction End
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/d6a522d980927f3012d778d8d093ba90f54be52129171da13afe1efb66f2c0bf.png" src="../_images/d6a522d980927f3012d778d8d093ba90f54be52129171da13afe1efb66f2c0bf.png" />
+<img alt="../_images/6262dfb1b81c1668542eb306418350f12d0453240057f7c66cae422a7bd30ea7.png" src="../_images/6262dfb1b81c1668542eb306418350f12d0453240057f7c66cae422a7bd30ea7.png" />
 </div>
 </div>
 <p>PCA plot</p>
@@ -275,7 +281,7 @@ Extraction End
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8519602b67ec112e0dae12bda1fca3c6f46cb5bca84d8e03682388b142275b46.png" src="../_images/8519602b67ec112e0dae12bda1fca3c6f46cb5bca84d8e03682388b142275b46.png" />
+<img alt="../_images/5cfbea5c130450958e8d05e6eee82495bae3a5f4a7998a7d6c94dfb944544691.png" src="../_images/5cfbea5c130450958e8d05e6eee82495bae3a5f4a7998a7d6c94dfb944544691.png" />
 </div>
 </div>
 </section>
