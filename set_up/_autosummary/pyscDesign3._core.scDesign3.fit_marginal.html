@@ -115,7 +115,10 @@
 <span class="sig-prename descclassname"><span class="pre">pyscDesign3._core.scDesign3.</span></span><span class="sig-name descname"><span class="pre">fit_marginal</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;function</span> <span class="pre">scDesign3.fit_marginal&gt;</span></em><a class="headerlink" href="#pyscDesign3._core.scDesign3.fit_marginal" title="Permalink to this definition"></a></dt>
 <dd><p>Fit the marginal models</p>
 <p>&#64;fit_marginal fits the per-feature regression models.</p>
+<section id="details">
+<h2>Details:<a class="headerlink" href="#details" title="Permalink to this heading"></a></h2>
 <p>The function takes the result from &#64;construct_data as the input, and fit the regression models for each feature based on users’ specification.</p>
+</section>
 <section id="arguments">
 <h2>Arguments:<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
 <dl class="simple">
@@ -142,6 +145,12 @@
 <dt>return_py: <cite>bool</cite> (default: ‘default’)</dt><dd><p>If True, functions will return a result easy for manipulation in python. Default is ‘default’, use the setting when initializing.</p>
 </dd>
 </dl>
+</section>
+<section id="output">
+<h2>Output:<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<p>A <cite>dict</cite> like object.</p>
+<p>Fitted regression models.</p>
+<p>Each key corresponds to one gene name and the length is equal to the total gene number.</p>
 </section>
 </dd></dl>
 

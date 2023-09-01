@@ -115,19 +115,22 @@
 <span class="sig-prename descclassname"><span class="pre">pyscDesign3._core.scDesign3.</span></span><span class="sig-name descname"><span class="pre">simu_new</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;function</span> <span class="pre">scDesign3.simu_new&gt;</span></em><a class="headerlink" href="#pyscDesign3._core.scDesign3.simu_new" title="Permalink to this definition"></a></dt>
 <dd><p>Simulate new data</p>
 <p>Generate new simulated data based on fitted marginal and copula models.</p>
+<section id="details">
+<h2>Details:<a class="headerlink" href="#details" title="Permalink to this heading"></a></h2>
 <p>The function takes the new covariate (if use) from &#64;construct_data, parameter matricies from &#64;extract_para and multivariate Unifs from &#64;fit_copula.</p>
+</section>
 <section id="arguments">
 <h2>Arguments:<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
 <dl class="simple">
-<dt>mean_mat: <cite>numpy.ndarray</cite> (default: ‘mean_mat’)</dt><dd><p>A matrix of the mean parameter. Default is ‘mean_mat’, use the &#64;model_paras, mean_mat output.</p>
+<dt>mean_mat: <cite>numpy.ndarray</cite> or <cite>pandas.DataFrame</cite> (default: ‘mean_mat’)</dt><dd><p>A matrix of the mean parameter. Default is ‘mean_mat’, use the &#64;model_paras, mean_mat output.</p>
 </dd>
-<dt>sigma_mat: <cite>numpy.ndarray</cite> (default: ‘sigma_mat’)</dt><dd><p>A matrix of the sigma parameter. Default is ‘sigma_mat’, use the &#64;model_paras, sigma_mat output.</p>
+<dt>sigma_mat: <cite>numpy.ndarray</cite> or <cite>pandas.DataFrame</cite> (default: ‘sigma_mat’)</dt><dd><p>A matrix of the sigma parameter. Default is ‘sigma_mat’, use the &#64;model_paras, sigma_mat output.</p>
 </dd>
-<dt>zero_mat: <cite>numpy.ndarray</cite> (default: ‘zero_mat’)</dt><dd><p>A matrix of the zero-inflation parameter. Default is ‘zero_mat’, use the &#64;model_paras, zero_mat output.</p>
+<dt>zero_mat: <cite>numpy.ndarray</cite> or <cite>pandas.DataFrame</cite> (default: ‘zero_mat’)</dt><dd><p>A matrix of the zero-inflation parameter. Default is ‘zero_mat’, use the &#64;model_paras, zero_mat output.</p>
 </dd>
-<dt>quantile_mat: <cite>numpy.ndarray</cite> (default: None)</dt><dd><p>A matrix of the multivariate quantile. Default is None, if parameter &#64;copula_list is provided.</p>
+<dt>quantile_mat: <cite>numpy.ndarray</cite> or <cite>pandas.DataFrame</cite> (default: None)</dt><dd><p>A matrix of the multivariate quantile. Default is None, if parameter &#64;copula_dict is provided.</p>
 </dd>
-<dt>copula_list: <cite>rpy2.robject.vectors.ListVector</cite> or <cite>rpy2.rlike.container.OrdDict</cite> or <cite>dict</cite> (default: ‘default’)</dt><dd><p>Copulas for generating the multivariate quantile matrix. Default is ‘default’, use the &#64;fit_copula_res, copula_list output.</p>
+<dt>copula_dict: <cite>rpy2.robject.vectors.ListVector</cite> or <cite>rpy2.rlike.container.OrdDict</cite> or <cite>dict</cite> (default: ‘default’)</dt><dd><p>Copulas for generating the multivariate quantile matrix. Default is ‘default’, use the &#64;fit_copula_res, copula_list output.</p>
 </dd>
 <dt>data: <cite>str</cite> or <cite>pandas.DataFrame</cite> (default: ‘dat’)</dt><dd><p>An input count matrix. Default is ‘dat’, use the &#64;construct_data_res, ‘dat’ output.</p>
 </dd>
@@ -150,6 +153,14 @@
 <dt>bpparam: <cite>rpy2.robject.methods.RS4</cite> (default: ‘default’)</dt><dd><p>If &#64;parallelization is ‘bpmapply’, first call function &#64;get_bpparam to get the robject. If &#64;parallelization is ‘mcmapply’ or ‘pbmcmapply’, it should be None. Default is ‘default’, use the setting when initializing.</p>
 </dd>
 <dt>return_py: <cite>bool</cite> (default: ‘default’)</dt><dd><p>If True, functions will return a result easy for manipulation in python. Default is ‘default’, use the setting when initializing.</p>
+</dd>
+</dl>
+</section>
+<section id="output">
+<h2>Output:<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<dl>
+<dt><cite>pandas.DataFrame</cite></dt><dd><p>The new simulated count (expression) matrix.</p>
+<p>The row corresponds to the observations and the column corresponds to the genes.</p>
 </dd>
 </dl>
 </section>

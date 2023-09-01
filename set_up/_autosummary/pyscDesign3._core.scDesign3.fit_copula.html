@@ -115,7 +115,10 @@
 <span class="sig-prename descclassname"><span class="pre">pyscDesign3._core.scDesign3.</span></span><span class="sig-name descname"><span class="pre">fit_copula</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;function</span> <span class="pre">scDesign3.fit_copula&gt;</span></em><a class="headerlink" href="#pyscDesign3._core.scDesign3.fit_copula" title="Permalink to this definition"></a></dt>
 <dd><p>Fit the copula model</p>
 <p>&#64;fit_copula fits the copula model.</p>
+<section id="details">
+<h2>Details:<a class="headerlink" href="#details" title="Permalink to this heading"></a></h2>
 <p>This function takes the result from &#64;fit_marginal as the input and fit the copula model on the residuals.</p>
+</section>
 <section id="arguments">
 <h2>Arguments:<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
 <dl class="simple">
@@ -125,7 +128,7 @@
 </dd>
 <dt>empirical_quantile: <cite>bool</cite> (default: False)</dt><dd><p>Please only use it if you clearly know what will happen! If True, DO NOT fit the copula and use the EMPIRICAL CDF values of the original data; it will make the simulated data fixed (no randomness). Only works if ncell is the same as your original data.</p>
 </dd>
-<dt>marginal_list: <cite>rpy2.robject.vectors.ListVector</cite> or <cite>rpy2.rlike.container.OrdDict</cite> or <cite>dict</cite> (default: ‘default’)</dt><dd><p>The result of &#64;fit_marginal. Default is ‘default’, using the class property &#64;fit_marginal_res.</p>
+<dt>marginal_dict: <cite>rpy2.robject.vectors.ListVector</cite> or <cite>rpy2.rlike.container.OrdDict</cite> or <cite>dict</cite> (default: ‘default’)</dt><dd><p>The result of &#64;fit_marginal. Default is ‘default’, using the class property &#64;fit_marginal_res.</p>
 </dd>
 <dt>family_use: <cite>str</cite> or <cite>list[str]</cite> (default: ‘default’)</dt><dd><p>A string or a list of strings of the marginal distribution. Must be one of ‘binomial’, ‘poisson’, ‘nb’, ‘zip’, ‘zinb’ or ‘gaussian’. Default is ‘default’, use the class property &#64;family_use.</p>
 </dd>
@@ -146,6 +149,22 @@
 <dt>bpparam: <cite>rpy2.robject.methods.RS4</cite> (default: ‘default’)</dt><dd><p>If &#64;parallelization is ‘bpmapply’, first call function &#64;get_bpparam to get the robject. If &#64;parallelization is ‘mcmapply’ or ‘pbmcmapply’, it should be None. Default is ‘default’, use the setting when initializing.</p>
 </dd>
 <dt>return_py: <cite>bool</cite> (default: ‘default’)</dt><dd><p>If True, functions will return a result easy for manipulation in python. Default is ‘default’, use the setting when initializing.</p>
+</dd>
+</dl>
+</section>
+<section id="output">
+<h2>Output:<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<p>A <cite>dict</cite> like object.</p>
+<dl>
+<dt>model_aic: <cite>pandas.Series</cite></dt><dd><p>An array with three values. In order, they are the marginal AIC, the copula AIC, the total AIC.</p>
+</dd>
+<dt>model_bic: <cite>pandas.Series</cite></dt><dd><p>An array with three values. In order, they are the marginal BIC, the copula BIC, the total BIC.</p>
+</dd>
+<dt>important_feature: <cite>rpy2.robjects.vectors.BoolVector</cite></dt><dd><p>A vector showing the genes regarded as the inportant genes.</p>
+<p>Call <cite>print</cite> to better show the result.</p>
+</dd>
+<dt>copula_list: <cite>rpy2.rlike.container.OrdDict</cite></dt><dd><p>A dict of the fitted copula model. If using Gaussian copula, a dict of correlation matrices; if vine, a dict of vine objects.</p>
+<p>Caution that though it’s name is <cite>list</cite>, it is actually a <cite>dict</cite> like object.</p>
 </dd>
 </dl>
 </section>

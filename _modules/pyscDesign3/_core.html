@@ -105,7 +105,15 @@
 <span class="kn">from</span> <span class="nn">rpy2.robjects.packages</span> <span class="kn">import</span> <span class="n">importr</span>
 
 <span class="kn">from</span> <span class="nn">._utils._errors</span> <span class="kn">import</span> <span class="n">InputError</span><span class="p">,</span> <span class="n">SequentialError</span>
-<span class="kn">from</span> <span class="nn">._utils._format</span> <span class="kn">import</span> <span class="n">_anndata2sce</span><span class="p">,</span> <span class="n">_bpparamcheck</span><span class="p">,</span> <span class="n">_other2list</span><span class="p">,</span> <span class="n">_strvec_none2ri</span><span class="p">,</span> <span class="n">_typecheck</span><span class="p">,</span> <span class="n">convert</span>
+<span class="kn">from</span> <span class="nn">._utils._format</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_addname</span><span class="p">,</span>
+    <span class="n">_anndata2sce</span><span class="p">,</span>
+    <span class="n">_bpparamcheck</span><span class="p">,</span>
+    <span class="n">_other2list</span><span class="p">,</span>
+    <span class="n">_strvec_none2ri</span><span class="p">,</span>
+    <span class="n">_typecheck</span><span class="p">,</span>
+    <span class="n">convert</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="scDesign3"><a class="viewcode-back" href="../../set_up/_autosummary/pyscDesign3._core.scDesign3.html#pyscDesign3._core.scDesign3">[docs]</a><span class="k">class</span> <span class="nc">scDesign3</span><span class="p">:</span>
@@ -191,7 +199,7 @@
         <span class="n">bpparam</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">methods</span><span class="o">.</span><span class="n">RS4</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">return_py</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decide basic settings</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Decide basic settings when running the class methods.</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">        ----------</span>
@@ -205,7 +213,9 @@
 <span class="sd">            If @parallelization is &#39;bpmapply&#39;, first call method @get_bpparam to get the robject. If @parallelization is &#39;mcmapply&#39; or &#39;pbmcmapply&#39;, remain default None.</span>
 
 <span class="sd">        return_py: `bool` (default: True)</span>
-<span class="sd">            If True, functions will return a result easy for manipulation in python.</span>
+<span class="sd">            If @return_py is True, a `rpy2.rlike.container.OrdDict` object is returned, which can be manipulated basically like the `dict` object and has `__getitem__()`, `get()`, `items()` method. What&#39;s more, values hosted in the object are transferred to `pandas`, `numpy` object. Else, a `rpy2.robjects.ListVector` object is returned, which also has the `items()` method, but if you want to get the value of a key, use `rx2()` method instead of `__getitem__()` and `get()` method. All values hosted basically remained as `rpy2.robjects.vectors` objects.</span>
+
+<span class="sd">            It is recommended that if there&#39;s no need to manipulate the result, or if you are familiar with `rpy2` package, set the @return_py as False, else setting @return_py as True may help you better manipulate the results. Default is True.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># import r package</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_rscdesign</span> <span class="o">=</span> <span class="n">importr</span><span class="p">(</span><span class="s2">&quot;scDesign3&quot;</span><span class="p">)</span>
@@ -248,6 +258,8 @@
 
 <span class="sd">        This function constructs the input data  (covaraite matrix and expression matrix) for @fit_marginal.</span>
 
+<span class="sd">        Details:</span>
+<span class="sd">        ----------</span>
 <span class="sd">        This function takes a `anndata.AnnData` object as the input. Based on users&#39; choice, it constructs the matrix of covaraites (explainary variables) and the expression matrix (e.g., count matrix for scRNA-seq).</span>
 
 <span class="sd">        Arguments:</span>
@@ -287,6 +299,21 @@
 
 <span class="sd">        return_py: `bool` (default: &#39;default&#39;)</span>
 <span class="sd">            If True, functions will return a result easy for manipulation in python. Default is &#39;default&#39;, use the setting when initializing.</span>
+
+<span class="sd">        Output:</span>
+<span class="sd">        --------</span>
+<span class="sd">        A `dict` like object.</span>
+
+<span class="sd">        count_mat: `pandas.DataFrame`</span>
+<span class="sd">            The expression matrix.</span>
+
+<span class="sd">            The row corresponds to the observations and the column corresponds to the genes.</span>
+
+<span class="sd">        dat: `pandas.DataFrame`</span>
+<span class="sd">            The original covariate matrix.</span>
+
+<span class="sd">        newCovariate: `pandas.DataFrame`</span>
+<span class="sd">            The simulated new covariate matrix. If @ncell is default, the @newCovariate is basically the same as the @dat only without the `corr_group` column.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">return_py</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
@@ -342,7 +369,12 @@
         <span class="k">if</span> <span class="n">return_py</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">convert</span><span class="o">.</span><span class="n">context</span><span class="p">():</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">rpy2py</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">construct_data_res</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">res</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;count_mat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_addname</span><span class="p">(</span>
+                <span class="n">array</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;count_mat&quot;</span><span class="p">],</span>
+                <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">construct_data_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;count_mat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rownames</span><span class="p">,</span>
+                <span class="n">col_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">construct_data_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;count_mat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">colnames</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">res</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">construct_data_res</span>
 
@@ -378,6 +410,8 @@
 
 <span class="sd">        @fit_marginal fits the per-feature regression models.</span>
 
+<span class="sd">        Details:</span>
+<span class="sd">        ----------</span>
 <span class="sd">        The function takes the result from @construct_data as the input, and fit the regression models for each feature based on users&#39; specification.</span>
 
 <span class="sd">        Arguments:</span>
@@ -414,6 +448,14 @@
 
 <span class="sd">        return_py: `bool` (default: &#39;default&#39;)</span>
 <span class="sd">            If True, functions will return a result easy for manipulation in python. Default is &#39;default&#39;, use the setting when initializing.</span>
+
+<span class="sd">        Output:</span>
+<span class="sd">        --------</span>
+<span class="sd">        A `dict` like object.</span>
+
+<span class="sd">        Fitted regression models.</span>
+
+<span class="sd">        Each key corresponds to one gene name and the length is equal to the total gene number.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">return_py</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
@@ -473,7 +515,7 @@
         <span class="n">input_data</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
         <span class="n">copula</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
         <span class="n">empirical_quantile</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
-        <span class="n">marginal_list</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span>
+        <span class="n">marginal_dict</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span>
         <span class="n">family_use</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">],</span>
         <span class="n">dt</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
         <span class="n">pseudo_obs</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span>
@@ -490,7 +532,7 @@
         <span class="n">input_data</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;count_mat&quot;</span><span class="p">,</span> <span class="s2">&quot;dat&quot;</span><span class="p">,</span> <span class="s2">&quot;newCovariate&quot;</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;dat&quot;</span><span class="p">,</span>
         <span class="n">copula</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> <span class="s2">&quot;vine&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
         <span class="n">empirical_quantile</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="n">marginal_list</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="n">marginal_dict</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="n">family_use</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;binomial&quot;</span><span class="p">,</span> <span class="s2">&quot;poisson&quot;</span><span class="p">,</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span> <span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="s2">&quot;zinb&quot;</span><span class="p">,</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="n">dt</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
         <span class="n">pseudo_obs</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
@@ -506,6 +548,8 @@
 
 <span class="sd">        @fit_copula fits the copula model.</span>
 
+<span class="sd">        Details:</span>
+<span class="sd">        ----------</span>
 <span class="sd">        This function takes the result from @fit_marginal as the input and fit the copula model on the residuals.</span>
 
 <span class="sd">        Arguments:</span>
@@ -519,7 +563,7 @@
 <span class="sd">        empirical_quantile: `bool` (default: False)</span>
 <span class="sd">            Please only use it if you clearly know what will happen! If True, DO NOT fit the copula and use the EMPIRICAL CDF values of the original data; it will make the simulated data fixed (no randomness). Only works if ncell is the same as your original data.</span>
 
-<span class="sd">        marginal_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: &#39;default&#39;)</span>
+<span class="sd">        marginal_dict: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: &#39;default&#39;)</span>
 <span class="sd">            The result of @fit_marginal. Default is &#39;default&#39;, using the class property @fit_marginal_res.</span>
 
 <span class="sd">        family_use: `str` or `list[str]` (default: &#39;default&#39;)</span>
@@ -551,6 +595,26 @@
 
 <span class="sd">        return_py: `bool` (default: &#39;default&#39;)</span>
 <span class="sd">            If True, functions will return a result easy for manipulation in python. Default is &#39;default&#39;, use the setting when initializing.</span>
+
+<span class="sd">        Output:</span>
+<span class="sd">        --------</span>
+<span class="sd">        A `dict` like object.</span>
+
+<span class="sd">        model_aic: `pandas.Series`</span>
+<span class="sd">            An array with three values. In order, they are the marginal AIC, the copula AIC, the total AIC.</span>
+
+<span class="sd">        model_bic: `pandas.Series`</span>
+<span class="sd">            An array with three values. In order, they are the marginal BIC, the copula BIC, the total BIC.</span>
+
+<span class="sd">        important_feature: `rpy2.robjects.vectors.BoolVector`</span>
+<span class="sd">            A vector showing the genes regarded as the inportant genes.</span>
+
+<span class="sd">            Call `print` to better show the result.</span>
+
+<span class="sd">        copula_list: `rpy2.rlike.container.OrdDict`</span>
+<span class="sd">            A dict of the fitted copula model. If using Gaussian copula, a dict of correlation matrices; if vine, a dict of vine objects.</span>
+
+<span class="sd">            Caution that though it&#39;s name is `list`, it is actually a `dict` like object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">return_py</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
@@ -597,11 +661,11 @@
 
         <span class="c1"># use fit marginal res</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">marginal_list</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
-                <span class="n">marginal_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_marginal_res</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">marginal_list</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">marginal_list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">marginal_dict</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+                <span class="n">marginal_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_marginal_res</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">marginal_dict</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">marginal_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="k">with</span> <span class="n">convert</span><span class="o">.</span><span class="n">context</span><span class="p">():</span>
-                    <span class="n">marginal_list</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">marginal_list</span><span class="p">)</span>
+                    <span class="n">marginal_dict</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">marginal_dict</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SequentialError</span><span class="p">(</span><span class="s2">&quot;Please first run @fit_marginal.&quot;</span><span class="p">)</span>
 
@@ -610,7 +674,7 @@
             <span class="n">assay_use</span><span class="o">=</span><span class="n">assay_use</span><span class="p">,</span>
             <span class="n">input_data</span><span class="o">=</span><span class="n">input_data</span><span class="p">,</span>
             <span class="n">empirical_quantile</span><span class="o">=</span><span class="n">empirical_quantile</span><span class="p">,</span>
-            <span class="n">marginal_list</span><span class="o">=</span><span class="n">marginal_list</span><span class="p">,</span>
+            <span class="n">marginal_list</span><span class="o">=</span><span class="n">marginal_dict</span><span class="p">,</span>
             <span class="n">family_use</span><span class="o">=</span><span class="n">family_use</span><span class="p">,</span>
             <span class="n">copula</span><span class="o">=</span><span class="n">copula</span><span class="p">,</span>
             <span class="n">DT</span><span class="o">=</span><span class="n">dt</span><span class="p">,</span>
@@ -626,14 +690,23 @@
         <span class="k">if</span> <span class="n">return_py</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">convert</span><span class="o">.</span><span class="n">context</span><span class="p">():</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">rpy2py</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_copula_res</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">res</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;model_aic&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_addname</span><span class="p">(</span>
+                <span class="n">array</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;model_aic&quot;</span><span class="p">],</span>
+                <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_copula_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;model_aic&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">names</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;model_bic&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_addname</span><span class="p">(</span>
+                <span class="n">array</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;model_bic&quot;</span><span class="p">],</span>
+                <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">fit_copula_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;model_bic&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">names</span><span class="p">,</span>
+            <span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">res</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_copula_res</span>
 
     <span class="nd">@_typecheck</span><span class="p">(</span>
         <span class="n">data</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
         <span class="n">new_covariate</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
-        <span class="n">marginal_list</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span>
+        <span class="n">marginal_dict</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span>
         <span class="n">family_use</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">],</span>
         <span class="n">n_cores</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
         <span class="n">parallelization</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
@@ -644,7 +717,7 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="s2">&quot;dat&quot;</span><span class="p">,</span>
         <span class="n">new_covariate</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="s2">&quot;newCovariate&quot;</span><span class="p">,</span>
-        <span class="n">marginal_list</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="n">marginal_dict</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="n">family_use</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;binomial&quot;</span><span class="p">,</span> <span class="s2">&quot;poisson&quot;</span><span class="p">,</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span> <span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="s2">&quot;zinb&quot;</span><span class="p">,</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="n">n_cores</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="n">parallelization</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="s2">&quot;pbmcmapply&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
@@ -655,6 +728,8 @@
 
 <span class="sd">        This function generates parameter matricies which determine each cell&#39;s distribution</span>
 
+<span class="sd">        Details:</span>
+<span class="sd">        ----------</span>
 <span class="sd">        The function takes the new covariate (if use) from @construct_data and marginal models from @fit_marginal.</span>
 
 <span class="sd">        Arguments:</span>
@@ -665,7 +740,7 @@
 <span class="sd">        new_covariate: `str` or `pandas.DataFrame` (default: &#39;newCovariate&#39;)</span>
 <span class="sd">            The new covariates to simulate new gene expression data using the gene marginal models. Default is &#39;newCovariate&#39;, use the @construct_data_res, &#39;newCovariate&#39; output.</span>
 
-<span class="sd">        marginal_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: &#39;default&#39;)</span>
+<span class="sd">        marginal_dict: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: &#39;default&#39;)</span>
 <span class="sd">            The result of @fit_marginal. Default is &#39;default&#39;, using the class property @fit_marginal_res.</span>
 
 <span class="sd">        family_use: `str` or `list[str]` (default: &#39;default&#39;)</span>
@@ -682,6 +757,25 @@
 
 <span class="sd">        return_py: `bool` (default: &#39;default&#39;)</span>
 <span class="sd">            If True, functions will return a result easy for manipulation in python. Default is &#39;default&#39;, use the setting when initializing.</span>
+
+<span class="sd">        Output:</span>
+<span class="sd">        --------</span>
+<span class="sd">        A `dict` like object.</span>
+
+<span class="sd">        mean_mat: `pandas.DataFrame`</span>
+<span class="sd">            A matrix of the mean parameter.</span>
+
+<span class="sd">            The row corresponds to the observations and the column corresponds to the genes.</span>
+
+<span class="sd">        sigma_mat: `pandas.DataFrame`</span>
+<span class="sd">            A matrix of the sigma parameter (for Gaussian, the variance; for NB, the dispersion.).</span>
+
+<span class="sd">            The row corresponds to the observations and the column corresponds to the genes.</span>
+
+<span class="sd">        zero_mat: `pandas.DataFrame`</span>
+<span class="sd">            A matrix of the zero-inflation parameter (only non-zero for ZIP and ZINB).</span>
+
+<span class="sd">            The row corresponds to the observations and the column corresponds to the genes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">return_py</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
@@ -715,11 +809,11 @@
 
         <span class="c1"># use fit marginal res</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">marginal_list</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
-                <span class="n">marginal_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_marginal_res</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">marginal_list</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">marginal_list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">marginal_dict</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+                <span class="n">marginal_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_marginal_res</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">marginal_dict</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">marginal_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="k">with</span> <span class="n">convert</span><span class="o">.</span><span class="n">context</span><span class="p">():</span>
-                    <span class="n">marginal_list</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">marginal_list</span><span class="p">)</span>
+                    <span class="n">marginal_dict</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">marginal_dict</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SequentialError</span><span class="p">(</span><span class="s2">&quot;Please first run @fit_marginal.&quot;</span><span class="p">)</span>
 
@@ -742,7 +836,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model_paras</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rscdesign</span><span class="o">.</span><span class="n">extract_para</span><span class="p">(</span>
             <span class="n">sce</span><span class="o">=</span><span class="n">sce</span><span class="p">,</span>
             <span class="n">assay_use</span><span class="o">=</span><span class="n">assay_use</span><span class="p">,</span>
-            <span class="n">marginal_list</span><span class="o">=</span><span class="n">marginal_list</span><span class="p">,</span>
+            <span class="n">marginal_list</span><span class="o">=</span><span class="n">marginal_dict</span><span class="p">,</span>
             <span class="n">family_use</span><span class="o">=</span><span class="n">family_use</span><span class="p">,</span>
             <span class="n">new_covariate</span><span class="o">=</span><span class="n">new_covariate</span><span class="p">,</span>
             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
@@ -754,16 +848,31 @@
         <span class="k">if</span> <span class="n">return_py</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">convert</span><span class="o">.</span><span class="n">context</span><span class="p">():</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">rpy2py</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_paras</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">res</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_addname</span><span class="p">(</span>
+                <span class="n">array</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">],</span>
+                <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_paras</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rownames</span><span class="p">,</span>
+                <span class="n">col_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_paras</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">colnames</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;sigma_mat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_addname</span><span class="p">(</span>
+                <span class="n">array</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;sigma_mat&quot;</span><span class="p">],</span>
+                <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_paras</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;sigma_mat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rownames</span><span class="p">,</span>
+                <span class="n">col_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_paras</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;sigma_mat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">colnames</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;zero_mat&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_addname</span><span class="p">(</span>
+                <span class="n">array</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;zero_mat&quot;</span><span class="p">],</span>
+                <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_paras</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;zero_mat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rownames</span><span class="p">,</span>
+                <span class="n">col_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">model_paras</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;zero_mat&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">colnames</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">res</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_paras</span>
 
     <span class="nd">@_typecheck</span><span class="p">(</span>
-        <span class="n">mean_mat</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
-        <span class="n">sigma_mat</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
-        <span class="n">zero_mat</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
-        <span class="n">quantile_mat</span><span class="o">=</span><span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span>
-        <span class="n">copula_list</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span>
+        <span class="n">mean_mat</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">sigma_mat</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">zero_mat</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
+        <span class="n">quantile_mat</span><span class="o">=</span><span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]],</span>
+        <span class="n">copula_dict</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">],</span>
         <span class="n">input_data</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
         <span class="n">new_covariate</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">],</span>
         <span class="n">family_use</span><span class="o">=</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">],</span>
@@ -778,11 +887,11 @@
     <span class="p">)</span>
     <span class="k">def</span> <span class="nf">simu_new</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">mean_mat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="s2">&quot;mean_mat&quot;</span><span class="p">,</span>
-        <span class="n">sigma_mat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="s2">&quot;sigma_mat&quot;</span><span class="p">,</span>
-        <span class="n">zero_mat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">=</span> <span class="s2">&quot;zero_mat&quot;</span><span class="p">,</span>
-        <span class="n">quantile_mat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">copula_list</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="n">mean_mat</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;mean_mat&quot;</span><span class="p">,</span>
+        <span class="n">sigma_mat</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;sigma_mat&quot;</span><span class="p">,</span>
+        <span class="n">zero_mat</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;zero_mat&quot;</span><span class="p">,</span>
+        <span class="n">quantile_mat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">copula_dict</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">ro</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">ListVector</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
         <span class="n">input_data</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="s2">&quot;dat&quot;</span><span class="p">,</span>
         <span class="n">new_covariate</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="s2">&quot;newCovariate&quot;</span><span class="p">,</span>
         <span class="n">family_use</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;binomial&quot;</span><span class="p">,</span> <span class="s2">&quot;poisson&quot;</span><span class="p">,</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span> <span class="s2">&quot;zip&quot;</span><span class="p">,</span> <span class="s2">&quot;zinb&quot;</span><span class="p">,</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
@@ -799,23 +908,25 @@
 
 <span class="sd">        Generate new simulated data based on fitted marginal and copula models.</span>
 
+<span class="sd">        Details:</span>
+<span class="sd">        ----------</span>
 <span class="sd">        The function takes the new covariate (if use) from @construct_data, parameter matricies from @extract_para and multivariate Unifs from @fit_copula.</span>
 
 <span class="sd">        Arguments:</span>
 <span class="sd">        ----------</span>
-<span class="sd">        mean_mat: `numpy.ndarray` (default: &#39;mean_mat&#39;)</span>
+<span class="sd">        mean_mat: `numpy.ndarray` or `pandas.DataFrame` (default: &#39;mean_mat&#39;)</span>
 <span class="sd">            A matrix of the mean parameter. Default is &#39;mean_mat&#39;, use the @model_paras, mean_mat output.</span>
 
-<span class="sd">        sigma_mat: `numpy.ndarray` (default: &#39;sigma_mat&#39;)</span>
+<span class="sd">        sigma_mat: `numpy.ndarray` or `pandas.DataFrame` (default: &#39;sigma_mat&#39;)</span>
 <span class="sd">            A matrix of the sigma parameter. Default is &#39;sigma_mat&#39;, use the @model_paras, sigma_mat output.</span>
 
-<span class="sd">        zero_mat: `numpy.ndarray` (default: &#39;zero_mat&#39;)</span>
+<span class="sd">        zero_mat: `numpy.ndarray` or `pandas.DataFrame` (default: &#39;zero_mat&#39;)</span>
 <span class="sd">            A matrix of the zero-inflation parameter. Default is &#39;zero_mat&#39;, use the @model_paras, zero_mat output.</span>
 
-<span class="sd">        quantile_mat: `numpy.ndarray` (default: None)</span>
-<span class="sd">            A matrix of the multivariate quantile. Default is None, if parameter @copula_list is provided.</span>
+<span class="sd">        quantile_mat: `numpy.ndarray` or `pandas.DataFrame` (default: None)</span>
+<span class="sd">            A matrix of the multivariate quantile. Default is None, if parameter @copula_dict is provided.</span>
 
-<span class="sd">        copula_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: &#39;default&#39;)</span>
+<span class="sd">        copula_dict: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: &#39;default&#39;)</span>
 <span class="sd">            Copulas for generating the multivariate quantile matrix. Default is &#39;default&#39;, use the @fit_copula_res, copula_list output.</span>
 
 <span class="sd">        data: `str` or `pandas.DataFrame` (default: &#39;dat&#39;)</span>
@@ -850,6 +961,13 @@
 
 <span class="sd">        return_py: `bool` (default: &#39;default&#39;)</span>
 <span class="sd">            If True, functions will return a result easy for manipulation in python. Default is &#39;default&#39;, use the setting when initializing.</span>
+
+<span class="sd">        Output:</span>
+<span class="sd">        --------</span>
+<span class="sd">        `pandas.DataFrame`</span>
+<span class="sd">            The new simulated count (expression) matrix.</span>
+
+<span class="sd">            The row corresponds to the observations and the column corresponds to the genes.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">return_py</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
@@ -901,14 +1019,14 @@
                 <span class="n">quantile_mat</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">quantile_mat</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">copula_list</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
-                <span class="n">copula_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_copula_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;copula_list&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">copula_dict</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
+                <span class="n">copula_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_copula_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;copula_list&quot;</span><span class="p">)</span>
 
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">copula_list</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">copula_list</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">copula_dict</span><span class="p">,</span> <span class="n">OrdDict</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">copula_dict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
                 <span class="k">with</span> <span class="n">convert</span><span class="o">.</span><span class="n">context</span><span class="p">():</span>
-                    <span class="n">copula_list</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">copula_list</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">copula_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">copula_list</span> <span class="o">=</span> <span class="n">NULL</span>
+                    <span class="n">copula_dict</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">copula_dict</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">copula_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">copula_dict</span> <span class="o">=</span> <span class="n">NULL</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">SequentialError</span><span class="p">(</span><span class="s2">&quot;Please first run @fit_copula.&quot;</span><span class="p">)</span>
 
@@ -948,7 +1066,7 @@
             <span class="n">sigma_mat</span><span class="o">=</span><span class="n">sigma_mat</span><span class="p">,</span>
             <span class="n">zero_mat</span><span class="o">=</span><span class="n">zero_mat</span><span class="p">,</span>
             <span class="n">quantile_mat</span><span class="o">=</span><span class="n">quantile_mat</span><span class="p">,</span>
-            <span class="n">copula_list</span><span class="o">=</span><span class="n">copula_list</span><span class="p">,</span>
+            <span class="n">copula_list</span><span class="o">=</span><span class="n">copula_dict</span><span class="p">,</span>
             <span class="n">family_use</span><span class="o">=</span><span class="n">family_use</span><span class="p">,</span>
             <span class="n">fastmvn</span><span class="o">=</span><span class="n">fastmvn</span><span class="p">,</span>
             <span class="n">nonnegative</span><span class="o">=</span><span class="n">nonnegative</span><span class="p">,</span>
@@ -964,7 +1082,12 @@
         <span class="k">if</span> <span class="n">return_py</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">convert</span><span class="o">.</span><span class="n">context</span><span class="p">():</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">rpy2py</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">simu_res</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">res</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">_addname</span><span class="p">(</span>
+                <span class="n">array</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simu_res</span><span class="o">.</span><span class="n">colnames</span><span class="p">,</span>
+                <span class="n">col_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">simu_res</span><span class="o">.</span><span class="n">rownames</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">res</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">simu_res</span>
 
@@ -1117,6 +1240,34 @@
 
 <span class="sd">        return_py: `bool` (default: &#39;default&#39;)</span>
 <span class="sd">            If True, functions will return a result easy for manipulation in python. Default is &#39;default&#39;, use the setting when initializing.</span>
+
+<span class="sd">        Output:</span>
+<span class="sd">        --------</span>
+<span class="sd">        A `dict` like object.</span>
+
+<span class="sd">        new_count: `pandas.DataFrame`</span>
+<span class="sd">            A matrix of the new simulated count (expression) matrix.</span>
+
+<span class="sd">            The row corresponds to the observations and the column corresponds to the genes.</span>
+
+<span class="sd">        new_covariate: `pandas.DataFrame`</span>
+<span class="sd">            A dataframe of the new covariate matrix.</span>
+
+<span class="sd">        model_aic: `pandas.Series`</span>
+<span class="sd">            An array with three values. In order, they are the marginal AIC, the copula AIC, the total AIC.</span>
+
+<span class="sd">        model_bic: `pandas.Series`</span>
+<span class="sd">            An array with three values. In order, they are the marginal BIC, the copula BIC, the total BIC.</span>
+
+<span class="sd">        marginal_list: `rpy2.rlike.container.OrdDict`</span>
+<span class="sd">            A dict of marginal regression models if return_model = True.</span>
+
+<span class="sd">            Caution that though it&#39;s name is `list`, it is actually a `dict` like object.</span>
+
+<span class="sd">        corr_list: `rpy2.rlike.container.OrdDict`</span>
+<span class="sd">            A dict of correlation models (conditional copulas) if return_model = True.</span>
+
+<span class="sd">            Caution that though it&#39;s name is `list`, it is actually a `dict` like object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="n">return_py</span> <span class="o">==</span> <span class="s2">&quot;default&quot;</span><span class="p">:</span>
@@ -1196,7 +1347,20 @@
         <span class="k">if</span> <span class="n">return_py</span><span class="p">:</span>
             <span class="k">with</span> <span class="n">convert</span><span class="o">.</span><span class="n">context</span><span class="p">():</span>
                 <span class="n">res</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">rpy2py</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">res</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;model_aic&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_addname</span><span class="p">(</span>
+                <span class="n">array</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;model_aic&quot;</span><span class="p">],</span>
+                <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;model_aic&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">names</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;model_bic&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_addname</span><span class="p">(</span>
+                <span class="n">array</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;model_bic&quot;</span><span class="p">],</span>
+                <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;model_bic&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">names</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">res</span><span class="p">[</span><span class="s2">&quot;new_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_addname</span><span class="p">(</span>
+                <span class="n">array</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="s2">&quot;new_count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span>
+                <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;new_count&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">colnames</span><span class="p">,</span>
+                <span class="n">col_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;new_count&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rownames</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">res</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span></div>
 </pre></div>

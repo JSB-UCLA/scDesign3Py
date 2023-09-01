@@ -117,10 +117,22 @@
 <p>Check R function <cite>BiocParallel::MulticoreParam</cite> and <cite>BiocParallel::SnowParam</cite> for more informarion on how to set the parameters.</p>
 <section id="arguments">
 <h2>Arguments:<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
-<dl class="simple">
-<dt>name: <cite>str</cite></dt><dd><p>The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.</p>
+<dl class="field-list simple">
+<dt class="field-odd">name<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>str</cite>
+The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.</p>
 </dd>
-<dt>show: <cite>bool</cite> (default: True)</dt><dd><p>Whether to print the constructed onject information on the screen.</p>
+<dt class="field-even">show<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>bool</cite> (default: True)
+Whether to print the constructed onject information on the screen.</p>
+</dd>
+</dl>
+</section>
+<section id="output">
+<h2>Output:<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<dl>
+<dt><cite>rpy2.robjects.methods.RS4</cite></dt><dd><p>A R class specifying the parrallel parameters.</p>
+<p>Combined use with &#64;parallelization = <cite>bpmapply</cite>.</p>
 </dd>
 </dl>
 </section>

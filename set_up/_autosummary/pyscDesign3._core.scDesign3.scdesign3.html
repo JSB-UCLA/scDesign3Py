@@ -176,6 +176,27 @@ The name of cell type variable in the <cite>anndata.AnnData.obs</cite>.</p>
 </dd>
 </dl>
 </section>
+<section id="output">
+<h2>Output:<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<p>A <cite>dict</cite> like object.</p>
+<dl>
+<dt>new_count: <cite>pandas.DataFrame</cite></dt><dd><p>A matrix of the new simulated count (expression) matrix.</p>
+<p>The row corresponds to the observations and the column corresponds to the genes.</p>
+</dd>
+<dt>new_covariate: <cite>pandas.DataFrame</cite></dt><dd><p>A dataframe of the new covariate matrix.</p>
+</dd>
+<dt>model_aic: <cite>pandas.Series</cite></dt><dd><p>An array with three values. In order, they are the marginal AIC, the copula AIC, the total AIC.</p>
+</dd>
+<dt>model_bic: <cite>pandas.Series</cite></dt><dd><p>An array with three values. In order, they are the marginal BIC, the copula BIC, the total BIC.</p>
+</dd>
+<dt>marginal_list: <cite>rpy2.rlike.container.OrdDict</cite></dt><dd><p>A dict of marginal regression models if return_model = True.</p>
+<p>Caution that though it’s name is <cite>list</cite>, it is actually a <cite>dict</cite> like object.</p>
+</dd>
+<dt>corr_list: <cite>rpy2.rlike.container.OrdDict</cite></dt><dd><p>A dict of correlation models (conditional copulas) if return_model = True.</p>
+<p>Caution that though it’s name is <cite>list</cite>, it is actually a <cite>dict</cite> like object.</p>
+</dd>
+</dl>
+</section>
 </dd></dl>
 
 </section>

@@ -115,7 +115,10 @@
 <span class="sig-prename descclassname"><span class="pre">pyscDesign3._core.scDesign3.</span></span><span class="sig-name descname"><span class="pre">construct_data</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;function</span> <span class="pre">scDesign3.construct_data&gt;</span></em><a class="headerlink" href="#pyscDesign3._core.scDesign3.construct_data" title="Permalink to this definition"></a></dt>
 <dd><p>Construct the input data</p>
 <p>This function constructs the input data  (covaraite matrix and expression matrix) for &#64;fit_marginal.</p>
+<section id="details">
+<h2>Details:<a class="headerlink" href="#details" title="Permalink to this heading"></a></h2>
 <p>This function takes a <cite>anndata.AnnData</cite> object as the input. Based on users’ choice, it constructs the matrix of covaraites (explainary variables) and the expression matrix (e.g., count matrix for scRNA-seq).</p>
+</section>
 <section id="arguments">
 <h2>Arguments:<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
 <dl class="simple">
@@ -142,6 +145,19 @@
 <dt>bpparam: <cite>rpy2.robject.methods.RS4</cite> (default: ‘default’)</dt><dd><p>If &#64;parallelization is ‘bpmapply’, first call function &#64;get_bpparam to get the robject. If &#64;parallelization is ‘mcmapply’ or ‘pbmcmapply’, it should be None. Default is ‘default’, use the setting when initializing.</p>
 </dd>
 <dt>return_py: <cite>bool</cite> (default: ‘default’)</dt><dd><p>If True, functions will return a result easy for manipulation in python. Default is ‘default’, use the setting when initializing.</p>
+</dd>
+</dl>
+</section>
+<section id="output">
+<h2>Output:<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<p>A <cite>dict</cite> like object.</p>
+<dl>
+<dt>count_mat: <cite>pandas.DataFrame</cite></dt><dd><p>The expression matrix.</p>
+<p>The row corresponds to the observations and the column corresponds to the genes.</p>
+</dd>
+<dt>dat: <cite>pandas.DataFrame</cite></dt><dd><p>The original covariate matrix.</p>
+</dd>
+<dt>newCovariate: <cite>pandas.DataFrame</cite></dt><dd><p>The simulated new covariate matrix. If &#64;ncell is default, the &#64;newCovariate is basically the same as the &#64;dat only without the <cite>corr_group</cite> column.</p>
 </dd>
 </dl>
 </section>

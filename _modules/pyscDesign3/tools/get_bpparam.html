@@ -106,11 +106,18 @@
 
 <span class="sd">    Arguments:</span>
 <span class="sd">    ----------</span>
-<span class="sd">    name: `str`</span>
+<span class="sd">    :name: `str`</span>
 <span class="sd">        The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.</span>
 
-<span class="sd">    show: `bool` (default: True)</span>
+<span class="sd">    :show: `bool` (default: True)</span>
 <span class="sd">        Whether to print the constructed onject information on the screen.</span>
+
+<span class="sd">    Output:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    `rpy2.robjects.methods.RS4`</span>
+<span class="sd">        A R class specifying the parrallel parameters. </span>
+<span class="sd">        </span>
+<span class="sd">        Combined use with @parallelization = `bpmapply`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;MulticoreParam&quot;</span><span class="p">:</span>
