@@ -12,11 +12,18 @@ def get_bpparam(name=Literal["MulticoreParam", "SnowParam"], show=True, **kwargs
 
     Arguments:
     ----------
-    name: `str`
+    :name: `str`
         The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.
 
-    show: `bool` (default: True)
+    :show: `bool` (default: True)
         Whether to print the constructed onject information on the screen.
+
+    Output:
+    ----------
+    `rpy2.robjects.methods.RS4`
+        A R class specifying the parrallel parameters. 
+        
+        Combined use with @parallelization = `bpmapply`.
     """
 
     if name == "MulticoreParam":

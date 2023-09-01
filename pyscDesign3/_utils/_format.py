@@ -108,6 +108,13 @@ def _other2list(*args):
     return [x if isinstance(x, list) or (x is None) else [x] for x in args]
 
 
+def _addname(array, row_name=None, col_name=None):
+    if len(array.shape) == 1:
+        return pd.Series(array, row_name)
+    if len(array.shape) == 2:
+        return pd.DataFrame(array, index=row_name, columns=col_name)
+
+
 def _strvec_none2ri(*args):
     """
     Para list[str] and None should call this func to change format

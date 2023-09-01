@@ -11,7 +11,15 @@ from rpy2.robjects import NULL
 from rpy2.robjects.packages import importr
 
 from ._utils._errors import InputError, SequentialError
-from ._utils._format import _anndata2sce, _bpparamcheck, _other2list, _strvec_none2ri, _typecheck, convert
+from ._utils._format import (
+    _addname,
+    _anndata2sce,
+    _bpparamcheck,
+    _other2list,
+    _strvec_none2ri,
+    _typecheck,
+    convert,
+)
 
 
 class scDesign3:
@@ -97,7 +105,7 @@ class scDesign3:
         bpparam: Optional[ro.methods.RS4] = None,
         return_py: bool = True,
     ) -> None:
-        """Decide basic settings
+        """Decide basic settings when running the class methods.
 
         Arguments:
         ----------
@@ -111,7 +119,9 @@ class scDesign3:
             If @parallelization is 'bpmapply', first call method @get_bpparam to get the robject. If @parallelization is 'mcmapply' or 'pbmcmapply', remain default None.
 
         return_py: `bool` (default: True)
-            If True, functions will return a result easy for manipulation in python.
+            If @return_py is True, a `rpy2.rlike.container.OrdDict` object is returned, which can be manipulated basically like the `dict` object and has `__getitem__()`, `get()`, `items()` method. What's more, values hosted in the object are transferred to `pandas`, `numpy` object. Else, a `rpy2.robjects.ListVector` object is returned, which also has the `items()` method, but if you want to get the value of a key, use `rx2()` method instead of `__getitem__()` and `get()` method. All values hosted basically remained as `rpy2.robjects.vectors` objects.
+
+            It is recommended that if there's no need to manipulate the result, or if you are familiar with `rpy2` package, set the @return_py as False, else setting @return_py as True may help you better manipulate the results. Default is True.
         """
         # import r package
         self._rscdesign = importr("scDesign3")
@@ -154,6 +164,8 @@ class scDesign3:
 
         This function constructs the input data  (covaraite matrix and expression matrix) for @fit_marginal.
 
+        Details:
+        ----------
         This function takes a `anndata.AnnData` object as the input. Based on users' choice, it constructs the matrix of covaraites (explainary variables) and the expression matrix (e.g., count matrix for scRNA-seq).
 
         Arguments:
@@ -193,6 +205,21 @@ class scDesign3:
 
         return_py: `bool` (default: 'default')
             If True, functions will return a result easy for manipulation in python. Default is 'default', use the setting when initializing.
+
+        Output:
+        --------
+        A `dict` like object.
+
+        count_mat: `pandas.DataFrame`
+            The expression matrix.
+
+            The row corresponds to the observations and the column corresponds to the genes.
+
+        dat: `pandas.DataFrame`
+            The original covariate matrix.
+
+        newCovariate: `pandas.DataFrame`
+            The simulated new covariate matrix. If @ncell is default, the @newCovariate is basically the same as the @dat only without the `corr_group` column.
         """
 
         if return_py == "default":
@@ -248,7 +275,12 @@ class scDesign3:
         if return_py:
             with convert.context():
                 res = ro.conversion.get_conversion().rpy2py(self.construct_data_res)
-                return res
+            res["count_mat"] = _addname(
+                array=res["count_mat"],
+                row_name=self.construct_data_res.rx2("count_mat").rownames,
+                col_name=self.construct_data_res.rx2("count_mat").colnames,
+            )
+            return res
         else:
             return self.construct_data_res
 
@@ -284,6 +316,8 @@ class scDesign3:
 
         @fit_marginal fits the per-feature regression models.
 
+        Details:
+        ----------
         The function takes the result from @construct_data as the input, and fit the regression models for each feature based on users' specification.
 
         Arguments:
@@ -320,6 +354,14 @@ class scDesign3:
 
         return_py: `bool` (default: 'default')
             If True, functions will return a result easy for manipulation in python. Default is 'default', use the setting when initializing.
+
+        Output:
+        --------
+        A `dict` like object.
+
+        Fitted regression models.
+
+        Each key corresponds to one gene name and the length is equal to the total gene number.
         """
 
         if return_py == "default":
@@ -379,7 +421,7 @@ class scDesign3:
         input_data=Union[str, pd.DataFrame],
         copula=str,
         empirical_quantile=bool,
-        marginal_list=Union[ro.vectors.ListVector, str, OrdDict, dict],
+        marginal_dict=Union[ro.vectors.ListVector, str, OrdDict, dict],
         family_use=Union[str, list],
         dt=bool,
         pseudo_obs=bool,
@@ -396,7 +438,7 @@ class scDesign3:
         input_data: Union[Literal["count_mat", "dat", "newCovariate"], pd.DataFrame] = "dat",
         copula: Literal["gaussian", "vine"] = "gaussian",
         empirical_quantile: bool = False,
-        marginal_list: Union[ro.vectors.ListVector, OrdDict, dict] = "default",
+        marginal_dict: Union[ro.vectors.ListVector, OrdDict, dict] = "default",
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
         dt: bool = True,
         pseudo_obs: bool = False,
@@ -412,6 +454,8 @@ class scDesign3:
 
         @fit_copula fits the copula model.
 
+        Details:
+        ----------
         This function takes the result from @fit_marginal as the input and fit the copula model on the residuals.
 
         Arguments:
@@ -425,7 +469,7 @@ class scDesign3:
         empirical_quantile: `bool` (default: False)
             Please only use it if you clearly know what will happen! If True, DO NOT fit the copula and use the EMPIRICAL CDF values of the original data; it will make the simulated data fixed (no randomness). Only works if ncell is the same as your original data.
 
-        marginal_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
+        marginal_dict: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
             The result of @fit_marginal. Default is 'default', using the class property @fit_marginal_res.
 
         family_use: `str` or `list[str]` (default: 'default')
@@ -457,6 +501,26 @@ class scDesign3:
 
         return_py: `bool` (default: 'default')
             If True, functions will return a result easy for manipulation in python. Default is 'default', use the setting when initializing.
+
+        Output:
+        --------
+        A `dict` like object.
+
+        model_aic: `pandas.Series`
+            An array with three values. In order, they are the marginal AIC, the copula AIC, the total AIC.
+
+        model_bic: `pandas.Series`
+            An array with three values. In order, they are the marginal BIC, the copula BIC, the total BIC.
+
+        important_feature: `rpy2.robjects.vectors.BoolVector`
+            A vector showing the genes regarded as the inportant genes.
+
+            Call `print` to better show the result.
+
+        copula_list: `rpy2.rlike.container.OrdDict`
+            A dict of the fitted copula model. If using Gaussian copula, a dict of correlation matrices; if vine, a dict of vine objects.
+
+            Caution that though it's name is `list`, it is actually a `dict` like object.
         """
 
         if return_py == "default":
@@ -503,11 +567,11 @@ class scDesign3:
 
         # use fit marginal res
         try:
-            if marginal_list == "default":
-                marginal_list = self.fit_marginal_res
-            elif isinstance(marginal_list, OrdDict) or isinstance(marginal_list, dict):
+            if marginal_dict == "default":
+                marginal_dict = self.fit_marginal_res
+            elif isinstance(marginal_dict, OrdDict) or isinstance(marginal_dict, dict):
                 with convert.context():
-                    marginal_list = ro.conversion.get_conversion().py2rpy(marginal_list)
+                    marginal_dict = ro.conversion.get_conversion().py2rpy(marginal_dict)
         except AttributeError:
             raise SequentialError("Please first run @fit_marginal.")
 
@@ -516,7 +580,7 @@ class scDesign3:
             assay_use=assay_use,
             input_data=input_data,
             empirical_quantile=empirical_quantile,
-            marginal_list=marginal_list,
+            marginal_list=marginal_dict,
             family_use=family_use,
             copula=copula,
             DT=dt,
@@ -532,14 +596,23 @@ class scDesign3:
         if return_py:
             with convert.context():
                 res = ro.conversion.get_conversion().rpy2py(self.fit_copula_res)
-                return res
+            res["model_aic"] = _addname(
+                array=res["model_aic"],
+                row_name=self.fit_copula_res.rx2("model_aic").names,
+            )
+            res["model_bic"] = _addname(
+                array=res["model_bic"],
+                row_name=self.fit_copula_res.rx2("model_bic").names,
+            )
+
+            return res
         else:
             return self.fit_copula_res
 
     @_typecheck(
         data=Union[str, pd.DataFrame],
         new_covariate=Union[str, pd.DataFrame],
-        marginal_list=Union[ro.vectors.ListVector, str, OrdDict, dict],
+        marginal_dict=Union[ro.vectors.ListVector, str, OrdDict, dict],
         family_use=Union[str, list],
         n_cores=Union[int, str],
         parallelization=str,
@@ -550,7 +623,7 @@ class scDesign3:
         self,
         data: pd.DataFrame = "dat",
         new_covariate: pd.DataFrame = "newCovariate",
-        marginal_list: Union[ro.vectors.ListVector, OrdDict, dict] = "default",
+        marginal_dict: Union[ro.vectors.ListVector, OrdDict, dict] = "default",
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
         n_cores: int = "default",
         parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
@@ -561,6 +634,8 @@ class scDesign3:
 
         This function generates parameter matricies which determine each cell's distribution
 
+        Details:
+        ----------
         The function takes the new covariate (if use) from @construct_data and marginal models from @fit_marginal.
 
         Arguments:
@@ -571,7 +646,7 @@ class scDesign3:
         new_covariate: `str` or `pandas.DataFrame` (default: 'newCovariate')
             The new covariates to simulate new gene expression data using the gene marginal models. Default is 'newCovariate', use the @construct_data_res, 'newCovariate' output.
 
-        marginal_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
+        marginal_dict: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
             The result of @fit_marginal. Default is 'default', using the class property @fit_marginal_res.
 
         family_use: `str` or `list[str]` (default: 'default')
@@ -588,6 +663,25 @@ class scDesign3:
 
         return_py: `bool` (default: 'default')
             If True, functions will return a result easy for manipulation in python. Default is 'default', use the setting when initializing.
+
+        Output:
+        --------
+        A `dict` like object.
+
+        mean_mat: `pandas.DataFrame`
+            A matrix of the mean parameter.
+
+            The row corresponds to the observations and the column corresponds to the genes.
+
+        sigma_mat: `pandas.DataFrame`
+            A matrix of the sigma parameter (for Gaussian, the variance; for NB, the dispersion.).
+
+            The row corresponds to the observations and the column corresponds to the genes.
+
+        zero_mat: `pandas.DataFrame`
+            A matrix of the zero-inflation parameter (only non-zero for ZIP and ZINB).
+
+            The row corresponds to the observations and the column corresponds to the genes.
         """
 
         if return_py == "default":
@@ -621,11 +715,11 @@ class scDesign3:
 
         # use fit marginal res
         try:
-            if marginal_list == "default":
-                marginal_list = self.fit_marginal_res
-            elif isinstance(marginal_list, OrdDict) or isinstance(marginal_list, dict):
+            if marginal_dict == "default":
+                marginal_dict = self.fit_marginal_res
+            elif isinstance(marginal_dict, OrdDict) or isinstance(marginal_dict, dict):
                 with convert.context():
-                    marginal_list = ro.conversion.get_conversion().py2rpy(marginal_list)
+                    marginal_dict = ro.conversion.get_conversion().py2rpy(marginal_dict)
         except AttributeError:
             raise SequentialError("Please first run @fit_marginal.")
 
@@ -648,7 +742,7 @@ class scDesign3:
         self.model_paras = self._rscdesign.extract_para(
             sce=sce,
             assay_use=assay_use,
-            marginal_list=marginal_list,
+            marginal_list=marginal_dict,
             family_use=family_use,
             new_covariate=new_covariate,
             data=data,
@@ -660,16 +754,31 @@ class scDesign3:
         if return_py:
             with convert.context():
                 res = ro.conversion.get_conversion().rpy2py(self.model_paras)
-                return res
+            res["mean_mat"] = _addname(
+                array=res["mean_mat"],
+                row_name=self.model_paras.rx2("mean_mat").rownames,
+                col_name=self.model_paras.rx2("mean_mat").colnames,
+            )
+            res["sigma_mat"] = _addname(
+                array=res["sigma_mat"],
+                row_name=self.model_paras.rx2("sigma_mat").rownames,
+                col_name=self.model_paras.rx2("sigma_mat").colnames,
+            )
+            res["zero_mat"] = _addname(
+                array=res["zero_mat"],
+                row_name=self.model_paras.rx2("zero_mat").rownames,
+                col_name=self.model_paras.rx2("zero_mat").colnames,
+            )
+            return res
         else:
             return self.model_paras
 
     @_typecheck(
-        mean_mat=Union[str, np.ndarray],
-        sigma_mat=Union[str, np.ndarray],
-        zero_mat=Union[str, np.ndarray],
-        quantile_mat=Optional[np.ndarray],
-        copula_list=Union[ro.vectors.ListVector, str, None, OrdDict, dict],
+        mean_mat=Union[str, np.ndarray, pd.DataFrame],
+        sigma_mat=Union[str, np.ndarray, pd.DataFrame],
+        zero_mat=Union[str, np.ndarray, pd.DataFrame],
+        quantile_mat=Optional[Union[np.ndarray, pd.DataFrame]],
+        copula_dict=Union[ro.vectors.ListVector, str, None, OrdDict, dict],
         input_data=Union[str, pd.DataFrame],
         new_covariate=Union[str, pd.DataFrame],
         family_use=Union[str, list],
@@ -684,11 +793,11 @@ class scDesign3:
     )
     def simu_new(
         self,
-        mean_mat: np.ndarray = "mean_mat",
-        sigma_mat: np.ndarray = "sigma_mat",
-        zero_mat: np.ndarray = "zero_mat",
-        quantile_mat: Optional[np.ndarray] = None,
-        copula_list: Optional[Union[ro.vectors.ListVector, OrdDict, dict]] = "default",
+        mean_mat: Union[np.ndarray, pd.DataFrame] = "mean_mat",
+        sigma_mat: Union[np.ndarray, pd.DataFrame] = "sigma_mat",
+        zero_mat: Union[np.ndarray, pd.DataFrame] = "zero_mat",
+        quantile_mat: Optional[Union[np.ndarray, pd.DataFrame]] = None,
+        copula_dict: Optional[Union[ro.vectors.ListVector, OrdDict, dict]] = "default",
         input_data: pd.DataFrame = "dat",
         new_covariate: pd.DataFrame = "newCovariate",
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
@@ -705,23 +814,25 @@ class scDesign3:
 
         Generate new simulated data based on fitted marginal and copula models.
 
+        Details:
+        ----------
         The function takes the new covariate (if use) from @construct_data, parameter matricies from @extract_para and multivariate Unifs from @fit_copula.
 
         Arguments:
         ----------
-        mean_mat: `numpy.ndarray` (default: 'mean_mat')
+        mean_mat: `numpy.ndarray` or `pandas.DataFrame` (default: 'mean_mat')
             A matrix of the mean parameter. Default is 'mean_mat', use the @model_paras, mean_mat output.
 
-        sigma_mat: `numpy.ndarray` (default: 'sigma_mat')
+        sigma_mat: `numpy.ndarray` or `pandas.DataFrame` (default: 'sigma_mat')
             A matrix of the sigma parameter. Default is 'sigma_mat', use the @model_paras, sigma_mat output.
 
-        zero_mat: `numpy.ndarray` (default: 'zero_mat')
+        zero_mat: `numpy.ndarray` or `pandas.DataFrame` (default: 'zero_mat')
             A matrix of the zero-inflation parameter. Default is 'zero_mat', use the @model_paras, zero_mat output.
 
-        quantile_mat: `numpy.ndarray` (default: None)
-            A matrix of the multivariate quantile. Default is None, if parameter @copula_list is provided.
+        quantile_mat: `numpy.ndarray` or `pandas.DataFrame` (default: None)
+            A matrix of the multivariate quantile. Default is None, if parameter @copula_dict is provided.
 
-        copula_list: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
+        copula_dict: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
             Copulas for generating the multivariate quantile matrix. Default is 'default', use the @fit_copula_res, copula_list output.
 
         data: `str` or `pandas.DataFrame` (default: 'dat')
@@ -756,6 +867,13 @@ class scDesign3:
 
         return_py: `bool` (default: 'default')
             If True, functions will return a result easy for manipulation in python. Default is 'default', use the setting when initializing.
+
+        Output:
+        --------
+        `pandas.DataFrame`
+            The new simulated count (expression) matrix.
+
+            The row corresponds to the observations and the column corresponds to the genes.
         """
 
         if return_py == "default":
@@ -807,14 +925,14 @@ class scDesign3:
                 quantile_mat = ro.conversion.get_conversion().py2rpy(quantile_mat)
 
         try:
-            if copula_list == "default":
-                copula_list = self.fit_copula_res.rx2("copula_list")
+            if copula_dict == "default":
+                copula_dict = self.fit_copula_res.rx2("copula_list")
 
-            elif isinstance(copula_list, OrdDict) or isinstance(copula_list, dict):
+            elif isinstance(copula_dict, OrdDict) or isinstance(copula_dict, dict):
                 with convert.context():
-                    copula_list = ro.conversion.get_conversion().py2rpy(copula_list)
-            elif copula_list is None:
-                copula_list = NULL
+                    copula_dict = ro.conversion.get_conversion().py2rpy(copula_dict)
+            elif copula_dict is None:
+                copula_dict = NULL
         except AttributeError:
             raise SequentialError("Please first run @fit_copula.")
 
@@ -854,7 +972,7 @@ class scDesign3:
             sigma_mat=sigma_mat,
             zero_mat=zero_mat,
             quantile_mat=quantile_mat,
-            copula_list=copula_list,
+            copula_list=copula_dict,
             family_use=family_use,
             fastmvn=fastmvn,
             nonnegative=nonnegative,
@@ -870,7 +988,12 @@ class scDesign3:
         if return_py:
             with convert.context():
                 res = ro.conversion.get_conversion().rpy2py(self.simu_res)
-                return res
+            res = _addname(
+                array=res.T,
+                row_name=self.simu_res.colnames,
+                col_name=self.simu_res.rownames,
+            )
+            return res
         else:
             return self.simu_res
 
@@ -1023,6 +1146,34 @@ class scDesign3:
 
         return_py: `bool` (default: 'default')
             If True, functions will return a result easy for manipulation in python. Default is 'default', use the setting when initializing.
+
+        Output:
+        --------
+        A `dict` like object.
+
+        new_count: `pandas.DataFrame`
+            A matrix of the new simulated count (expression) matrix.
+
+            The row corresponds to the observations and the column corresponds to the genes.
+
+        new_covariate: `pandas.DataFrame`
+            A dataframe of the new covariate matrix.
+
+        model_aic: `pandas.Series`
+            An array with three values. In order, they are the marginal AIC, the copula AIC, the total AIC.
+
+        model_bic: `pandas.Series`
+            An array with three values. In order, they are the marginal BIC, the copula BIC, the total BIC.
+
+        marginal_list: `rpy2.rlike.container.OrdDict`
+            A dict of marginal regression models if return_model = True.
+
+            Caution that though it's name is `list`, it is actually a `dict` like object.
+
+        corr_list: `rpy2.rlike.container.OrdDict`
+            A dict of correlation models (conditional copulas) if return_model = True.
+
+            Caution that though it's name is `list`, it is actually a `dict` like object.
         """
 
         if return_py == "default":
@@ -1102,6 +1253,19 @@ class scDesign3:
         if return_py:
             with convert.context():
                 res = ro.conversion.get_conversion().rpy2py(self.whole_pipeline_res)
-                return res
+            res["model_aic"] = _addname(
+                array=res["model_aic"],
+                row_name=self.whole_pipeline_res.rx2("model_aic").names,
+            )
+            res["model_bic"] = _addname(
+                array=res["model_bic"],
+                row_name=self.whole_pipeline_res.rx2("model_bic").names,
+            )
+            res["new_count"] = _addname(
+                array=res["new_count"].T,
+                row_name=self.whole_pipeline_res.rx2("new_count").colnames,
+                col_name=self.whole_pipeline_res.rx2("new_count").rownames,
+            )
+            return res
         else:
             return self.whole_pipeline_res

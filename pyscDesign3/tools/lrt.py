@@ -14,6 +14,8 @@ def perform_lrt(
 
     Perform the likelihood ratio test to compare two list of marginal models.
 
+    Details:
+    ----------
     The function takes two lists of marginal models (by default, the first list is the alternative and the second is the null) from @fit_margnial. Note that LRT only makes sense for NESTED models. This can be quite tricky if you use penalized-splines (e.g., for trajectory data).
 
     Arguments:
@@ -23,6 +25,11 @@ def perform_lrt(
 
     null_marginal: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict`
         A dict of marginal models from the null hypothesis. It must be strictly nested in the alternative model.
+
+    Output:
+    ----------
+    `pandas.DataFrame`
+        A dataframe of the LRT result.
     """
 
     with convert.context():
