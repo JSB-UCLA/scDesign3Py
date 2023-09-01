@@ -100,7 +100,7 @@ class scDesign3:
     )
     def __init__(
         self,
-        n_cores: int,
+        n_cores: int = 1,
         parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "mcmapply",
         bpparam: Optional[ro.methods.RS4] = None,
         return_py: bool = True,
@@ -109,7 +109,7 @@ class scDesign3:
 
         Arguments:
         ----------
-        n_cores: `int`
+        n_cores: `int` (default: 1)
             The number of cores to use.
 
         parallelization: `str` (default: 'mcmapply')
@@ -1266,6 +1266,10 @@ class scDesign3:
                 row_name=self.whole_pipeline_res.rx2("new_count").colnames,
                 col_name=self.whole_pipeline_res.rx2("new_count").rownames,
             )
+            if res["marginal_list"] is NULL:
+                res["marginal_list"] = None
+            if res["corr_list"] is NULL:
+                res["corr_list"] = None
             return res
         else:
             return self.whole_pipeline_res

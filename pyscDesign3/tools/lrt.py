@@ -12,11 +12,11 @@ def perform_lrt(
 ):
     """Perform the likelihood ratio test
 
-    Perform the likelihood ratio test to compare two list of marginal models.
+    Perform the likelihood ratio test to compare two dicts of marginal models.
 
     Details:
     ----------
-    The function takes two lists of marginal models (by default, the first list is the alternative and the second is the null) from @fit_margnial. Note that LRT only makes sense for NESTED models. This can be quite tricky if you use penalized-splines (e.g., for trajectory data).
+    The function takes two dicts of marginal models (by default, the first dict is the alternative and the second is the null) from @fit_margnial. Note that LRT only makes sense for NESTED models. This can be quite tricky if you use penalized-splines (e.g., for trajectory data).
 
     Arguments:
     ----------

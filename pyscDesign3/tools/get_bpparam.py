@@ -5,28 +5,28 @@ from rpy2.robjects import r
 from .._utils._errors import InputError
 
 
-def get_bpparam(name=Literal["MulticoreParam", "SnowParam"], show=True, **kwargs):
+def get_bpparam(mode=Literal["MulticoreParam", "SnowParam"], show=True, **kwargs):
     """Get your parallelization parameters robject
 
     Check R function `BiocParallel::MulticoreParam` and `BiocParallel::SnowParam` for more informarion on how to set the parameters.
 
     Arguments:
     ----------
-    :name: `str`
+    mode: `str`
         The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.
 
-    :show: `bool` (default: True)
+    show: `bool` (default: True)
         Whether to print the constructed onject information on the screen.
 
     Output:
     ----------
     `rpy2.robjects.methods.RS4`
-        A R class specifying the parrallel parameters. 
-        
+        A R class specifying the parrallel parameters.
+
         Combined use with @parallelization = `bpmapply`.
     """
 
-    if name == "MulticoreParam":
+    if mode == "MulticoreParam":
         para_list = [
             "workers",
             "tasks",
@@ -45,7 +45,7 @@ def get_bpparam(name=Literal["MulticoreParam", "SnowParam"], show=True, **kwargs
             "manager_hostname",
             "manager_port",
         ]
-    elif name == "SnowParam":
+    elif mode == "SnowParam":
         para_list = [
             "workers",
             "type",
@@ -74,9 +74,9 @@ def get_bpparam(name=Literal["MulticoreParam", "SnowParam"], show=True, **kwargs
         raise InputError(
             "Please check R document BiocParallel for argument details. https://www.bioconductor.org/packages/devel/bioc/manuals/BiocParallel/man/BiocParallel.pdf"
         )
-    elif name == "MulticoreParam":
+    elif mode == "MulticoreParam":
         para_object = r("BiocParallel::MulticoreParam")(**para_dict)
-    elif name == "SnowParam":
+    elif mode == "SnowParam":
         para_object = r("BiocParallel::SnowParam")(**para_dict)
 
     if show:
