@@ -51,7 +51,8 @@
     - [2.17.1. set-up](#2171-set-up)
     - [2.17.2. 结构](#2172-结构)
     - [2.17.3. 基本文件](#2173-基本文件)
-    - [2.17.4. 其他](#2174-其他)
+    - [2.17.4. autodoc](#2174-autodoc)
+    - [2.17.5. 其他](#2175-其他)
 - [3. 老版本(不用 rpy2 版本)的相关记录](#3-老版本不用-rpy2-版本的相关记录)
   - [3.1. 未来的下一步功能:](#31-未来的下一步功能)
   - [3.2. Questions](#32-questions)
@@ -918,12 +919,30 @@ make clean
 
 - `make.bat` 和 `Makefile` 文件不用管，命令行用来 make html 用的
 
-#### 2.17.4. 其他
+#### 2.17.4. autodoc
+
+- 支持直接读取 python script 中的函数名字并且直接给出对应的 parameter 和 source code，用 `autosummary` 功能
+- 使用 Sphinx 自带的 autodoc 功能的时候需要注意，所有 import 的包（非 python 自带的包）需要添加到一个 mock list（一个只 import 不运行的环境），否则无法进行读取和自动渲染，在 `conf.py` 文件中进行添加即可
+
+```python
+# method 1
+import mock
+
+MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'matplotlib.pyplot', 'scipy.interpolate']
+for mod_name in MOCK_MODULES:
+sys.modules[mod_name] = mock.Mock()
+
+# method 2
+autodoc_mock_imports = ["rpy2", "numpy", "pandas", "pysam", "tqdm", "joblib", "pathlib", "Bio", "gffpandas"] # Mock import these dependent pacakges
+```
+
+- 在执行 autodoc 时，sphinx 实际上是会执行 package 的**init**文件，即进行了对 package 的 import 的（可以显式的用 `.. module:: package` 进行 import），之后就可以根据实际的调用方式进行引用了。需要注意的是 import 时 autodoc 无法执行任何实际代码，因此如果有不是定义在函数中的部分，会导致渲染报错。一种曲线救国的方法是包在`if __name__ == "main"` 中。
+
+#### 2.17.5. 其他
 
 - 如果要使用直接将 jupyter 改变的话，使用的插件是`myst_nb`，在添加这个插件的时候**不能**再单独加载 `myst_parser`，这个插件自己已经把 markdown 和 jupyter 输出都解决了
 - 在 jupyter 中设置 cell tag 为 `remove(hide)-cell(input/output)` 就可以实现在 render 的时候不显示部分的 cell 内容
 - 支持 markdown 的插件是 `myst_parser`，也要用 pip 下载，添加这个 extension 后才能正确识别和渲染 markdown 文件。在 include 这个 extension 的时候会自动配置识别后缀名 rst 和 md（in `conf.py` `source_suffix` 配置后缀名-对应文件的字典如`{".md":markdown}`）
-- 貌似支持直接读取 python script 中的函数名字并且直接给出对应的 parameter 和 source code，用 `autosummary` 功能
 - `maxdepth` 参数限制了如果打印数据的引用树，最多显示到几级标题
 - `html_theme_options = {"navigation_depth": 2,}` 使得侧边栏可以索引为 2，可以 host 多级索引标题
 - 在 markdown 中可以在 code 环境中 include eval-rst 来实现在 rst 中才能实现的一些功能，比如颜色块
@@ -940,21 +959,9 @@ make clean
   Special in rst, :doc:`shown in another section <./sec_name>`
 ```
 
-- 使用 Sphinx 自带的 autodoc 功能的时候需要注意，所有 import 的包（非 python 自带的包）需要添加到一个 mock list（一个只 import 不运行的环境），否则无法进行读取和自动渲染，在 `conf.py` 文件中进行添加即可
-
-```python
-# method 1
-import mock
-
-MOCK_MODULES = ['numpy', 'scipy', 'matplotlib', 'matplotlib.pyplot', 'scipy.interpolate']
-for mod_name in MOCK_MODULES:
-sys.modules[mod_name] = mock.Mock()
-
-# method 2
-autodoc_mock_imports = ["rpy2", "numpy", "pandas", "pysam", "tqdm", "joblib", "pathlib", "Bio", "gffpandas"] # Mock import these dependent pacakges
-```
-
 - 对于生成比较简单的网页托管可以使用[read the docs](https://about.readthedocs.com/)，但是对于需要额外跑代码的网页托管感觉还是在本地生成后，直接将 `build/html` 中的内容发布为 Github Page 就好了（直接让 index.html 位于 repo 的 root 文件夹下即可），生成时可以用 `sphinx.ext.githubpages` 插件，在 html 文件夹下自动生成一个 `.nojekyll` 文件，可以避免在 Github Page 中无法正常显示的问题
+
+- 有色代码块叫做 [Admonition](https://docs.typo3.org/m/typo3/docs-how-to-document/main/en-us/WritingReST/Reference/Content/Admonitions.html)
 
 ## 3. 老版本(不用 rpy2 版本)的相关记录
 
