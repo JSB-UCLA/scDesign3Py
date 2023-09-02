@@ -16,7 +16,7 @@ import sys
 sys.path.insert(0, os.path.abspath("../.."))
 # print(sys.path)
 # Mock import these dependent pacakges for website building
-autodoc_mock_imports = ["rpy2", "numpy", "pandas", "matplotlib", "anndata", "seaborn", "pyscDesign3"]
+autodoc_mock_imports = ["rpy2", "numpy", "pandas", "matplotlib", "anndata", "seaborn"]
 
 # -- Project information -----------------------------------------------------
 
@@ -42,12 +42,21 @@ extensions = [
     "myst_nb",
 ]
 autosummary_generate = True  # Turn on sphinx.ext.autosummary
+autosummary_generate_overwrite = False  # Trun off auto overwrite generated rst
+napoleon_google_docstring = False
+napoleon_numpy_docstring = True
+napoleon_include_init_with_doc = False
+napoleon_use_rtype = True  # having a separate entry generally helps readability
+napoleon_use_param = True
+napoleon_custom_sections = [("Params", "Parameters")]
+typehints_defaults = "braces"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
 # The master toctree document.
 master_doc = "index"
+source_suffix = [".rst", ".md"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -61,7 +70,7 @@ pygments_style = "sphinx"
 todo_include_todos = False
 
 # Set myst_nb extension in case execution is too slow
-nb_execution_timeout = 300
+nb_execution_timeout = 3600
 
 # -- Options for HTML output -------------------------------------------------
 

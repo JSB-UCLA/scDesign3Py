@@ -1,0 +1,6 @@
+﻿pyscDesign3.scDesign3.scdesign3
+===============================
+
+.. currentmodule:: pyscDesign3
+
+.. automethod:: scDesign3.scdesign3
