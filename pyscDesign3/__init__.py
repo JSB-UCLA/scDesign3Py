@@ -57,8 +57,8 @@ if all_install:
 
 rpackages.importr("scDesign3")
 
-from pyscDesign3.tools.get_bpparam import get_bpparam
-from pyscDesign3.tools.lrt import perform_lrt
-from pyscDesign3.tools.plot import plot_reduceddim
+from .tools.get_bpparam import get_bpparam
+from .tools.lrt import perform_lrt
+from .tools.plot import plot_reduceddim
 
 from ._core import scDesign3

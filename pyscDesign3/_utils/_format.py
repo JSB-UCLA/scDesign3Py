@@ -23,12 +23,10 @@ def convert_ord_dict(ord_dict):
     return ListVector(ord_dict)
 
 
-convert = numpy2ri.converter + default_converter + pandas2ri.converter
-
-
 def _anndata2sce(data: ad.AnnData, assay_use=None, default_assay_name=None, covar=None):
     """Extract anndata info used for scDesign3 and change into R SingleCellExperiment"""
 
+    convert = numpy2ri.converter + default_converter + pandas2ri.converter 
     ## check unique cell names and gene names
     if not data.obs.index.is_unique:
         warnings.warn(

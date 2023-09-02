@@ -11,15 +11,7 @@ from rpy2.robjects import NULL
 from rpy2.robjects.packages import importr
 
 from ._utils._errors import InputError, SequentialError
-from ._utils._format import (
-    _addname,
-    _anndata2sce,
-    _bpparamcheck,
-    _other2list,
-    _strvec_none2ri,
-    _typecheck,
-    convert,
-)
+from ._utils._format import _addname, _anndata2sce, _bpparamcheck, _other2list, _strvec_none2ri, _typecheck
 
 
 class scDesign3:
@@ -40,6 +32,9 @@ class scDesign3:
 
     :family_use:
         The set marginal distribution of each gene.
+
+    :copula:
+        The copula type you set.
 
     :n_cores:
         The number of cores used for model fitting.
@@ -70,26 +65,6 @@ class scDesign3:
 
     :whole_pipeline_res:
         Result of calling @scdesign3
-
-    Methods:
-    -----------
-    :construct_data:
-        Construct the input data for downstream analysis.
-
-    :fit_marginal:
-        Fit the marginal models.
-
-    :fit_copula:
-        Fit the copula model.
-
-    :extract_para:
-        Extract the parameters of each cell's distribution.
-
-    :simu_new:
-        Simulate new data.
-
-    :scdesign3:
-        The wrapper for the whole scDesign3 pipeline.
     """
 
     @_typecheck(
@@ -106,6 +81,10 @@ class scDesign3:
         return_py: bool = True,
     ) -> None:
         """Decide basic settings when running the class methods.
+
+        Details:
+        ----------
+        Decide basic settings including the parallel computation method, number cores to use and whether to return the more pythonic result.
 
         Arguments:
         ----------
@@ -129,6 +108,7 @@ class scDesign3:
         self.n_cores = n_cores
         self.bpparam = _bpparamcheck(parallelization, bpparam)
         self.return_py = return_py
+        self.__convert = ro.numpy2ri.converter + ro.default_converter + ro.pandas2ri.converter
 
     # construct data
     @_typecheck(
@@ -220,6 +200,9 @@ class scDesign3:
 
         newCovariate: `pandas.DataFrame`
             The simulated new covariate matrix. If @ncell is default, the @newCovariate is basically the same as the @dat only without the `corr_group` column.
+
+        filtered_gene: `None` or `list[str]`
+            The genes that are excluded in the marginal and copula fitting steps because these genes only express in less than two cells.
         """
 
         if return_py == "default":
@@ -273,13 +256,17 @@ class scDesign3:
         )
 
         if return_py:
-            with convert.context():
+            with self.__convert.context():
                 res = ro.conversion.get_conversion().rpy2py(self.construct_data_res)
             res["count_mat"] = _addname(
                 array=res["count_mat"],
                 row_name=self.construct_data_res.rx2("count_mat").rownames,
                 col_name=self.construct_data_res.rx2("count_mat").colnames,
             )
+            if res["filtered_gene"] is NULL:
+                res["filtered_gene"] = None
+            else:
+                res["filtered_gene"] = [i for i in res["filtered_gene"]]
             return res
         else:
             return self.construct_data_res
@@ -357,11 +344,21 @@ class scDesign3:
 
         Output:
         --------
-        A `dict` like object.
+        A `dict` like object. Each key corresponds to one gene name and the length is equal to the total gene number.
 
-        Fitted regression models.
+        Every gene has the following keys.
 
-        Each key corresponds to one gene name and the length is equal to the total gene number.
+        fit: `rpy2.rlike.container.OrdDict`
+            The fitted regression models.
+
+        removed_cell: `numpy.ndarray`
+            The removed cell (observation) when fitting the marginal regression model.
+
+        warning: `rpy2.rlike.container.OrdDict`
+            If @trace = True, this key is returned. Hosting the warning/error log when fitting the marginal models.
+
+        time: `numpy.ndarray`
+            If @trace = True, this key is returned. The runtime for each marginal model. The first value corresponds to runtime for gam model and the second one corresponds to runtime for gamlss model.
         """
 
         if return_py == "default":
@@ -372,7 +369,15 @@ class scDesign3:
             if data == "default":
                 data = self.construct_data_res
             elif isinstance(data, OrdDict) or isinstance(data, dict):
-                with convert.context():
+                data = data.copy()
+                try:
+                    (tmp,) = _other2list(data["filtered_gene"])
+                    (tmp,) = _strvec_none2ri(tmp)
+                    data["filtered_gene"] = tmp
+                except KeyError:
+                    raise InputError("The result given should be the (modified) output of @construct_data.")
+
+                with self.__convert.context():
                     data = ro.conversion.get_conversion().py2rpy(data)
         except AttributeError:
             raise SequentialError("Please first run @construct_data.")
@@ -406,7 +411,7 @@ class scDesign3:
         )
 
         if return_py:
-            # with convert.context():
+            # with self.__convert.context():
             #     res = ro.conversion.get_conversion().rpy2py(self.fit_marginal_res)
             #     return res
             warnings.warn(
@@ -512,10 +517,8 @@ class scDesign3:
         model_bic: `pandas.Series`
             An array with three values. In order, they are the marginal BIC, the copula BIC, the total BIC.
 
-        important_feature: `rpy2.robjects.vectors.BoolVector`
+        important_feature: `list[bool]`
             A vector showing the genes regarded as the inportant genes.
-
-            Call `print` to better show the result.
 
         copula_list: `rpy2.rlike.container.OrdDict`
             A dict of the fitted copula model. If using Gaussian copula, a dict of correlation matrices; if vine, a dict of vine objects.
@@ -525,6 +528,11 @@ class scDesign3:
 
         if return_py == "default":
             return_py = self.return_py
+
+        if copula in ["gaussian", "vine"]:
+            self.copula = copula
+        else:
+            raise InputError("The copula type could only be either 'gaussian' or 'vine'.")
 
         # check sce and assay use
         try:
@@ -557,11 +565,12 @@ class scDesign3:
 
         # use construct data res
         try:
-            if input_data in ["count_mat", "dat", "newCovariate"]:
-                input_data = self.construct_data_res.rx2(input_data)
-            elif isinstance(input_data, pd.DataFrame):
-                with convert.context():
+            if isinstance(input_data, pd.DataFrame):
+                with self.__convert.context():
                     input_data = ro.conversion.get_conversion().py2rpy(input_data)
+            elif input_data in ["count_mat", "dat", "newCovariate"]:
+                input_data = self.construct_data_res.rx2(input_data)
+
         except AttributeError:
             raise SequentialError("Please first run @construct_data.")
 
@@ -570,7 +579,7 @@ class scDesign3:
             if marginal_dict == "default":
                 marginal_dict = self.fit_marginal_res
             elif isinstance(marginal_dict, OrdDict) or isinstance(marginal_dict, dict):
-                with convert.context():
+                with self.__convert.context():
                     marginal_dict = ro.conversion.get_conversion().py2rpy(marginal_dict)
         except AttributeError:
             raise SequentialError("Please first run @fit_marginal.")
@@ -594,7 +603,7 @@ class scDesign3:
         )
 
         if return_py:
-            with convert.context():
+            with self.__convert.context():
                 res = ro.conversion.get_conversion().rpy2py(self.fit_copula_res)
             res["model_aic"] = _addname(
                 array=res["model_aic"],
@@ -604,6 +613,17 @@ class scDesign3:
                 array=res["model_bic"],
                 row_name=self.fit_copula_res.rx2("model_bic").names,
             )
+            res["important_feature"] = [i for i in res["important_feature"]]
+
+            if copula == "gaussian":
+                res["copula_list"] = {
+                    key: _addname(
+                        array=value,
+                        row_name=self.fit_copula_res.rx2("copula_list").rx2(key).rownames,
+                        col_name=self.fit_copula_res.rx2("copula_list").rx2(key).colnames,
+                    )
+                    for key, value in res["copula_list"].items()
+                }
 
             return res
         else:
@@ -611,7 +631,7 @@ class scDesign3:
 
     @_typecheck(
         data=Union[str, pd.DataFrame],
-        new_covariate=Union[str, pd.DataFrame],
+        new_covariate=Union[str, pd.DataFrame, None],
         marginal_dict=Union[ro.vectors.ListVector, str, OrdDict, dict],
         family_use=Union[str, list],
         n_cores=Union[int, str],
@@ -622,7 +642,7 @@ class scDesign3:
     def extract_para(
         self,
         data: pd.DataFrame = "dat",
-        new_covariate: pd.DataFrame = "newCovariate",
+        new_covariate: Optional[pd.DataFrame] = "newCovariate",
         marginal_dict: Union[ro.vectors.ListVector, OrdDict, dict] = "default",
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
         n_cores: int = "default",
@@ -640,10 +660,10 @@ class scDesign3:
 
         Arguments:
         ----------
-        data: `str` or `pandas.DataFrame` (default: 'dat')
+        data: `pandas.DataFrame` (default: 'dat')
             The data used for fitting the gene marginal models. Default is 'dat', use the @construct_data_res, 'dat' output.
 
-        new_covariate: `str` or `pandas.DataFrame` (default: 'newCovariate')
+        new_covariate: `pandas.DataFrame` or None (default: 'newCovariate')
             The new covariates to simulate new gene expression data using the gene marginal models. Default is 'newCovariate', use the @construct_data_res, 'newCovariate' output.
 
         marginal_dict: `rpy2.robject.vectors.ListVector` or `rpy2.rlike.container.OrdDict` or `dict` (default: 'default')
@@ -696,20 +716,23 @@ class scDesign3:
 
         # check what is data and new_covariate
         try:
-            if data == "dat":
-                data = self.construct_data_res.rx2(data)
-            elif isinstance(data, pd.DataFrame):
-                with convert.context():
+            if isinstance(data, pd.DataFrame):
+                with self.__convert.context():
                     data = ro.conversion.get_conversion().py2rpy(data)
+            elif data == "dat":
+                data = self.construct_data_res.rx2(data)
+
         except AttributeError:
             raise SequentialError("Please first run @construct_data.")
 
         try:
-            if new_covariate == "newCovariate":
-                new_covariate = self.construct_data_res.rx2(new_covariate)
-            elif isinstance(new_covariate, pd.DataFrame):
-                with convert.context():
+            if isinstance(new_covariate, pd.DataFrame):
+                with self.__convert.context():
                     new_covariate = ro.conversion.get_conversion().py2rpy(new_covariate)
+            elif new_covariate == "newCovariate":
+                new_covariate = self.construct_data_res.rx2(new_covariate)
+            elif new_covariate is None:
+                new_covariate = NULL
         except AttributeError:
             raise SequentialError("Please first run @construct_data.")
 
@@ -718,7 +741,7 @@ class scDesign3:
             if marginal_dict == "default":
                 marginal_dict = self.fit_marginal_res
             elif isinstance(marginal_dict, OrdDict) or isinstance(marginal_dict, dict):
-                with convert.context():
+                with self.__convert.context():
                     marginal_dict = ro.conversion.get_conversion().py2rpy(marginal_dict)
         except AttributeError:
             raise SequentialError("Please first run @fit_marginal.")
@@ -752,7 +775,7 @@ class scDesign3:
         )
 
         if return_py:
-            with convert.context():
+            with self.__convert.context():
                 res = ro.conversion.get_conversion().rpy2py(self.model_paras)
             res["mean_mat"] = _addname(
                 array=res["mean_mat"],
@@ -764,11 +787,16 @@ class scDesign3:
                 row_name=self.model_paras.rx2("sigma_mat").rownames,
                 col_name=self.model_paras.rx2("sigma_mat").colnames,
             )
+
+            res["zero_mat"] = ro.r["as.matrix"](self.model_paras.rx2("zero_mat"))
+            with self.__convert.context():
+                tmp = ro.conversion.get_conversion().rpy2py(res["zero_mat"])
             res["zero_mat"] = _addname(
-                array=res["zero_mat"],
-                row_name=self.model_paras.rx2("zero_mat").rownames,
-                col_name=self.model_paras.rx2("zero_mat").colnames,
+                array=tmp,
+                row_name=res["zero_mat"].rownames,
+                col_name=res["zero_mat"].colnames,
             )
+
             return res
         else:
             return self.model_paras
@@ -786,6 +814,7 @@ class scDesign3:
         fastmvn=bool,
         nonnegative=bool,
         nonzerovar=bool,
+        filtered_gene=Union[None, list, str],
         n_cores=Union[int, str],
         parallelization=str,
         bpparam=Optional[Union[ro.methods.RS4, str]],
@@ -805,6 +834,7 @@ class scDesign3:
         fastmvn: bool = False,
         nonnegative: bool = True,
         nonzerovar: bool = False,
+        filtered_gene: Optional[list[str]] = "default",
         n_cores: int = "default",
         parallelization: Literal["mcmapply", "bpmapply", "pbmcmapply"] = "default",
         bpparam: Optional[ro.methods.RS4] = "default",
@@ -856,6 +886,9 @@ class scDesign3:
         nonzerovar: `bool` (default: False)
             If True, for any gene with zero variance, a cell will be replaced with 1. This is designed for avoiding potential errors, for example, PCA.
 
+        filtered_gene: `None` or `list[str]` (default: 'default')
+            None or a list which contains genes that are excluded in the marginal and copula fitting steps because these genes only express in less than two cells. Default is 'default', use the @construct_data_res, 'filtered_gene' output.
+
         n_cores: `int` (default: 'default')
             The number of cores to use. Default is 'default', use the setting when initializing.
 
@@ -881,47 +914,58 @@ class scDesign3:
 
         # check what is data and new_covariate
         try:
-            if input_data == "dat":
-                input_data = self.construct_data_res.rx2(input_data)
-            elif isinstance(input_data, pd.DataFrame):
-                with convert.context():
+            if isinstance(input_data, pd.DataFrame):
+                with self.__convert.context():
                     input_data = ro.conversion.get_conversion().py2rpy(input_data)
+            elif input_data == "dat":
+                input_data = self.construct_data_res.rx2(input_data)
+
         except AttributeError:
             raise SequentialError("Please first run @construct_data.")
 
         try:
-            if new_covariate == "newCovariate":
-                new_covariate = self.construct_data_res.rx2(new_covariate)
-            elif isinstance(new_covariate, pd.DataFrame):
-                with convert.context():
+            if isinstance(new_covariate, pd.DataFrame):
+                with self.__convert.context():
                     new_covariate = ro.conversion.get_conversion().py2rpy(new_covariate)
+            elif new_covariate == "newCovariate":
+                new_covariate = self.construct_data_res.rx2(new_covariate)
+
         except AttributeError:
             raise SequentialError("Please first run @construct_data.")
 
         # check the matrix
         try:
-            if mean_mat == "mean_mat":
+            if isinstance(mean_mat, np.ndarray) or isinstance(mean_mat, pd.DataFrame):
+                with self.__convert.context():
+                    mean_mat = ro.conversion.get_conversion().py2rpy(mean_mat)
+            elif mean_mat == "mean_mat":
                 mean_mat = self.model_paras.rx2(mean_mat)
-            if sigma_mat == "sigma_mat":
+        except AttributeError:
+            raise SequentialError("mean_mat is not provided. Please first run @extract_para.")
+
+        try:
+            if isinstance(sigma_mat, np.ndarray) or isinstance(sigma_mat, pd.DataFrame):
+                with self.__convert.context():
+                    sigma_mat = ro.conversion.get_conversion().py2rpy(sigma_mat)
+            elif sigma_mat == "sigma_mat":
                 sigma_mat = self.model_paras.rx2(sigma_mat)
-            if zero_mat == "zero_mat":
+        except AttributeError:
+            raise SequentialError("sigma_mat is not provided. Please first run @extract_para.")
+
+        try:
+            if isinstance(zero_mat, np.ndarray) or isinstance(zero_mat, pd.DataFrame):
+                with self.__convert.context():
+                    zero_mat = ro.conversion.get_conversion().py2rpy(zero_mat)
+            elif zero_mat == "zero_mat":
                 zero_mat = self.model_paras.rx2(zero_mat)
         except AttributeError:
-            raise SequentialError("Please first run @extract_para.")
-
-        with convert.context():
-            if isinstance(mean_mat, np.ndarray):
-                mean_mat = ro.conversion.get_conversion().py2rpy(mean_mat)
-            if isinstance(sigma_mat, np.ndarray):
-                sigma_mat = ro.conversion.get_conversion().py2rpy(sigma_mat)
-            if isinstance(zero_mat, np.ndarray):
-                zero_mat = ro.conversion.get_conversion().py2rpy(zero_mat)
+            raise SequentialError("zero_mat is not provided. Please first run @extract_para.")
 
         # check the copula lists
         if quantile_mat is None:
             quantile_mat = NULL
         else:
-            with convert.context():
+            with self.__convert.context():
                 quantile_mat = ro.conversion.get_conversion().py2rpy(quantile_mat)
 
         try:
@@ -929,8 +973,18 @@ class scDesign3:
                 copula_dict = self.fit_copula_res.rx2("copula_list")
 
             elif isinstance(copula_dict, OrdDict) or isinstance(copula_dict, dict):
-                with convert.context():
-                    copula_dict = ro.conversion.get_conversion().py2rpy(copula_dict)
+                if self.copula == "gaussian":
+                    with self.__convert.context():
+                        # first change each value to R data.frame
+                        tmp = {
+                            key: ro.conversion.get_conversion().py2rpy(value) for key, value in copula_dict.items()
+                        }
+                    with ro.default_converter.context():
+                        # then change R data.frame to R named matrix
+                        copula_dict = ro.conversion.get_conversion().py2rpy(
+                            {key: ro.r["as.matrix"](value) for key, value in tmp.items()}
+                        )
+
             elif copula_dict is None:
                 copula_dict = NULL
         except AttributeError:
@@ -948,6 +1002,12 @@ class scDesign3:
             family_use = self.family_use
         (family_use,) = _other2list(family_use)
         (family_use,) = _strvec_none2ri(family_use)
+
+        if filtered_gene == "default":
+            filtered_gene = self.construct_data_res.rx2("filtered_gene")
+        else:
+            (filtered_gene,) = _other2list(filtered_gene)
+            (filtered_gene,) = _strvec_none2ri(filtered_gene)
 
         # check important feature
         if isinstance(important_feature, list):
@@ -977,6 +1037,7 @@ class scDesign3:
             fastmvn=fastmvn,
             nonnegative=nonnegative,
             nonzerovar=nonzerovar,
+            filtered_gene=filtered_gene,
             input_data=input_data,
             new_covariate=new_covariate,
             important_feature=important_feature,
@@ -986,7 +1047,7 @@ class scDesign3:
         )
 
         if return_py:
-            with convert.context():
+            with self.__convert.context():
                 res = ro.conversion.get_conversion().rpy2py(self.simu_res)
             res = _addname(
                 array=res.T,
@@ -1251,7 +1312,7 @@ class scDesign3:
         )
 
         if return_py:
-            with convert.context():
+            with self.__convert.context():
                 res = ro.conversion.get_conversion().rpy2py(self.whole_pipeline_res)
             res["model_aic"] = _addname(
                 array=res["model_aic"],

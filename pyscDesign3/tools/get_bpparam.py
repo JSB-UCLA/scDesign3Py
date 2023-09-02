@@ -10,6 +10,10 @@ def get_bpparam(mode=Literal["MulticoreParam", "SnowParam"], show=True, **kwargs
 
     Check R function `BiocParallel::MulticoreParam` and `BiocParallel::SnowParam` for more informarion on how to set the parameters.
 
+    Details:
+    ----------
+    For users who are going to use 'bpmapply' as the parallel method, this function provide the interface to create the control param. The implemented mode including 'MulticoreParam' for linux/Mac users and 'SnowParam' for windows users.
+
     Arguments:
     ----------
     mode: `str`
@@ -70,7 +74,7 @@ def get_bpparam(mode=Literal["MulticoreParam", "SnowParam"], show=True, **kwargs
         raise InputError("Currently only support MulticoreParam for linux/mac and SnowParam for windows.")
 
     para_dict = {key: value for key, value in kwargs.items() if key in para_list}
-    if not para_dict:
+    if (not para_dict) and kwargs:
         raise InputError(
             "Please check R document BiocParallel for argument details. https://www.bioconductor.org/packages/devel/bioc/manuals/BiocParallel/man/BiocParallel.pdf"
         )

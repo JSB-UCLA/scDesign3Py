@@ -3,8 +3,6 @@ from typing import Union
 import rpy2.robjects as ro
 from rpy2.rlike.container import OrdDict
 
-from .._utils._format import convert
-
 
 def perform_lrt(
     alter_marginal: Union[ro.vectors.ListVector, OrdDict, dict],
@@ -31,7 +29,7 @@ def perform_lrt(
     `pandas.DataFrame`
         A dataframe of the LRT result.
     """
-
+    convert = ro.numpy2ri.converter + ro.default_converter + ro.pandas2ri.converter
     with convert.context():
         lrt_func = ro.r("scDesign3::perform_lrt")
         lrt_res = lrt_func(alter_marginal, null_marginal)
