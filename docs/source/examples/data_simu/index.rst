@@ -1,6 +1,13 @@
 Data Simulation
 ===============
 
+Introduction
+-------------
+
+In this section, we will show how to use pyscDesign3 to simulate data.
+
+The provided examples are shown as below.
+
 .. toctree::
    :maxdepth: 1
    

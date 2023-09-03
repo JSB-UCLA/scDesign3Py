@@ -23,7 +23,7 @@ autodoc_mock_imports = ["rpy2", "numpy", "pandas", "matplotlib", "anndata", "sea
 project = "pyscDesign3"
 copyright = "2023, Di Liu"
 author = "Di Liu"
-
+version = "1.0.0"
 
 # -- General configuration ---------------------------------------------------
 
