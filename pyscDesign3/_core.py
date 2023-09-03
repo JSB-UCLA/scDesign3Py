@@ -810,7 +810,7 @@ class scDesign3:
         input_data=Union[str, pd.DataFrame],
         new_covariate=Union[str, pd.DataFrame],
         family_use=Union[str, list],
-        important_feature=Union[str, list],
+        important_feature=Union[str, list, ro.BoolVector],
         fastmvn=bool,
         nonnegative=bool,
         nonzerovar=bool,
@@ -830,7 +830,7 @@ class scDesign3:
         input_data: pd.DataFrame = "dat",
         new_covariate: pd.DataFrame = "newCovariate",
         family_use: Union[Literal["binomial", "poisson", "nb", "zip", "zinb", "gaussian"], list[str]] = "default",
-        important_feature: Union[Literal["all", "auto"], list[bool]] = "all",
+        important_feature: Union[Literal["all", "auto"], list[bool], ro.BoolVector] = "all",
         fastmvn: bool = False,
         nonnegative: bool = True,
         nonzerovar: bool = False,
@@ -874,7 +874,7 @@ class scDesign3:
         family_use: `str` or `list[str]` (default: 'default')
             A string or a list of strings of the marginal distribution. Must be one of 'binomial', 'poisson', 'nb', 'zip', 'zinb' or 'gaussian'. Default is 'default', use the class property @family_use.
 
-        important_feature: `str` or `list[bool]` (default: 'all')
+        important_feature: `str` or `list[bool]` or `rpy2.robject.vectors.BoolVector` (default: 'all')
             A string or list which indicates whether a gene will be used in correlation estimation or not. If this is a string, then this string must be either "all" (using all genes) or "auto", which indicates that the genes will be automatically selected based on the proportion of zero expression across cells for each gene. Gene with zero proportion greater than 0.8 will be excluded form gene-gene correlation estimation. If this is a list, then this should be a logical vector with length equal to the number of genes in @sce. True in the logical vector means the corresponding gene will be included in gene-gene correlation estimation and False in the logical vector means the corresponding gene will be excluded from the gene-gene correlation estimation.
 
         fastmvn: `bool` (default: False)
@@ -984,7 +984,11 @@ class scDesign3:
                         copula_dict = ro.conversion.get_conversion().py2rpy(
                             {key: ro.r["as.matrix"](value) for key, value in tmp.items()}
                         )
-
+                elif self.copula == "vine":
+                    with self.__convert.context():
+                        copula_dict = ro.conversion.get_conversion().py2rpy(copula_dict)
+                    for _,v in copula_dict.items():
+                        v.rclass = ('vinecop', 'vinecop_dist')
             elif copula_dict is None:
                 copula_dict = NULL
         except AttributeError:

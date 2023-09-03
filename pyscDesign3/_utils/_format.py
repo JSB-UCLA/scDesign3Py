@@ -12,14 +12,13 @@ from rpy2.robjects import NULL, ListVector, StrVector, conversion, default_conve
 from ._errors import ConvertionError, InputError
 
 
-# Conversion for OrdDict
-# rpy2 3.5.13 version has bug for changing Orddict back to ListVector, this function is used for currently fixing this bug
-# This bug has been fixed and this change has been merged to numpy2ri.converter, hopefully in rpy2 3.5.14, this code can be deleted
 @default_converter.py2rpy.register(OrdDict)
 @default_converter.py2rpy.register(dict)
-def convert_ord_dict(ord_dict):
+def convert_ord_dict(obj):
+    ord_dict = OrdDict()
     with (default_converter + pandas2ri.converter + numpy2ri.converter).context():
-        ord_dict = {k: conversion.get_conversion().py2rpy(v) for k, v in ord_dict.items()}
+        for k, v in obj.items():
+            ord_dict[k] = conversion.get_conversion().py2rpy(v)
     return ListVector(ord_dict)
 
 
