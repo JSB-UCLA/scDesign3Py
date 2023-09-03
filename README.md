@@ -173,6 +173,8 @@ print(r.lm(ro.Formula('y~x'),data=data))
 - **拿到的 matrix 对象是没有行名和列名的！**直接转换成 np 格式了
 - python 命名的`_`和 R 中的`.`是可以被 rpy2 自动转换的
 - `pandas2ri`和`numpy2ri`可以实现 R list 的 rpy2py，类型是 `rpy2.rlike.container.OrdDict`，但这个数据类型也无法 py2rpy，有点扯淡
+- rpy2 中得到的`Matrix`对象实际上有 rownames，colnames 对应行列名字，ncol，nrow 对应形状
+- rclass 属性可以得到一个对象的 S3 class
 
 ##### 2.2.5.1. `rpy2.robjects.converter`相关函数
 
