@@ -39,6 +39,9 @@
           <a href="../index.html" class="icon icon-home">
             pyscDesign3
           </a>
+              <div class="version">
+                1.0.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -99,8 +102,145 @@
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
 <p>In this section, we will show how to use <code class="docutils literal notranslate"><span class="pre">get_bpparam()</span></code> function to get a <strong>R</strong> <code class="docutils literal notranslate"><span class="pre">BiocParallel::MulticoreParam</span></code> or <code class="docutils literal notranslate"><span class="pre">BiocParallel::SnowParam</span></code> object to combine with &#64;parallelization = <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code>.</p>
-<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/pyscDesign3.tools.get_bpparam.get_bpparam.html"><span class="doc std std-doc">API</span></a>.</p>
+<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/pyscDesign3.get_bpparam.html"><span class="doc std std-doc">API</span></a>.</p>
 <p>To get more information on <code class="docutils literal notranslate"><span class="pre">BiocParallel</span></code> <strong>R</strong> package to help you set the parameters, please check the <a class="reference external" href="https://www.bioconductor.org/packages/devel/bioc/manuals/BiocParallel/man/BiocParallel.pdf">document</a>.</p>
+</section>
+<section id="step-1-import-packages">
+<h2>Step 1: Import packages<a class="headerlink" href="#step-1-import-packages" title="Permalink to this heading"></a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at D:/Code_env/R-4.3.1
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-2-call-get-bpparam-function">
+<h2>Step 2: Call <code class="docutils literal notranslate"><span class="pre">get_bpparam</span></code> function<a class="headerlink" href="#step-2-call-get-bpparam-function" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>For Linux/Mac users:</p></li>
+</ul>
+<p>The possible parallel method include <code class="docutils literal notranslate"><span class="pre">mcmapply</span></code>, <code class="docutils literal notranslate"><span class="pre">pbmcmapply</span></code> and <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code>. If you are using the <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code> method, then you should run this function and you can choose either <code class="docutils literal notranslate"><span class="pre">MulticoreParam</span></code> or <code class="docutils literal notranslate"><span class="pre">SnowParam</span></code> mode.</p>
+<ul class="simple">
+<li><p>For windows users:</p></li>
+</ul>
+<p>The only choice is to choose <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code> method and run this function with <code class="docutils literal notranslate"><span class="pre">SnowParam</span></code> mode. <strong>Setting more than 1 core is not allowed in other methods.</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bpparam</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;SnowParam&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stop_on_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>class: SnowParam
+  bpisup: FALSE; bpnworkers: 6; bptasks: 0; bpjobname: BPJOB
+  bplog: FALSE; bpthreshold: INFO; bpstopOnError: FALSE
+  bpRNGseed: ; bptimeout: NA; bpprogressbar: FALSE
+  bpexportglobals: TRUE; bpexportvariables: TRUE; bpforceGC: FALSE
+  bpfallback: TRUE
+  bplogdir: NA
+  bpresultdir: NA
+  cluster type: SOCK
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-3-read-in-data-and-run-the-scdesign3-methods">
+<h2>Step 3: Read in data and Run the scDesign3 methods<a class="headerlink" href="#step-3-read-in-data-and-run-the-scdesign3-methods" title="Permalink to this heading"></a></h2>
+<p>The raw data is from the <a class="reference external" href="https://scvelo.readthedocs.io/scvelo.datasets.pancreas/">scvelo</a> and we only choose top 30 genes to save time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/PANCREAS.h5ad&quot;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>View of AnnData object with n_obs × n_vars = 2087 × 30
+    obs: &#39;clusters_coarse&#39;, &#39;clusters&#39;, &#39;S_score&#39;, &#39;G2M_score&#39;, &#39;cell_type&#39;, &#39;sizeFactor&#39;, &#39;pseudotime&#39;
+    var: &#39;highly_variable_genes&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;, &#39;X_x_pca&#39;, &#39;X_x_umap&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here we simply show the differnece when fitting the marginal models using the <code class="docutils literal notranslate"><span class="pre">SnowParam</span></code> mode.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the instance</span>
+<span class="n">test1</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">test2</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># construct data</span>
+<span class="n">test1</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">pseudotime</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">test2</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">pseudotime</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Fit marginal using 1 core</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">test1</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 5, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total time cost when using 1 core is </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total time cost when using 1 core is 161.56 sec
+</pre></div>
+</div>
+</div>
+</div>
+<p>Fit marginal using 4 cores</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">test2</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 5, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total time cost when using 4 cores is </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total time cost when using 4 cores is 16.70 sec
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 

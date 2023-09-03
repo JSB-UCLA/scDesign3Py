@@ -63,7 +63,7 @@
    "outputs": [],
    "source": [
     "data = ad.read_h5ad(\"data/PANCREAS.h5ad\")\n",
-    "data = data[:,0:30]\n",
+    "data = data[:, 0:30]\n",
     "data"
    ]
   },
@@ -84,7 +84,7 @@
    },
    "outputs": [],
    "source": [
-    "test = pyscDesign3.scDesign3(n_cores=1)"
+    "test = pyscDesign3.scDesign3()"
    ]
   },
   {
@@ -107,14 +107,14 @@
     "simu_res = test.scdesign3(\n",
     "    anndata=data,\n",
     "    default_assay_name=\"counts\",\n",
-    "    celltype = \"cell_type\",\n",
-    "    pseudotime = \"pseudotime\",\n",
-    "    mu_formula = \"s(pseudotime, k = 10, bs = 'cr')\",\n",
-    "    sigma_formula = \"s(pseudotime, k = 5, bs = 'cr')\",\n",
-    "    family_use = \"nb\",\n",
-    "    usebam = True,\n",
-    "    corr_formula = \"1\",\n",
-    "    copula = \"gaussian\",\n",
+    "    celltype=\"cell_type\",\n",
+    "    pseudotime=\"pseudotime\",\n",
+    "    mu_formula=\"s(pseudotime, k = 10, bs = 'cr')\",\n",
+    "    sigma_formula=\"s(pseudotime, k = 5, bs = 'cr')\",\n",
+    "    family_use=\"nb\",\n",
+    "    usebam=True,\n",
+    "    corr_formula=\"1\",\n",
+    "    copula=\"gaussian\",\n",
     ")"
    ]
   },
@@ -124,7 +124,7 @@
    "source": [
     "```{eval-rst}\n",
     ".. Note::\n",
-    "    Details of the usage of the `scdesign3()` function will be shown in :doc:`tutorial <./all_in_one>` section.\n",
+    "    Details of creating the instance of the scDesign3 class and the usage of the `scdesign3()` function will be shown in :doc:`tutorial <./all_in_one>` section.\n",
     "```\n",
     "\n",
     "## Step 3: Construct new `anndata.AnnData` object with the simulated result\n",
@@ -138,16 +138,21 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "simu_data = ad.AnnData(X=simu_res[\"new_count\"],obs=simu_res[\"new_covariate\"])\n",
-    "simu_data.layers['log_transformed'] = np.log1p(simu_data.X)\n",
-    "data.layers['log_transformed'] = np.log1p(data.X)"
+    "simu_data = ad.AnnData(X=simu_res[\"new_count\"], obs=simu_res[\"new_covariate\"])\n",
+    "simu_data.layers[\"log_transformed\"] = np.log1p(simu_data.X)\n",
+    "data.layers[\"log_transformed\"] = np.log1p(data.X)"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## Step 4: Visualization"
+    "## Step 4: Visualization\n",
+    "\n",
+    "```{eval-rst}\n",
+    ".. Note::\n",
+    "    Details of the plot process will be shown in :doc:`tutorial <./plot>` section.\n",
+    "```"
    ]
   },
   {

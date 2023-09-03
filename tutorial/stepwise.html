@@ -39,6 +39,9 @@
           <a href="../index.html" class="icon icon-home">
             pyscDesign3
           </a>
+              <div class="version">
+                1.0.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -96,6 +99,543 @@
              
   <section id="run-pyscdesign3-pipeline-step-by-step">
 <h1>Run pyscDesign3 pipeline step by step<a class="headerlink" href="#run-pyscdesign3-pipeline-step-by-step" title="Permalink to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p>In this section, we will show how to run the whole pyscDesign3 pipeline step by step.</p>
+<p>Some basic introduction of pyscDesign3 package is included in the <a class="reference internal" href="all_in_one.html"><span class="doc std std-doc">All in one simulation</span></a> section, so if you have no idea of how to use the package, you can first go through that tutorial.</p>
+<p>In this section, we will introduce the following methods according to their actual execution order.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#step-1-construct-data"><span class="std std-ref">Construct data</span></a> (<a class="reference internal" href="../set_up/_autosummary/pyscDesign3.scDesign3.construct_data.html"><span class="doc std std-doc">API</span></a>)</p></li>
+<li><p><a class="reference internal" href="#step-2-fit-marginal"><span class="std std-ref">Fit marginal</span></a> (<a class="reference internal" href="../set_up/_autosummary/pyscDesign3.scDesign3.fit_marginal.html"><span class="doc std std-doc">API</span></a>)</p></li>
+<li><p><a class="reference internal" href="#step-3-fit-copula"><span class="std std-ref">Fit copula</span></a> (<a class="reference internal" href="../set_up/_autosummary/pyscDesign3.scDesign3.fit_copula.html"><span class="doc std std-doc">API</span></a>)</p></li>
+<li><p><a class="reference internal" href="#step-4-extract-parameters"><span class="std std-ref">Extract parameters</span></a> (<a class="reference internal" href="../set_up/_autosummary/pyscDesign3.scDesign3.extract_para.html"><span class="doc std std-doc">API</span></a>)</p></li>
+<li><p><a class="reference internal" href="#step-5-simulate-new-data"><span class="std std-ref">Simulate new data</span></a> (<a class="reference internal" href="../set_up/_autosummary/pyscDesign3.scDesign3.simu_new.html"><span class="doc std std-doc">API</span></a>)</p></li>
+</ul>
+</section>
+<section id="step-0-preparation">
+<h2>Step 0: Preparation<a class="headerlink" href="#step-0-preparation" title="Permalink to this heading"></a></h2>
+<section id="import-packages">
+<h3>import packages<a class="headerlink" href="#import-packages" title="Permalink to this heading"></a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at D:/Code_env/R-4.3.1
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="read-in-data">
+<h3>Read in data<a class="headerlink" href="#read-in-data" title="Permalink to this heading"></a></h3>
+<p>The raw data is from the <a class="reference external" href="https://scvelo.readthedocs.io/scvelo.datasets.pancreas/">scvelo</a> and we only choose top 30 genes to save time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/PANCREAS.h5ad&quot;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>View of AnnData object with n_obs × n_vars = 20 × 5
+    obs: &#39;clusters_coarse&#39;, &#39;clusters&#39;, &#39;S_score&#39;, &#39;G2M_score&#39;, &#39;cell_type&#39;, &#39;sizeFactor&#39;, &#39;pseudotime&#39;
+    var: &#39;highly_variable_genes&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;, &#39;X_x_pca&#39;, &#39;X_x_umap&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="create-the-scdesign3-instance">
+<h3>Create the <code class="docutils literal notranslate"><span class="pre">scDesign3</span></code> instance<a class="headerlink" href="#create-the-scdesign3-instance" title="Permalink to this heading"></a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-1-construct-data">
+<span id="id1"></span><h2>Step 1: Construct data<a class="headerlink" href="#step-1-construct-data" title="Permalink to this heading"></a></h2>
+<p>This function construct the input dataset.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default assay counts stored in <cite>anndata.AnnData.X</cite> don’t have a specified name, when you are going to use the default assay, you should assign a name to it in the <cite>default_assay_name</cite> parameter. Else if you are using the assay stored in <cite>anndata.AnnData.layers[assay_use]</cite>, you can specify the name in the <cite>assay_use</cite> parameter.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">const_data</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">pseudotime</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The results are all converted to <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> so that you can easily check and manipulate the result in python.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">const_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>cell_type</th>
+      <th>pseudotime</th>
+      <th>corr_group</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AAACCTGAGAGGGATA</th>
+      <td>Pre-endocrine</td>
+      <td>0.677236</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>AAACCTGGTAAGTGGC</th>
+      <td>Ngn3 high EP</td>
+      <td>0.431569</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>AAACGGGCAAAGAATC</th>
+      <td>Beta</td>
+      <td>0.749373</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>AAACGGGGTACAGTTC</th>
+      <td>Beta</td>
+      <td>0.925441</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>AAACGGGGTGAAATCA</th>
+      <td>Ngn3 high EP</td>
+      <td>0.380345</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="step-2-fit-marginal">
+<span id="id2"></span><h2>Step 2: Fit marginal<a class="headerlink" href="#step-2-fit-marginal" title="Permalink to this heading"></a></h2>
+<p>Fit regression models for each gene (feature) based on your specification.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Though we have already set the parallel method when creating the instance, we can change the setting temporarily when executing the methods one by one.</p>
+<p>Here is an example where we change the parallel method to <cite>bpmapply</cite> .</p>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bpparam</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;SnowParam&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">marginal</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">const_data</span><span class="p">,</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span>
+    <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>So far there has been some problem in converting the <cite>fit_marginal</cite> result to a more pythonic version, so the return type is <cite>rpy2.robjects.ListVector</cite>.</p>
+<p>You can manipulate the result by following the tutorial instruction.</p>
+</div>
+<p><strong>If you want to manipulate the results</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">marginal</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;Pyy&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;coefficients&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    (Intercept) s(pseudotime).1 s(pseudotime).2 s(pseudotime).3 s(pseudotime).4 
+      3.1015925      -1.8812188      -0.2820121       1.1673134       0.8974383 
+s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9 
+      1.8146717       2.2833748       2.8386624       3.0027544       3.0944890 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">marginal</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;Pyy&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;coefficients&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.96</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">marginal</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;Pyy&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;coefficients&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    (Intercept) s(pseudotime).1 s(pseudotime).2 s(pseudotime).3 s(pseudotime).4 
+      1.9600000      -1.8812188      -0.2820121       1.1673134       0.8974383 
+s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9 
+      1.8146717       2.2833748       2.8386624       3.0027544       3.0944890 
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-3-fit-copula">
+<span id="id3"></span><h2>Step 3: Fit copula<a class="headerlink" href="#step-3-fit-copula" title="Permalink to this heading"></a></h2>
+<p>Fit a copula, obtain AIC and BIC.</p>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">copula</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">fit_copula</span><span class="p">(</span>
+    <span class="n">input_data</span><span class="o">=</span><span class="n">const_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">],</span>
+    <span class="n">marginal_dict</span><span class="o">=</span><span class="n">marginal</span><span class="p">,</span>
+    <span class="n">important_feature</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="n">copula</span><span class="o">=</span><span class="s2">&quot;vine&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Convert Residuals to Uniform
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Converting End
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Copula group 1 starts
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Vine Copula Estimation Starts
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Time difference of 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.1089821
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>secs
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Vine Copula Estimation Ends
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>We can evaluate the model by checking the AIC.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">copula</span><span class="p">[</span><span class="s2">&quot;model_aic&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>aic.marginal    664.545736
+aic.copula        0.000000
+aic.total       664.545736
+dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The return value is a <cite>rpy2.rlike.container.OrdDict</cite> . Not all elements in this <cite>dict</cite> like object have to be named but they have a given order. <strong>None</strong> as a key value means an absence of name for the element. For the values without a named key, you can call <cite>byindex</cite> method to get them by index (rank).</p>
+</div>
+<p>Here, we show an example to get the vine copula values. <strong>If you call <code class="docutils literal notranslate"><span class="pre">byindex</span></code> method, you will get a tuple with the first value being the key and the second value being the value.</strong></p>
+<p>The example fetches the R vinecop class property <code class="docutils literal notranslate"><span class="pre">pair_copulas</span></code>, and get the <code class="docutils literal notranslate"><span class="pre">family</span></code> info. The equal R version code is <code class="docutils literal notranslate"><span class="pre">copula$copula_list$&quot;1&quot;$pair_copulas[[1]][[1]]$&quot;family&quot;</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">copula</span><span class="p">[</span><span class="s2">&quot;copula_list&quot;</span><span class="p">][</span><span class="s2">&quot;1&quot;</span><span class="p">][</span><span class="s2">&quot;pair_copulas&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">byindex</span><span class="p">(</span><span class="mi">0</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">byindex</span><span class="p">(</span><span class="mi">0</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;family&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1] &quot;indep&quot;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-extract-parameters">
+<span id="id4"></span><h2>Step 4: Extract parameters<a class="headerlink" href="#step-4-extract-parameters" title="Permalink to this heading"></a></h2>
+<p>Extract out the estimated parameters so you can make some modifications and use the modified parameters to generate new data if needed. The following parameters can be extracted:</p>
+<ul class="simple">
+<li><p>a cell-by-gene mean matrix</p></li>
+<li><p>a sigma matrix which is:</p>
+<ul>
+<li><p>a cell-by-gene matrix of $\frac{1}{\phi}$ for negative binomial distribution</p></li>
+<li><p>a cell-by-gene matrix of the standard deviation $\sigma$ for Gaussian distribution</p></li>
+<li><p>a cell-by-gene matrix of 1 for poisson distribution</p></li>
+</ul>
+</li>
+<li><p>a zero matrix which is:</p>
+<ul>
+<li><p>a cell-by-gene matrix of zero probabilities for zero-inflated negative binomial and zero-inflated poisson distributions</p></li>
+<li><p>a zero matrix for negative binomial, Gaussian, and poisson distributions</p></li>
+</ul>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">para</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">extract_para</span><span class="p">(</span>
+    <span class="n">marginal_dict</span><span class="o">=</span><span class="n">marginal</span><span class="p">,</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">const_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">],</span>
+    <span class="n">new_covariate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The output matrix can be modified based on <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> syntax.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Pyy</th>
+      <th>Iapp</th>
+      <th>Chgb</th>
+      <th>Rbp4</th>
+      <th>Spp1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AAACCTGAGAGGGATA</th>
+      <td>7.556592</td>
+      <td>4.060408</td>
+      <td>30.387177</td>
+      <td>9.680710</td>
+      <td>0.293384</td>
+    </tr>
+    <tr>
+      <th>AAACCTGGTAAGTGGC</th>
+      <td>1.469785</td>
+      <td>0.750587</td>
+      <td>1.591679</td>
+      <td>0.039239</td>
+      <td>0.789811</td>
+    </tr>
+    <tr>
+      <th>AAACGGGCAAAGAATC</th>
+      <td>12.221418</td>
+      <td>10.120813</td>
+      <td>34.386125</td>
+      <td>39.053108</td>
+      <td>0.294727</td>
+    </tr>
+    <tr>
+      <th>AAACGGGGTACAGTTC</th>
+      <td>39.512942</td>
+      <td>196.422984</td>
+      <td>20.594161</td>
+      <td>59.865974</td>
+      <td>0.315667</td>
+    </tr>
+    <tr>
+      <th>AAACGGGGTGAAATCA</th>
+      <td>1.044697</td>
+      <td>0.635037</td>
+      <td>0.642357</td>
+      <td>0.012128</td>
+      <td>1.376052</td>
+    </tr>
+    <tr>
+      <th>AAACGGGTCAAACAAG</th>
+      <td>0.457109</td>
+      <td>0.412587</td>
+      <td>0.062825</td>
+      <td>0.000681</td>
+      <td>6.473435</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
+<section id="step-5-simulate-new-data">
+<span id="id5"></span><h2>Step 5: Simulate new data<a class="headerlink" href="#step-5-simulate-new-data" title="Permalink to this heading"></a></h2>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_new</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">simu_new</span><span class="p">(</span>
+    <span class="n">mean_mat</span><span class="o">=</span><span class="n">para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">],</span>
+    <span class="n">sigma_mat</span><span class="o">=</span><span class="n">para</span><span class="p">[</span><span class="s2">&quot;sigma_mat&quot;</span><span class="p">],</span>
+    <span class="n">zero_mat</span><span class="o">=</span><span class="n">para</span><span class="p">[</span><span class="s2">&quot;zero_mat&quot;</span><span class="p">],</span>
+    <span class="n">copula_dict</span><span class="o">=</span><span class="n">copula</span><span class="p">[</span><span class="s2">&quot;copula_list&quot;</span><span class="p">],</span>
+    <span class="n">input_data</span><span class="o">=</span><span class="n">const_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">],</span>
+    <span class="n">new_covariate</span><span class="o">=</span><span class="n">const_data</span><span class="p">[</span><span class="s2">&quot;newCovariate&quot;</span><span class="p">],</span>
+    <span class="n">important_feature</span><span class="o">=</span><span class="n">copula</span><span class="p">[</span><span class="s2">&quot;important_feature&quot;</span><span class="p">],</span>
+    <span class="n">filtered_gene</span><span class="o">=</span><span class="n">const_data</span><span class="p">[</span><span class="s2">&quot;filtered_gene&quot;</span><span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Use Copula to sample a multivariate quantile matrix
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Sample Copula group 1 starts
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>The final simulated result is also a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_new</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Pyy</th>
+      <th>Iapp</th>
+      <th>Chgb</th>
+      <th>Rbp4</th>
+      <th>Spp1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>AAACCTGAGAGGGATA</th>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>38.0</td>
+      <td>8.0</td>
+      <td>-0.0</td>
+    </tr>
+    <tr>
+      <th>AAACCTGGTAAGTGGC</th>
+      <td>1.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>AAACGGGCAAAGAATC</th>
+      <td>4.0</td>
+      <td>9.0</td>
+      <td>76.0</td>
+      <td>22.0</td>
+      <td>-0.0</td>
+    </tr>
+    <tr>
+      <th>AAACGGGGTACAGTTC</th>
+      <td>105.0</td>
+      <td>229.0</td>
+      <td>16.0</td>
+      <td>95.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>AAACGGGGTGAAATCA</th>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>3.0</td>
+    </tr>
+    <tr>
+      <th>AAACGGGTCAAACAAG</th>
+      <td>0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>4.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
 </section>
 
 

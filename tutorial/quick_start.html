@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="About pyscDesign3" href="../set_up/info.html" />
-    <link rel="prev" title="pyscDesign3.tools.plot.plot_reduceddim" href="../set_up/_autosummary/pyscDesign3.tools.plot.plot_reduceddim.html" /> 
+    <link rel="prev" title="pyscDesign3.plot_reduceddim" href="../set_up/_autosummary/pyscDesign3.plot_reduceddim.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,6 +39,9 @@
           <a href="../index.html" class="icon icon-home">
             pyscDesign3
           </a>
+              <div class="version">
+                1.0.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -127,7 +130,7 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/PANCREAS.h5ad&quot;</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span>
 <span class="n">data</span>
 </pre></div>
 </div>
@@ -148,7 +151,7 @@
 <p>First create an instance of the <code class="docutils literal notranslate"><span class="pre">scDesign</span></code> class to use the <code class="docutils literal notranslate"><span class="pre">scdesign3()</span></code> class method.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -159,14 +162,14 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span>
     <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
     <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
-    <span class="n">celltype</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
-    <span class="n">pseudotime</span> <span class="o">=</span> <span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
-    <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
-    <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;s(pseudotime, k = 5, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
-    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
-    <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
-    <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">pseudotime</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 5, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">copula</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -228,7 +231,7 @@ Extraction End
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Details of the usage of the <cite>scdesign3()</cite> function will be shown in <a class="reference internal" href="all_in_one.html"><span class="doc">tutorial</span></a> section.</p>
+<p>Details of creating the instance of the scDesign3 class and the usage of the <cite>scdesign3()</cite> function will be shown in <a class="reference internal" href="all_in_one.html"><span class="doc">tutorial</span></a> section.</p>
 </div>
 </section>
 <section id="step-3-construct-new-anndata-anndata-object-with-the-simulated-result">
@@ -236,9 +239,9 @@ Extraction End
 <p>Besides constructing the simulated <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object, we can also calculate the log transformed data for visualization.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">simu_res</span><span class="p">[</span><span class="s2">&quot;new_count&quot;</span><span class="p">],</span><span class="n">obs</span><span class="o">=</span><span class="n">simu_res</span><span class="p">[</span><span class="s2">&quot;new_covariate&quot;</span><span class="p">])</span>
-<span class="n">simu_data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;log_transformed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">simu_data</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
-<span class="n">data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s1">&#39;log_transformed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">simu_res</span><span class="p">[</span><span class="s2">&quot;new_count&quot;</span><span class="p">],</span> <span class="n">obs</span><span class="o">=</span><span class="n">simu_res</span><span class="p">[</span><span class="s2">&quot;new_covariate&quot;</span><span class="p">])</span>
+<span class="n">simu_data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">simu_data</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -246,6 +249,10 @@ Extraction End
 </section>
 <section id="step-4-visualization">
 <h2>Step 4: Visualization<a class="headerlink" href="#step-4-visualization" title="Permalink to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Details of the plot process will be shown in <a class="reference internal" href="plot.html"><span class="doc">tutorial</span></a> section.</p>
+</div>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
@@ -270,7 +277,7 @@ Extraction End
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/ccac4c02c2277d991e928c3453b0b4d0318c55d837efaa572177ba38fe80f281.png" src="../_images/ccac4c02c2277d991e928c3453b0b4d0318c55d837efaa572177ba38fe80f281.png" />
+<img alt="../_images/ffc5de1381b24ad9857d83e2bbceb14e1e6c095eda4790631b65b20f9abab125.png" src="../_images/ffc5de1381b24ad9857d83e2bbceb14e1e6c095eda4790631b65b20f9abab125.png" />
 </div>
 </div>
 <p>PCA plot</p>
@@ -281,7 +288,7 @@ Extraction End
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/83623b14e242675eb87a6b6ebd5f82f958740530131ffe28073ab79c75b741b6.png" src="../_images/83623b14e242675eb87a6b6ebd5f82f958740530131ffe28073ab79c75b741b6.png" />
+<img alt="../_images/4a8bbbdd40afdff62af4214bc4576c3dc0fbe9b46fd640a289bf0cf287239130.png" src="../_images/4a8bbbdd40afdff62af4214bc4576c3dc0fbe9b46fd640a289bf0cf287239130.png" />
 </div>
 </div>
 </section>
@@ -291,7 +298,7 @@ Extraction End
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../set_up/_autosummary/pyscDesign3.tools.plot.plot_reduceddim.html" class="btn btn-neutral float-left" title="pyscDesign3.tools.plot.plot_reduceddim" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../set_up/_autosummary/pyscDesign3.plot_reduceddim.html" class="btn btn-neutral float-left" title="pyscDesign3.plot_reduceddim" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../set_up/info.html" class="btn btn-neutral float-right" title="About pyscDesign3" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

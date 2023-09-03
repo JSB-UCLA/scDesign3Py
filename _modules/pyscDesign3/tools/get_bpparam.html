@@ -99,28 +99,32 @@
 <span class="kn">from</span> <span class="nn">.._utils._errors</span> <span class="kn">import</span> <span class="n">InputError</span>
 
 
-<div class="viewcode-block" id="get_bpparam"><a class="viewcode-back" href="../../../set_up/_autosummary/pyscDesign3.tools.get_bpparam.get_bpparam.html#pyscDesign3.tools.get_bpparam.get_bpparam">[docs]</a><span class="k">def</span> <span class="nf">get_bpparam</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;MulticoreParam&quot;</span><span class="p">,</span> <span class="s2">&quot;SnowParam&quot;</span><span class="p">],</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="get_bpparam"><a class="viewcode-back" href="../../../set_up/_autosummary/pyscDesign3.get_bpparam.html#pyscDesign3.get_bpparam">[docs]</a><span class="k">def</span> <span class="nf">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;MulticoreParam&quot;</span><span class="p">,</span> <span class="s2">&quot;SnowParam&quot;</span><span class="p">],</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get your parallelization parameters robject</span>
 
 <span class="sd">    Check R function `BiocParallel::MulticoreParam` and `BiocParallel::SnowParam` for more informarion on how to set the parameters.</span>
 
+<span class="sd">    Details:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    For users who are going to use &#39;bpmapply&#39; as the parallel method, this function provide the interface to create the control param. The implemented mode including &#39;MulticoreParam&#39; for linux/Mac users and &#39;SnowParam&#39; for windows users.</span>
+
 <span class="sd">    Arguments:</span>
 <span class="sd">    ----------</span>
-<span class="sd">    :name: `str`</span>
+<span class="sd">    mode: `str`</span>
 <span class="sd">        The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.</span>
 
-<span class="sd">    :show: `bool` (default: True)</span>
+<span class="sd">    show: `bool` (default: True)</span>
 <span class="sd">        Whether to print the constructed onject information on the screen.</span>
 
 <span class="sd">    Output:</span>
 <span class="sd">    ----------</span>
 <span class="sd">    `rpy2.robjects.methods.RS4`</span>
-<span class="sd">        A R class specifying the parrallel parameters. </span>
-<span class="sd">        </span>
+<span class="sd">        A R class specifying the parrallel parameters.</span>
+
 <span class="sd">        Combined use with @parallelization = `bpmapply`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;MulticoreParam&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;MulticoreParam&quot;</span><span class="p">:</span>
         <span class="n">para_list</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;workers&quot;</span><span class="p">,</span>
             <span class="s2">&quot;tasks&quot;</span><span class="p">,</span>
@@ -139,7 +143,7 @@
             <span class="s2">&quot;manager_hostname&quot;</span><span class="p">,</span>
             <span class="s2">&quot;manager_port&quot;</span><span class="p">,</span>
         <span class="p">]</span>
-    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;SnowParam&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SnowParam&quot;</span><span class="p">:</span>
         <span class="n">para_list</span> <span class="o">=</span> <span class="p">[</span>
             <span class="s2">&quot;workers&quot;</span><span class="p">,</span>
             <span class="s2">&quot;type&quot;</span><span class="p">,</span>
@@ -164,13 +168,13 @@
         <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span><span class="s2">&quot;Currently only support MulticoreParam for linux/mac and SnowParam for windows.&quot;</span><span class="p">)</span>
 
     <span class="n">para_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">value</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">para_list</span><span class="p">}</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">para_dict</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">para_dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">kwargs</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">InputError</span><span class="p">(</span>
             <span class="s2">&quot;Please check R document BiocParallel for argument details. https://www.bioconductor.org/packages/devel/bioc/manuals/BiocParallel/man/BiocParallel.pdf&quot;</span>
         <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;MulticoreParam&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;MulticoreParam&quot;</span><span class="p">:</span>
         <span class="n">para_object</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="s2">&quot;BiocParallel::MulticoreParam&quot;</span><span class="p">)(</span><span class="o">**</span><span class="n">para_dict</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;SnowParam&quot;</span><span class="p">:</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;SnowParam&quot;</span><span class="p">:</span>
         <span class="n">para_object</span> <span class="o">=</span> <span class="n">r</span><span class="p">(</span><span class="s2">&quot;BiocParallel::SnowParam&quot;</span><span class="p">)(</span><span class="o">**</span><span class="n">para_dict</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">show</span><span class="p">:</span>

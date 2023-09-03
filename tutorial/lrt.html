@@ -39,6 +39,9 @@
           <a href="../index.html" class="icon icon-home">
             pyscDesign3
           </a>
+              <div class="version">
+                1.0.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -96,6 +99,196 @@
              
   <section id="perform-likelihood-ratio-test">
 <h1>Perform likelihood ratio test<a class="headerlink" href="#perform-likelihood-ratio-test" title="Permalink to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p>In this section, we will show how to use <code class="docutils literal notranslate"><span class="pre">perform_lrt</span></code> function to perform likelihood ratio test to compare two dicts of marginal models.</p>
+<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/pyscDesign3.perform_lrt.html"><span class="doc std std-doc">API</span></a>.</p>
+</section>
+<section id="step-1-import-packages-and-read-in-data">
+<h2>Step 1: Import packages and Read in data<a class="headerlink" href="#step-1-import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
+<section id="import-pacakges">
+<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Permalink to this heading"></a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at D:/Code_env/R-4.3.1
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="read-in-data">
+<h3>Read in data<a class="headerlink" href="#read-in-data" title="Permalink to this heading"></a></h3>
+<p>The raw data is from the <a class="reference external" href="https://scvelo.readthedocs.io/scvelo.datasets.pancreas/">scvelo</a> and we only choose top 30 genes to save time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/PANCREAS.h5ad&quot;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>View of AnnData object with n_obs × n_vars = 2087 × 30
+    obs: &#39;clusters_coarse&#39;, &#39;clusters&#39;, &#39;S_score&#39;, &#39;G2M_score&#39;, &#39;cell_type&#39;, &#39;sizeFactor&#39;, &#39;pseudotime&#39;
+    var: &#39;highly_variable_genes&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;, &#39;X_x_pca&#39;, &#39;X_x_umap&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-2-run-the-fit-marginal-method-to-create-the-marginal-models">
+<h2>Step 2: Run the <code class="docutils literal notranslate"><span class="pre">fit_marginal()</span></code> method to create the marginal models<a class="headerlink" href="#step-2-run-the-fit-marginal-method-to-create-the-marginal-models" title="Permalink to this heading"></a></h2>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set bpparam</span>
+<span class="n">bpparam</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;SnowParam&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">stop_on_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># create the instance</span>
+<span class="n">test1</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">test2</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="c1"># construct data</span>
+<span class="n">test1</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">pseudotime</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">test2</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">pseudotime</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+    <span class="n">ncell</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># fit marginal</span>
+<span class="n">marginal1</span> <span class="o">=</span> <span class="n">test1</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">marginal2</span> <span class="o">=</span> <span class="n">test1</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, bs = &#39;cr&#39;, k = 10)&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-3-get-the-marginal-models-from-the-fit-key">
+<h2>Step 3: Get the marginal models from the <code class="docutils literal notranslate"><span class="pre">fit</span></code> key<a class="headerlink" href="#step-3-get-the-marginal-models-from-the-fit-key" title="Permalink to this heading"></a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">marg_test_1</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="n">value</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="n">marginal1</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="n">marg_test_2</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span><span class="n">value</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="n">marginal2</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-run-the-perform-lrt-function-to-perform-the-likelihood-ratio-test">
+<h2>Step 4: Run the <code class="docutils literal notranslate"><span class="pre">perform_lrt</span></code> function to perform the likelihood ratio test<a class="headerlink" href="#step-4-run-the-perform-lrt-function-to-perform-the-likelihood-ratio-test" title="Permalink to this heading"></a></h2>
+<p>The first argument is the alternative hypothesis and the second is the null hypothesis.</p>
+<p>The return value is a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> object with each row corresponding to a gene (marginal) model LRT result.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pyscDesign3</span><span class="o">.</span><span class="n">perform_lrt</span><span class="p">(</span><span class="n">marg_test_2</span><span class="p">,</span><span class="n">marg_test_1</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>same_model</th>
+      <th>LogLik_alter</th>
+      <th>LogLik_null</th>
+      <th>df_alter</th>
+      <th>df_null</th>
+      <th>p_value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Pyy</th>
+      <td>1.0</td>
+      <td>-6335.504699</td>
+      <td>-7242.205596</td>
+      <td>9.341965</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Iapp</th>
+      <td>1.0</td>
+      <td>-4260.230410</td>
+      <td>-5730.149416</td>
+      <td>9.802905</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Chgb</th>
+      <td>1.0</td>
+      <td>-5764.120772</td>
+      <td>-6942.103030</td>
+      <td>9.883961</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Rbp4</th>
+      <td>1.0</td>
+      <td>-5268.219696</td>
+      <td>-6522.623963</td>
+      <td>10.216497</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>Spp1</th>
+      <td>1.0</td>
+      <td>-3397.364727</td>
+      <td>-4865.083733</td>
+      <td>10.013325</td>
+      <td>1.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
 </section>
 
 

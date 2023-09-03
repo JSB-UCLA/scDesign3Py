@@ -47,4 +47,6 @@ pip install pyscDesign3
 ```{eval-rst}
 .. Note::
     If there's any problem in installing `rpy2`, please refer to `rpy2 installation tutorial <https://pypi.org/project/rpy2/>`_.
+
+    **Please make sure that the `rpy2` version is above **
 ```

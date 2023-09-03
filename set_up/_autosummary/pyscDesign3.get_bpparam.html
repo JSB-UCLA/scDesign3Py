@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyscDesign3.tools.get_bpparam.get_bpparam &mdash; pyscDesign3  documentation</title>
+  <title>pyscDesign3.get_bpparam &mdash; pyscDesign3  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="pyscDesign3.tools.lrt.perform_lrt" href="pyscDesign3.tools.lrt.perform_lrt.html" />
-    <link rel="prev" title="pyscDesign3._core.scDesign3.scdesign3" href="pyscDesign3._core.scDesign3.scdesign3.html" /> 
+    <link rel="next" title="pyscDesign3.perform_lrt" href="pyscDesign3.perform_lrt.html" />
+    <link rel="prev" title="pyscDesign3.scDesign3.scdesign3" href="pyscDesign3.scDesign3.scdesign3.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,6 +39,9 @@
           <a href="../../index.html" class="icon icon-home">
             pyscDesign3
           </a>
+              <div class="version">
+                1.0.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -51,17 +54,17 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../Installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.html">pyscDesign3._core.scDesign3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.__init__.html">pyscDesign3._core.scDesign3.__init__</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.construct_data.html">pyscDesign3._core.scDesign3.construct_data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.fit_marginal.html">pyscDesign3._core.scDesign3.fit_marginal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.fit_copula.html">pyscDesign3._core.scDesign3.fit_copula</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.extract_para.html">pyscDesign3._core.scDesign3.extract_para</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.simu_new.html">pyscDesign3._core.scDesign3.simu_new</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.scdesign3.html">pyscDesign3._core.scDesign3.scdesign3</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">pyscDesign3.tools.get_bpparam.get_bpparam</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.tools.lrt.perform_lrt.html">pyscDesign3.tools.lrt.perform_lrt</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.tools.plot.plot_reduceddim.html">pyscDesign3.tools.plot.plot_reduceddim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.html">pyscDesign3.scDesign3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.__init__.html">pyscDesign3.scDesign3.__init__</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.construct_data.html">pyscDesign3.scDesign3.construct_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.fit_marginal.html">pyscDesign3.scDesign3.fit_marginal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.fit_copula.html">pyscDesign3.scDesign3.fit_copula</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.extract_para.html">pyscDesign3.scDesign3.extract_para</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.simu_new.html">pyscDesign3.scDesign3.simu_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.scdesign3.html">pyscDesign3.scDesign3.scdesign3</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pyscDesign3.get_bpparam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.perform_lrt.html">pyscDesign3.perform_lrt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.plot_reduceddim.html">pyscDesign3.plot_reduceddim</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
@@ -98,9 +101,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../API.html">API</a></li>
-      <li class="breadcrumb-item active">pyscDesign3.tools.get_bpparam.get_bpparam</li>
+      <li class="breadcrumb-item active">pyscDesign3.get_bpparam</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/set_up/_autosummary/pyscDesign3.tools.get_bpparam.get_bpparam.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/set_up/_autosummary/pyscDesign3.get_bpparam.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -108,23 +111,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pyscdesign3-tools-get-bpparam-get-bpparam">
-<h1>pyscDesign3.tools.get_bpparam.get_bpparam<a class="headerlink" href="#pyscdesign3-tools-get-bpparam-get-bpparam" title="Permalink to this heading"></a></h1>
-<dl class="py data">
-<dt class="sig sig-object py" id="pyscDesign3.tools.get_bpparam.get_bpparam">
-<span class="sig-prename descclassname"><span class="pre">pyscDesign3.tools.get_bpparam.</span></span><span class="sig-name descname"><span class="pre">get_bpparam</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;function</span> <span class="pre">get_bpparam&gt;</span></em><a class="reference internal" href="../../_modules/pyscDesign3/tools/get_bpparam.html#get_bpparam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyscDesign3.tools.get_bpparam.get_bpparam" title="Permalink to this definition"></a></dt>
+  <section id="pyscdesign3-get-bpparam">
+<h1>pyscDesign3.get_bpparam<a class="headerlink" href="#pyscdesign3-get-bpparam" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyscDesign3.get_bpparam">
+<span class="sig-prename descclassname"><span class="pre">pyscDesign3.</span></span><span class="sig-name descname"><span class="pre">get_bpparam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typing.Literal['MulticoreParam',</span> <span class="pre">'SnowParam']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscDesign3/tools/get_bpparam.html#get_bpparam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyscDesign3.get_bpparam" title="Permalink to this definition"></a></dt>
 <dd><p>Get your parallelization parameters robject</p>
 <p>Check R function <cite>BiocParallel::MulticoreParam</cite> and <cite>BiocParallel::SnowParam</cite> for more informarion on how to set the parameters.</p>
+<section id="details">
+<h2>Details:<a class="headerlink" href="#details" title="Permalink to this heading"></a></h2>
+<p>For users who are going to use ‘bpmapply’ as the parallel method, this function provide the interface to create the control param. The implemented mode including ‘MulticoreParam’ for linux/Mac users and ‘SnowParam’ for windows users.</p>
+</section>
 <section id="arguments">
 <h2>Arguments:<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
-<dl class="field-list simple">
-<dt class="field-odd">name<span class="colon">:</span></dt>
-<dd class="field-odd"><p><cite>str</cite>
-The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.</p>
+<dl class="simple">
+<dt>mode: <cite>str</cite></dt><dd><p>The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.</p>
 </dd>
-<dt class="field-even">show<span class="colon">:</span></dt>
-<dd class="field-even"><p><cite>bool</cite> (default: True)
-Whether to print the constructed onject information on the screen.</p>
+<dt>show: <cite>bool</cite> (default: True)</dt><dd><p>Whether to print the constructed onject information on the screen.</p>
 </dd>
 </dl>
 </section>
@@ -144,8 +147,8 @@ Whether to print the constructed onject information on the screen.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pyscDesign3._core.scDesign3.scdesign3.html" class="btn btn-neutral float-left" title="pyscDesign3._core.scDesign3.scdesign3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="pyscDesign3.tools.lrt.perform_lrt.html" class="btn btn-neutral float-right" title="pyscDesign3.tools.lrt.perform_lrt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pyscDesign3.scDesign3.scdesign3.html" class="btn btn-neutral float-left" title="pyscDesign3.scDesign3.scdesign3" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyscDesign3.perform_lrt.html" class="btn btn-neutral float-right" title="pyscDesign3.perform_lrt" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

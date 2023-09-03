@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>pyscDesign3.tools.plot.plot_reduceddim &mdash; pyscDesign3  documentation</title>
+  <title>pyscDesign3.plot_reduceddim &mdash; pyscDesign3  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Quick Start" href="../../tutorial/quick_start.html" />
-    <link rel="prev" title="pyscDesign3.tools.lrt.perform_lrt" href="pyscDesign3.tools.lrt.perform_lrt.html" /> 
+    <link rel="prev" title="pyscDesign3.perform_lrt" href="pyscDesign3.perform_lrt.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,6 +39,9 @@
           <a href="../../index.html" class="icon icon-home">
             pyscDesign3
           </a>
+              <div class="version">
+                1.0.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -51,17 +54,17 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../Installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.html">pyscDesign3._core.scDesign3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.__init__.html">pyscDesign3._core.scDesign3.__init__</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.construct_data.html">pyscDesign3._core.scDesign3.construct_data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.fit_marginal.html">pyscDesign3._core.scDesign3.fit_marginal</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.fit_copula.html">pyscDesign3._core.scDesign3.fit_copula</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.extract_para.html">pyscDesign3._core.scDesign3.extract_para</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.simu_new.html">pyscDesign3._core.scDesign3.simu_new</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3._core.scDesign3.scdesign3.html">pyscDesign3._core.scDesign3.scdesign3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.tools.get_bpparam.get_bpparam.html">pyscDesign3.tools.get_bpparam.get_bpparam</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.tools.lrt.perform_lrt.html">pyscDesign3.tools.lrt.perform_lrt</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">pyscDesign3.tools.plot.plot_reduceddim</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.html">pyscDesign3.scDesign3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.__init__.html">pyscDesign3.scDesign3.__init__</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.construct_data.html">pyscDesign3.scDesign3.construct_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.fit_marginal.html">pyscDesign3.scDesign3.fit_marginal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.fit_copula.html">pyscDesign3.scDesign3.fit_copula</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.extract_para.html">pyscDesign3.scDesign3.extract_para</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.simu_new.html">pyscDesign3.scDesign3.simu_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.scDesign3.scdesign3.html">pyscDesign3.scDesign3.scdesign3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.get_bpparam.html">pyscDesign3.get_bpparam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pyscDesign3.perform_lrt.html">pyscDesign3.perform_lrt</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pyscDesign3.plot_reduceddim</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
@@ -98,9 +101,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../API.html">API</a></li>
-      <li class="breadcrumb-item active">pyscDesign3.tools.plot.plot_reduceddim</li>
+      <li class="breadcrumb-item active">pyscDesign3.plot_reduceddim</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/set_up/_autosummary/pyscDesign3.tools.plot.plot_reduceddim.rst" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/set_up/_autosummary/pyscDesign3.plot_reduceddim.rst" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -108,12 +111,13 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pyscdesign3-tools-plot-plot-reduceddim">
-<h1>pyscDesign3.tools.plot.plot_reduceddim<a class="headerlink" href="#pyscdesign3-tools-plot-plot-reduceddim" title="Permalink to this heading"></a></h1>
-<dl class="py data">
-<dt class="sig sig-object py" id="pyscDesign3.tools.plot.plot_reduceddim">
-<span class="sig-prename descclassname"><span class="pre">pyscDesign3.tools.plot.</span></span><span class="sig-name descname"><span class="pre">plot_reduceddim</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;function</span> <span class="pre">plot_reduceddim&gt;</span></em><a class="reference internal" href="../../_modules/pyscDesign3/tools/plot.html#plot_reduceddim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyscDesign3.tools.plot.plot_reduceddim" title="Permalink to this definition"></a></dt>
+  <section id="pyscdesign3-plot-reduceddim">
+<h1>pyscDesign3.plot_reduceddim<a class="headerlink" href="#pyscdesign3-plot-reduceddim" title="Permalink to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyscDesign3.plot_reduceddim">
+<span class="sig-prename descclassname"><span class="pre">pyscDesign3.</span></span><span class="sig-name descname"><span class="pre">plot_reduceddim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_anndata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">anndata.AnnData</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anndata_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">anndata.AnnData</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">assay_use</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_assay_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_pc</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pc_umap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_plot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape_by</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyscDesign3/tools/plot.html#plot_reduceddim"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyscDesign3.plot_reduceddim" title="Permalink to this definition"></a></dt>
 <dd><p>Dimensionality reduction and visualization</p>
+<p>Dimensionality reduction using both PCA and UMAP method. Based on your choice, return the plot or the dimension reduction result.</p>
 <section id="details">
 <h2>Details:<a class="headerlink" href="#details" title="Permalink to this heading"></a></h2>
 <p>This function takes a reference <cite>anndata.AnnData</cite> and a list of new <cite>anndata.AnnData</cite>, performs the dimensionality reduction on the reference data, projects the synthetic datasets on the same low dimensional space, then visualize the results.</p>
@@ -155,7 +159,14 @@
 <blockquote>
 <div><p>When &#64;if_plot is False, return the dataframe of reduced dimensions.</p>
 <p>When &#64;if_plot is True, return a dict with two plots generated by <cite>matplotlib</cite>.</p>
-<p>One key is <cite>p_pca</cite>, the other is <cite>p_umap</cite>, corresponding to PCA and UMAP dimension reduction method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">p_pca<span class="colon">:</span></dt>
+<dd class="field-odd"><p>PCA dimension reduction method</p>
+</dd>
+<dt class="field-even">p_umap<span class="colon">:</span></dt>
+<dd class="field-even"><p>UMAP dimension reduction method</p>
+</dd>
+</dl>
 </div></blockquote>
 </section>
 </dd></dl>
@@ -166,7 +177,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="pyscDesign3.tools.lrt.perform_lrt.html" class="btn btn-neutral float-left" title="pyscDesign3.tools.lrt.perform_lrt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyscDesign3.perform_lrt.html" class="btn btn-neutral float-left" title="pyscDesign3.perform_lrt" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../../tutorial/quick_start.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

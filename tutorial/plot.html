@@ -39,6 +39,9 @@
           <a href="../index.html" class="icon icon-home">
             pyscDesign3
           </a>
+              <div class="version">
+                1.0.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -96,6 +99,546 @@
              
   <section id="plot-for-visualization">
 <h1>Plot for visualization<a class="headerlink" href="#plot-for-visualization" title="Permalink to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p>In this section, we will show how to use function <code class="docutils literal notranslate"><span class="pre">plot_reduceddim()</span></code> to realize dimension reduction and automatically plot the result.</p>
+<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/pyscDesign3.plot_reduceddim.html"><span class="doc std std-doc">API</span></a>.</p>
+</section>
+<section id="step-1-import-packages-and-read-in-data">
+<h2>Step 1: Import packages and Read in data<a class="headerlink" href="#step-1-import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
+<section id="import-packages">
+<h3>import packages<a class="headerlink" href="#import-packages" title="Permalink to this heading"></a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at D:/Code_env/R-4.3.1
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="read-in-data">
+<h3>Read in data<a class="headerlink" href="#read-in-data" title="Permalink to this heading"></a></h3>
+<p>The raw data is from the <a class="reference external" href="https://scvelo.readthedocs.io/scvelo.datasets.pancreas/">scvelo</a> and we only choose top 30 genes to save time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/PANCREAS.h5ad&quot;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>View of AnnData object with n_obs × n_vars = 2087 × 30
+    obs: &#39;clusters_coarse&#39;, &#39;clusters&#39;, &#39;S_score&#39;, &#39;G2M_score&#39;, &#39;cell_type&#39;, &#39;sizeFactor&#39;, &#39;pseudotime&#39;
+    var: &#39;highly_variable_genes&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_umap&#39;, &#39;X_x_pca&#39;, &#39;X_x_umap&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="step-2-use-scdesign3-class-to-simulate-reads-for-comparison">
+<h2>Step 2: Use <code class="docutils literal notranslate"><span class="pre">scDesign3</span></code> class to simulate reads for comparison<a class="headerlink" href="#step-2-use-scdesign3-class-to-simulate-reads-for-comparison" title="Permalink to this heading"></a></h2>
+<div class="cell tag_hide-output docutils container">
+<div class="cell_input above-output-prompt docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the instance and set the parallel method</span>
+<span class="n">bpparam</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;SnowParam&quot;</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span><span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span><span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># all-in-one simulation</span>
+<span class="n">simu_res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">pseudotime</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 5, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">copula</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<details class="hide below-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell output</span>
+<span class="expanded">Hide code cell output</span>
+</summary>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Input Data Construction Start
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Input Data Construction End
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Start Marginal Fitting
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Marginal Fitting End
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Start Copula Fitting
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Convert Residuals to Multivariate Gaussian
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: 载入需要的程辑包：SingleCellExperiment
+载入需要的程辑包：SummarizedExperiment
+载入需要的程辑包：MatrixGenerics
+载入需要的程辑包：matrixStats
+
+载入程辑包：&#39;MatrixGenerics&#39;
+
+The following objects are masked from &#39;package:matrixStats&#39;:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+载入需要的程辑包：GenomicRanges
+载入需要的程辑包：stats4
+载入需要的程辑包：BiocGenerics
+
+载入程辑包：&#39;BiocGenerics&#39;
+
+The following objects are masked from &#39;package:stats&#39;:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from &#39;package:base&#39;:
+
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,
+    table, tapply, union, unique, unsplit, which.max, which.min
+
+载入需要的程辑包：S4Vectors
+
+载入程辑包：&#39;S4Vectors&#39;
+
+The following object is masked from &#39;package:utils&#39;:
+
+    findMatches
+
+The following objects are masked from &#39;package:base&#39;:
+
+    expand.grid, I, unname
+
+载入需要的程辑包：IRanges
+
+载入程辑包：&#39;IRanges&#39;
+
+The following object is masked from &#39;package:grDevices&#39;:
+
+    windows
+
+载入需要的程辑包：GenomeInfoDb
+载入需要的程辑包：Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    &#39;browseVignettes()&#39;. To cite Bioconductor, see
+    &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.
+
+
+载入程辑包：&#39;Biobase&#39;
+
+The following object is masked from &#39;package:MatrixGenerics&#39;:
+
+    rowMedians
+
+The following objects are masked from &#39;package:matrixStats&#39;:
+
+    anyMissing, rowMedians
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: 载入需要的程辑包：SingleCellExperiment
+载入需要的程辑包：SummarizedExperiment
+载入需要的程辑包：MatrixGenerics
+载入需要的程辑包：matrixStats
+
+载入程辑包：&#39;MatrixGenerics&#39;
+
+The following objects are masked from &#39;package:matrixStats&#39;:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+载入需要的程辑包：GenomicRanges
+载入需要的程辑包：stats4
+载入需要的程辑包：BiocGenerics
+
+载入程辑包：&#39;BiocGenerics&#39;
+
+The following objects are masked from &#39;package:stats&#39;:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from &#39;package:base&#39;:
+
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,
+    table, tapply, union, unique, unsplit, which.max, which.min
+
+载入需要的程辑包：S4Vectors
+
+载入程辑包：&#39;S4Vectors&#39;
+
+The following object is masked from &#39;package:utils&#39;:
+
+    findMatches
+
+The following objects are masked from &#39;package:base&#39;:
+
+    expand.grid, I, unname
+
+载入需要的程辑包：IRanges
+
+载入程辑包：&#39;IRanges&#39;
+
+The following object is masked from &#39;package:grDevices&#39;:
+
+    windows
+
+载入需要的程辑包：GenomeInfoDb
+载入需要的程辑包：Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    &#39;browseVignettes()&#39;. To cite Bioconductor, see
+    &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.
+
+
+载入程辑包：&#39;Biobase&#39;
+
+The following object is masked from &#39;package:MatrixGenerics&#39;:
+
+    rowMedians
+
+The following objects are masked from &#39;package:matrixStats&#39;:
+
+    anyMissing, rowMedians
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: 载入需要的程辑包：SingleCellExperiment
+载入需要的程辑包：SummarizedExperiment
+载入需要的程辑包：MatrixGenerics
+载入需要的程辑包：matrixStats
+
+载入程辑包：&#39;MatrixGenerics&#39;
+
+The following objects are masked from &#39;package:matrixStats&#39;:
+
+    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
+    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
+    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
+    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
+    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
+    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
+    colWeightedMeans, colWeightedMedians, colWeightedSds,
+    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
+    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
+    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
+    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
+    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
+    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
+    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
+    rowWeightedSds, rowWeightedVars
+
+载入需要的程辑包：GenomicRanges
+载入需要的程辑包：stats4
+载入需要的程辑包：BiocGenerics
+
+载入程辑包：&#39;BiocGenerics&#39;
+
+The following objects are masked from &#39;package:stats&#39;:
+
+    IQR, mad, sd, var, xtabs
+
+The following objects are masked from &#39;package:base&#39;:
+
+    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
+    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
+    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
+    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
+    Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,
+    table, tapply, union, unique, unsplit, which.max, which.min
+
+载入需要的程辑包：S4Vectors
+
+载入程辑包：&#39;S4Vectors&#39;
+
+The following object is masked from &#39;package:utils&#39;:
+
+    findMatches
+
+The following objects are masked from &#39;package:base&#39;:
+
+    expand.grid, I, unname
+
+载入需要的程辑包：IRanges
+
+载入程辑包：&#39;IRanges&#39;
+
+The following object is masked from &#39;package:grDevices&#39;:
+
+    windows
+
+载入需要的程辑包：GenomeInfoDb
+载入需要的程辑包：Biobase
+Welcome to Bioconductor
+
+    Vignettes contain introductory material; view with
+    &#39;browseVignettes()&#39;. To cite Bioconductor, see
+    &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.
+
+
+载入程辑包：&#39;Biobase&#39;
+
+The following object is masked from &#39;package:MatrixGenerics&#39;:
+
+    rowMedians
+
+The following objects are masked from &#39;package:matrixStats&#39;:
+
+    anyMissing, rowMedians
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Converting End
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Copula group 1 starts
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Copula Fitting End
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Start Parameter Extraction
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Parameter
+Extraction End
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Start Generate New Data
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Use Copula to sample a multivariate quantile matrix
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Sample Copula group 1 starts
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: New Data Generating End
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+</section>
+<section id="step-3-use-the-simulated-counts-to-construct-the-new-anndata-anndata-object">
+<h2>Step 3: Use the simulated counts to construct the new <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object<a class="headerlink" href="#step-3-use-the-simulated-counts-to-construct-the-new-anndata-anndata-object" title="Permalink to this heading"></a></h2>
+<p>Besides constructing the simulated <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object, we can also calculate the log transformed data for visualization.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">simu_res</span><span class="p">[</span><span class="s2">&quot;new_count&quot;</span><span class="p">],</span> <span class="n">obs</span><span class="o">=</span><span class="n">simu_res</span><span class="p">[</span><span class="s2">&quot;new_covariate&quot;</span><span class="p">])</span>
+<span class="n">simu_data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">simu_data</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="step-4-visualization">
+<h2>Step 4: Visualization<a class="headerlink" href="#step-4-visualization" title="Permalink to this heading"></a></h2>
+<p>Please make sure all <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> objects provided in <code class="docutils literal notranslate"><span class="pre">ref_anndata</span></code> and <code class="docutils literal notranslate"><span class="pre">anndata_list</span></code> has similar assay name structure.</p>
+<p>For example, all involved count matrix should all be stored either in <code class="docutils literal notranslate"><span class="pre">anndata.AnnData.X</span></code> or <code class="docutils literal notranslate"><span class="pre">anndata.AnnData.layers[assay_use]</span></code> and all share the same name.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
+    <span class="n">ref_anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">anndata_list</span><span class="o">=</span><span class="n">simu_data</span><span class="p">,</span>
+    <span class="n">name_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">,</span> <span class="s2">&quot;scDesign3&quot;</span><span class="p">],</span>
+    <span class="n">assay_use</span><span class="o">=</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">,</span>
+    <span class="n">if_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">color_by</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+    <span class="n">n_pc</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">point_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>If you set <code class="docutils literal notranslate"><span class="pre">if_plot</span></code> = True, then the return result is a <code class="docutils literal notranslate"><span class="pre">dict</span></code> with two keys: <strong>p_umap</strong> and <strong>p_pca</strong>. Each key hosts a plot plotted by <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code>.</p>
+<p>UMAP plot</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">[</span><span class="s2">&quot;p_umap&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/31a2bfbfdc5cde4338e99cb221c547c21667249b1db632a755e4d73146e1f94e.png" src="../_images/31a2bfbfdc5cde4338e99cb221c547c21667249b1db632a755e4d73146e1f94e.png" />
+</div>
+</div>
+<p>PCA plot</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">[</span><span class="s2">&quot;p_pca&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/1e15b2840688e7dc0848c4203bf8082b670aee2cd79b4e82d6d16a1e38613bb7.png" src="../_images/1e15b2840688e7dc0848c4203bf8082b670aee2cd79b4e82d6d16a1e38613bb7.png" />
+</div>
+</div>
+</section>
+<section id="alternative-to-plot">
+<h2>Alternative to plot<a class="headerlink" href="#alternative-to-plot" title="Permalink to this heading"></a></h2>
+<p>If you are not satisfied with the automatically generated plot result, you can set <code class="docutils literal notranslate"><span class="pre">if_plot</span></code> = False. Then you will get the dimension reduction result and customize your manipulation.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
+    <span class="n">ref_anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">anndata_list</span><span class="o">=</span><span class="n">simu_data</span><span class="p">,</span>
+    <span class="n">name_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">,</span> <span class="s2">&quot;scDesign3&quot;</span><span class="p">],</span>
+    <span class="n">assay_use</span><span class="o">=</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">,</span>
+    <span class="n">if_plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">color_by</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+    <span class="n">n_pc</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">point_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each row of the output represents a cell (observation). The return PCs number is equal to the set in <code class="docutils literal notranslate"><span class="pre">n_pc</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span><span class="p">[[</span><span class="s2">&quot;Method&quot;</span><span class="p">,</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span><span class="s2">&quot;PC1&quot;</span><span class="p">,</span><span class="s2">&quot;PC2&quot;</span><span class="p">,</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">,</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Method</th>
+      <th>pseudotime</th>
+      <th>PC1</th>
+      <th>PC2</th>
+      <th>UMAP1</th>
+      <th>UMAP2</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>Reference</td>
+      <td>0.677236</td>
+      <td>2.303983</td>
+      <td>2.020007</td>
+      <td>1.733163</td>
+      <td>-4.209486</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Reference</td>
+      <td>0.431569</td>
+      <td>-2.346135</td>
+      <td>1.611974</td>
+      <td>3.954532</td>
+      <td>2.416698</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Reference</td>
+      <td>0.749373</td>
+      <td>3.688469</td>
+      <td>0.252404</td>
+      <td>-0.629799</td>
+      <td>-4.357507</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Reference</td>
+      <td>0.925441</td>
+      <td>6.045197</td>
+      <td>-2.888025</td>
+      <td>-3.817818</td>
+      <td>-5.632081</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Reference</td>
+      <td>0.380345</td>
+      <td>-3.650479</td>
+      <td>1.347464</td>
+      <td>1.369551</td>
+      <td>1.627157</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</section>
 </section>
 
 
