@@ -202,6 +202,10 @@ The name of cell type variable in the <cite>anndata.AnnData.obs</cite>.</p>
 </section>
 </dd></dl>
 
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The return value is a <cite>rpy2.rlike.container.OrdDict</cite> . Not all elements in this <cite>dict</cite> like object have to be named but they have a given order. <strong>None</strong> as a key value means an absence of name for the element. For the values without a named key, you can call <cite>byindex</cite> method to get them by index (rank).</p>
+</div>
 </section>
 
 

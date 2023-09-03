@@ -68,7 +68,7 @@
    "outputs": [],
    "source": [
     "data = ad.read_h5ad(\"data/PANCREAS.h5ad\")\n",
-    "data = data[0:20, 0:5]\n",
+    "data = data[:, 0:30]\n",
     "data"
    ]
   },
@@ -324,7 +324,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "para[\"mean_mat\"].iloc[0:6,0:6]"
+    "para[\"mean_mat\"].iloc[0:6,0:5]"
    ]
   },
   {

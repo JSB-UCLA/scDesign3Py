@@ -136,13 +136,13 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/PANCREAS.h5ad&quot;</span><span class="p">)</span>
-<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span>
 <span class="n">data</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>View of AnnData object with n_obs × n_vars = 20 × 5
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>View of AnnData object with n_obs × n_vars = 2087 × 30
     obs: &#39;clusters_coarse&#39;, &#39;clusters&#39;, &#39;S_score&#39;, &#39;G2M_score&#39;, &#39;cell_type&#39;, &#39;sizeFactor&#39;, &#39;pseudotime&#39;
     var: &#39;highly_variable_genes&#39;
     obsm: &#39;X_pca&#39;, &#39;X_umap&#39;, &#39;X_x_pca&#39;, &#39;X_x_umap&#39;
@@ -288,9 +288,9 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    (Intercept) s(pseudotime).1 s(pseudotime).2 s(pseudotime).3 s(pseudotime).4 
-      3.1015925      -1.8812188      -0.2820121       1.1673134       0.8974383 
+      1.9585122      -1.5466581      -1.8250803      -1.8320568      -0.6745635 
 s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9 
-      1.8146717       2.2833748       2.8386624       3.0027544       3.0944890 
+      1.0997392       2.6285021       3.5939811       4.0042983       2.8564420 
 </pre></div>
 </div>
 </div>
@@ -304,9 +304,9 @@ s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    (Intercept) s(pseudotime).1 s(pseudotime).2 s(pseudotime).3 s(pseudotime).4 
-      1.9600000      -1.8812188      -0.2820121       1.1673134       0.8974383 
+      1.9600000      -1.5466581      -1.8250803      -1.8320568      -0.6745635 
 s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9 
-      1.8146717       2.2833748       2.8386624       3.0027544       3.0944890 
+      1.0997392       2.6285021       3.5939811       4.0042983       2.8564420 
 </pre></div>
 </div>
 </div>
@@ -347,7 +347,7 @@ s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Time difference of 
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.1089821
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8.093516
 </pre></div>
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 
@@ -373,9 +373,9 @@ s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>aic.marginal    664.545736
-aic.copula        0.000000
-aic.total       664.545736
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>aic.marginal    271021.35384
+aic.copula       -2270.60594
+aic.total       268750.74790
 dtype: float64
 </pre></div>
 </div>
@@ -394,7 +394,7 @@ dtype: float64
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1] &quot;indep&quot;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[1] &quot;gaussian&quot;
 </pre></div>
 </div>
 </div>
@@ -433,7 +433,7 @@ dtype: float64
 <p>The output matrix can be modified based on <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> syntax.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
@@ -466,51 +466,51 @@ dtype: float64
   <tbody>
     <tr>
       <th>AAACCTGAGAGGGATA</th>
-      <td>7.556592</td>
-      <td>4.060408</td>
-      <td>30.387177</td>
-      <td>9.680710</td>
-      <td>0.293384</td>
+      <td>49.940402</td>
+      <td>1.190921</td>
+      <td>54.085986</td>
+      <td>20.103570</td>
+      <td>0.243648</td>
     </tr>
     <tr>
       <th>AAACCTGGTAAGTGGC</th>
-      <td>1.469785</td>
-      <td>0.750587</td>
-      <td>1.591679</td>
-      <td>0.039239</td>
-      <td>0.789811</td>
+      <td>1.279222</td>
+      <td>0.254829</td>
+      <td>5.659475</td>
+      <td>0.599492</td>
+      <td>0.221166</td>
     </tr>
     <tr>
       <th>AAACGGGCAAAGAATC</th>
-      <td>12.221418</td>
-      <td>10.120813</td>
-      <td>34.386125</td>
-      <td>39.053108</td>
-      <td>0.294727</td>
+      <td>104.525977</td>
+      <td>8.290215</td>
+      <td>38.167856</td>
+      <td>39.422798</td>
+      <td>0.217998</td>
     </tr>
     <tr>
       <th>AAACGGGGTACAGTTC</th>
-      <td>39.512942</td>
-      <td>196.422984</td>
-      <td>20.594161</td>
-      <td>59.865974</td>
-      <td>0.315667</td>
+      <td>160.813500</td>
+      <td>290.218150</td>
+      <td>18.659258</td>
+      <td>46.143444</td>
+      <td>0.276631</td>
     </tr>
     <tr>
       <th>AAACGGGGTGAAATCA</th>
-      <td>1.044697</td>
-      <td>0.635037</td>
-      <td>0.642357</td>
-      <td>0.012128</td>
-      <td>1.376052</td>
+      <td>0.725943</td>
+      <td>0.234674</td>
+      <td>0.954873</td>
+      <td>0.240587</td>
+      <td>0.207927</td>
     </tr>
     <tr>
       <th>AAACGGGTCAAACAAG</th>
-      <td>0.457109</td>
-      <td>0.412587</td>
-      <td>0.062825</td>
-      <td>0.000681</td>
-      <td>6.473435</td>
+      <td>0.566305</td>
+      <td>0.322497</td>
+      <td>0.069305</td>
+      <td>0.249637</td>
+      <td>7.217850</td>
     </tr>
   </tbody>
 </table>
@@ -580,56 +580,63 @@ dtype: float64
       <th>Chgb</th>
       <th>Rbp4</th>
       <th>Spp1</th>
+      <th>Chga</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>AAACCTGAGAGGGATA</th>
-      <td>0.0</td>
-      <td>10.0</td>
-      <td>38.0</td>
-      <td>8.0</td>
+      <td>22.0</td>
       <td>-0.0</td>
+      <td>19.0</td>
+      <td>5.0</td>
+      <td>0.0</td>
+      <td>41.0</td>
     </tr>
     <tr>
       <th>AAACCTGGTAAGTGGC</th>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>-0.0</td>
-      <td>0.0</td>
+      <td>10.0</td>
       <td>0.0</td>
       <td>1.0</td>
+      <td>5.0</td>
     </tr>
     <tr>
       <th>AAACGGGCAAAGAATC</th>
-      <td>4.0</td>
-      <td>9.0</td>
-      <td>76.0</td>
-      <td>22.0</td>
+      <td>173.0</td>
+      <td>14.0</td>
+      <td>17.0</td>
+      <td>3.0</td>
       <td>-0.0</td>
+      <td>6.0</td>
     </tr>
     <tr>
       <th>AAACGGGGTACAGTTC</th>
-      <td>105.0</td>
-      <td>229.0</td>
-      <td>16.0</td>
-      <td>95.0</td>
+      <td>23.0</td>
+      <td>83.0</td>
       <td>0.0</td>
+      <td>29.0</td>
+      <td>0.0</td>
+      <td>31.0</td>
     </tr>
     <tr>
       <th>AAACGGGGTGAAATCA</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
       <td>-0.0</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
-      <td>3.0</td>
+      <td>2.0</td>
     </tr>
     <tr>
       <th>AAACGGGTCAAACAAG</th>
-      <td>0.0</td>
+      <td>-0.0</td>
+      <td>1.0</td>
       <td>-0.0</td>
       <td>-0.0</td>
+      <td>6.0</td>
       <td>-0.0</td>
-      <td>4.0</td>
     </tr>
   </tbody>
 </table>
