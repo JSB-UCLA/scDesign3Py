@@ -51,6 +51,12 @@ napoleon_use_param = True
 napoleon_custom_sections = [("Params", "Parameters")]
 typehints_defaults = "braces"
 
+# Add myst parser extension to render math
+myst_enable_extensions = [
+    "amsmath",
+    "dollarmath",
+]
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
 
