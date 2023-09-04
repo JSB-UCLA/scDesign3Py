@@ -1333,6 +1333,11 @@ class scDesign3:
             )
             if res["marginal_list"] is NULL:
                 res["marginal_list"] = None
+            else:
+                warnings.warn(
+                "There's an unfixed problem in changing the @marginal_list back to a more pythonic version. The return type is rpy2.robjects.vectors.ListVector, which is assigned method @items which is similar to dict. If you want to get the value using the key name, instead of using res[key_name], please use res.rx2(key_name)."
+            )
+                res["marginal_list"] = self.whole_pipeline_res.rx2("marginal_list")
             if res["corr_list"] is NULL:
                 res["corr_list"] = None
             return res
