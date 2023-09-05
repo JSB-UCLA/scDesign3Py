@@ -233,6 +233,7 @@ parafunc(fun_name,arg1=...,arg2=...,...,MoreArgs=list())
   - 使用`cbind`将带有 name 的`vector`或`data.frame`并在一起时会把每一列变成一个`list`，很抽象
 - `formula`对象可以用`update.formula`进行修改，在`formula`用`-`代表删去一些变量
 - `invisible()`可以对单行运行的 R 代码不输出返回值
+- 关于如何在 vinecopula 的输出结果中构建无向图，首先得到一个 vinecopula 结构对应的[matrix](https://rdrr.io/cran/rvinecopulib/src/R/as_rvine_structure.R)（`as_rvine_matrix.rvine_structure`），然后计算得到对应的[边和节点信息](https://github.com/vinecopulib/rvinecopulib/blob/main/R/vinecop_plot.R)（`get_graph`）得到邻接矩阵，最后再根据邻接矩阵得到最后的[图](https://blog.csdn.net/weixin_40198632/article/details/78418714)
 
 #### 2.3.2. API
 
@@ -437,6 +438,8 @@ res = compare.style.applymap(set_cell_color)
 [matplotib 颜色](https://matplotlib.org/stable/tutorials/colors/colormaps.html#lightness-of-matplotlib-colormaps)
 
 [如何 mapping 颜色](https://stackoverflow.com/questions/52108558/how-do-parameters-c-and-cmap-behave)
+
+供参考[查阅](https://zhuanlan.zhihu.com/p/587919124)
 
 #### 2.6.2. 子图作图
 

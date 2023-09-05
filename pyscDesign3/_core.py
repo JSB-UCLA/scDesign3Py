@@ -987,8 +987,8 @@ class scDesign3:
                 elif self.copula == "vine":
                     with self.__convert.context():
                         copula_dict = ro.conversion.get_conversion().py2rpy(copula_dict)
-                    for _,v in copula_dict.items():
-                        v.rclass = ('vinecop', 'vinecop_dist')
+                    for _, v in copula_dict.items():
+                        v.rclass = ("vinecop", "vinecop_dist")
             elif copula_dict is None:
                 copula_dict = NULL
         except AttributeError:
@@ -1335,11 +1335,20 @@ class scDesign3:
                 res["marginal_list"] = None
             else:
                 warnings.warn(
-                "There's an unfixed problem in changing the @marginal_list back to a more pythonic version. The return type is rpy2.robjects.vectors.ListVector, which is assigned method @items which is similar to dict. If you want to get the value using the key name, instead of using res[key_name], please use res.rx2(key_name)."
-            )
+                    "There's an unfixed problem in changing the @marginal_list back to a more pythonic version. The return type is rpy2.robjects.vectors.ListVector, which is assigned method @items which is similar to dict. If you want to get the value using the key name, instead of using res[key_name], please use res.rx2(key_name)."
+                )
                 res["marginal_list"] = self.whole_pipeline_res.rx2("marginal_list")
             if res["corr_list"] is NULL:
                 res["corr_list"] = None
+            elif copula == "gaussian":
+                res["corr_list"] = {
+                    key: _addname(
+                        array=value,
+                        row_name=self.whole_pipeline_res.rx2("corr_list").rx2(key).rownames,
+                        col_name=self.whole_pipeline_res.rx2("corr_list").rx2(key).colnames,
+                    )
+                    for key, value in res["corr_list"].items()
+                }
             return res
         else:
             return self.whole_pipeline_res
