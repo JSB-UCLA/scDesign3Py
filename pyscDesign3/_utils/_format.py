@@ -25,7 +25,7 @@ def convert_ord_dict(obj):
 def _anndata2sce(data: ad.AnnData, assay_use=None, default_assay_name=None, covar=None):
     """Extract anndata info used for scDesign3 and change into R SingleCellExperiment"""
 
-    convert = numpy2ri.converter + default_converter + pandas2ri.converter 
+    convert = numpy2ri.converter + default_converter + pandas2ri.converter
     ## check unique cell names and gene names
     if not data.obs.index.is_unique:
         warnings.warn(
@@ -60,15 +60,19 @@ def _anndata2sce(data: ad.AnnData, assay_use=None, default_assay_name=None, cova
                 )
             )
 
-    for _, dtype in cell_info.dtypes.items():
-        if (dtype != "category") and (not np.issubdtype(dtype, np.number)):
-            raise ConvertionError(
-                "Please make sure the given Anndata.obs dataframe has only category and numeric dtypes."
-            )
+    # for _, dtype in cell_info.dtypes.items():
+    #     if (dtype != "category") and (not np.issubdtype(dtype, np.number)):
+    #         raise ConvertionError(
+    #             "Please make sure the given Anndata.obs dataframe has only category and numeric dtypes."
+    #         )
 
     ## check input assay use
     if assay_use is None:
-        count_matrix = data.X.toarray().T
+        if isinstance(data.X, np.ndarray):
+            count_matrix = data.X.T
+        else:
+            count_matrix = data.X.toarray().T
+
         if default_assay_name is None:
             raise ConvertionError(
                 "If use Anndata.X as the default count matrix, please specify the default_assay_name argument used in R SingleCellExperiment as the default assay name."

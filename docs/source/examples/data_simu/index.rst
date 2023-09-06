@@ -12,3 +12,5 @@ The provided examples are shown as below.
    :maxdepth: 1
    
    Simulate datasets with cell library size <cell_lib_size>
+   Simulate datasets with multiple lineages <mul_lineage>
+   Simulate spatial transcriptomic data <spatial>
