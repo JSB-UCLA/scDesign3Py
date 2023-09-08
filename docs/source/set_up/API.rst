@@ -21,6 +21,7 @@ scDesign3
    scDesign3.extract_para
    scDesign3.simu_new
    scDesign3.scdesign3
+   scDesign3.set_r_random_seed
 
 Tools
 ~~~~~

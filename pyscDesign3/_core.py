@@ -413,11 +413,14 @@ class scDesign3:
         if return_py:
             # with self.__convert.context():
             #     res = ro.conversion.get_conversion().rpy2py(self.fit_marginal_res)
-            #     return res
+            # warnings.warn(
+            #     "There's an unfixed problem in printing the result on screen but not affecting usage. You can ignore the error output."
+            # )
             warnings.warn(
-                "There's an unfixed problem in changing the @fit_marginal_res back to a more pythonic version. The return type is rpy2.robjects.vectors.ListVector, which is assigned method @items which is similar to dict. If you want to get the value using the key name, instead of using res[key_name], please use res.rx2(key_name)."
+                "There's an unfixed problem in converting the marginal list to OrdDict. Use .rx2 method to get values."
             )
-            return self.fit_marginal_res
+            res = self.fit_marginal_res
+            return res
         else:
             return self.fit_marginal_res
 
@@ -1334,10 +1337,18 @@ class scDesign3:
             if res["marginal_list"] is NULL:
                 res["marginal_list"] = None
             else:
+                # with self.__convert.context():
+                #     res["marginal_list"] = ro.conversion.get_conversion().rpy2py(
+                #         self.whole_pipeline_res.rx2("marginal_list")
+                #     )
+                # warnings.warn(
+                #     "There's an unfixed problem in printing the result on screen but not affecting usage. You can ignore the error output."
+                # )
                 warnings.warn(
-                    "There's an unfixed problem in changing the @marginal_list back to a more pythonic version. The return type is rpy2.robjects.vectors.ListVector, which is assigned method @items which is similar to dict. If you want to get the value using the key name, instead of using res[key_name], please use res.rx2(key_name)."
+                    "There's an unfixed problem in converting the marginal list to OrdDict. Use .rx2 method to get values."
                 )
                 res["marginal_list"] = self.whole_pipeline_res.rx2("marginal_list")
+
             if res["corr_list"] is NULL:
                 res["corr_list"] = None
             elif copula == "gaussian":
@@ -1352,3 +1363,24 @@ class scDesign3:
             return res
         else:
             return self.whole_pipeline_res
+
+    @staticmethod
+    def set_r_random_seed(seed: int):
+        """Set the R random seed
+
+        As scDesign3 has some procedure performs some random steps, this function helps you set the random seed to make the results repeatable. The seed is only valid for the next random process. Note that this is a staticmethod.
+
+        Details:
+        ----------
+        The function helps set R random seed.
+
+        Arguments:
+        ----------
+        seed: `int`
+            The random seed.
+
+        Output:
+        ----------
+        None
+        """
+        ro.r["set.seed"](seed)
