@@ -46,10 +46,10 @@ For tutorial of **R** package **scDesign3**, you can check the `tutorial website
    Plot results <tutorial/plot>
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: More examples
    
-   Data simulation <examples/data_simu/index> 
    Model parameter <examples/model_para/index> 
+   Data simulation <examples/data_simu/index> 
    Model selection <examples/model_select/index> 
    Model alteration <examples/model_alter/index> 

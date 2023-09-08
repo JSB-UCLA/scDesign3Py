@@ -82,9 +82,7 @@
     "\n",
     "When creating the instance, the basic setting can be specified, including how many cores used to computing, which parallel method to use and whether to return a more pythonic output.\n",
     "\n",
-    "Details of the settings are shown in [API](../set_up/_autosummary/pyscDesign3.scDesign3.__init__.rst).\n",
-    "\n",
-    "Here, we choose `bpmapply` as the parallel method, thus we need an extra bpparam object got from the `get_bpparam()` function. (Details of the function is included in [Get BPPARAM](./bpparam.ipynb) section)"
+    "Details of the settings are shown in [API](../set_up/_autosummary/pyscDesign3.scDesign3.__init__.rst)."
    ]
   },
   {
@@ -93,8 +91,8 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "bpparam = pyscDesign3.get_bpparam(mode=\"SnowParam\",show=False)\n",
-    "test = pyscDesign3.scDesign3(n_cores=3, parallelization=\"bpmapply\",bpparam=bpparam,return_py=True)"
+    "test = pyscDesign3.scDesign3(n_cores=6, parallelization=\"mcmapply\",return_py=True)\n",
+    "test.set_r_random_seed(123)"
    ]
   },
   {
@@ -109,7 +107,7 @@
    "execution_count": null,
    "metadata": {
     "tags": [
-     "hide-output"
+     "remove-output"
     ]
    },
    "outputs": [],
@@ -222,7 +220,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.9.17"
+   "version": "3.11.5"
   },
   "orig_nbformat": 4
  },

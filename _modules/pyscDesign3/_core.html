@@ -36,6 +36,9 @@
           <a href="../../index.html" class="icon icon-home">
             pyscDesign3
           </a>
+              <div class="version">
+                1.0.0
+              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -61,8 +64,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">More examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../examples/data_simu/index.html">Data simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/data_simu/index.html">Data simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/model_select/index.html">Model selection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../examples/model_alter/index.html">Model alteration</a></li>
 </ul>
@@ -507,11 +510,14 @@
         <span class="k">if</span> <span class="n">return_py</span><span class="p">:</span>
             <span class="c1"># with self.__convert.context():</span>
             <span class="c1">#     res = ro.conversion.get_conversion().rpy2py(self.fit_marginal_res)</span>
-            <span class="c1">#     return res</span>
+            <span class="c1"># warnings.warn(</span>
+            <span class="c1">#     &quot;There&#39;s an unfixed problem in printing the result on screen but not affecting usage. You can ignore the error output.&quot;</span>
+            <span class="c1"># )</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                <span class="s2">&quot;There&#39;s an unfixed problem in changing the @fit_marginal_res back to a more pythonic version. The return type is rpy2.robjects.vectors.ListVector, which is assigned method @items which is similar to dict. If you want to get the value using the key name, instead of using res[key_name], please use res.rx2(key_name).&quot;</span>
+                <span class="s2">&quot;There&#39;s an unfixed problem in converting the marginal list to OrdDict. Use .rx2 method to get values.&quot;</span>
             <span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_marginal_res</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_marginal_res</span>
+            <span class="k">return</span> <span class="n">res</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit_marginal_res</span></div>
 
@@ -1081,8 +1087,8 @@
                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">copula</span> <span class="o">==</span> <span class="s2">&quot;vine&quot;</span><span class="p">:</span>
                     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">__convert</span><span class="o">.</span><span class="n">context</span><span class="p">():</span>
                         <span class="n">copula_dict</span> <span class="o">=</span> <span class="n">ro</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">get_conversion</span><span class="p">()</span><span class="o">.</span><span class="n">py2rpy</span><span class="p">(</span><span class="n">copula_dict</span><span class="p">)</span>
-                    <span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">copula_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                        <span class="n">v</span><span class="o">.</span><span class="n">rclass</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;vinecop&#39;</span><span class="p">,</span> <span class="s1">&#39;vinecop_dist&#39;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">copula_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                        <span class="n">v</span><span class="o">.</span><span class="n">rclass</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;vinecop&quot;</span><span class="p">,</span> <span class="s2">&quot;vinecop_dist&quot;</span><span class="p">)</span>
             <span class="k">elif</span> <span class="n">copula_dict</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">copula_dict</span> <span class="o">=</span> <span class="n">NULL</span>
         <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
@@ -1427,11 +1433,54 @@
             <span class="p">)</span>
             <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;marginal_list&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="n">NULL</span><span class="p">:</span>
                 <span class="n">res</span><span class="p">[</span><span class="s2">&quot;marginal_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># with self.__convert.context():</span>
+                <span class="c1">#     res[&quot;marginal_list&quot;] = ro.conversion.get_conversion().rpy2py(</span>
+                <span class="c1">#         self.whole_pipeline_res.rx2(&quot;marginal_list&quot;)</span>
+                <span class="c1">#     )</span>
+                <span class="c1"># warnings.warn(</span>
+                <span class="c1">#     &quot;There&#39;s an unfixed problem in printing the result on screen but not affecting usage. You can ignore the error output.&quot;</span>
+                <span class="c1"># )</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                    <span class="s2">&quot;There&#39;s an unfixed problem in converting the marginal list to OrdDict. Use .rx2 method to get values.&quot;</span>
+                <span class="p">)</span>
+                <span class="n">res</span><span class="p">[</span><span class="s2">&quot;marginal_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;marginal_list&quot;</span><span class="p">)</span>
+
             <span class="k">if</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;corr_list&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="n">NULL</span><span class="p">:</span>
                 <span class="n">res</span><span class="p">[</span><span class="s2">&quot;corr_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">elif</span> <span class="n">copula</span> <span class="o">==</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">:</span>
+                <span class="n">res</span><span class="p">[</span><span class="s2">&quot;corr_list&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="n">key</span><span class="p">:</span> <span class="n">_addname</span><span class="p">(</span>
+                        <span class="n">array</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
+                        <span class="n">row_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;corr_list&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">rownames</span><span class="p">,</span>
+                        <span class="n">col_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;corr_list&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">colnames</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;corr_list&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                <span class="p">}</span>
             <span class="k">return</span> <span class="n">res</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span></div></div>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">whole_pipeline_res</span></div>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">set_r_random_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the R random seed</span>
+
+<span class="sd">        As scDesign3 has some procedure performs some random steps, this function helps you set the random seed to make the results repeatable. The seed is only valid for the next random process. Note that this is a staticmethod.</span>
+
+<span class="sd">        Details:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        The function helps set R random seed.</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        seed: `int`</span>
+<span class="sd">            The random seed.</span>
+
+<span class="sd">        Output:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ro</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="s2">&quot;set.seed&quot;</span><span class="p">](</span><span class="n">seed</span><span class="p">)</span></div>
 </pre></div>
 
            </div>

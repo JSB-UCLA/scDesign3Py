@@ -85,7 +85,8 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "test = pyscDesign3.scDesign3(n_cores=1, parallelization=\"mcmapply\", return_py=True)"
+    "test = pyscDesign3.scDesign3(n_cores=6, parallelization=\"mcmapply\", return_py=True)\n",
+    "test.set_r_random_seed(123)"
    ]
   },
   {
@@ -152,8 +153,8 @@
     ".. Note::\n",
     "    Though we have already set the parallel method when creating the instance, we can change the setting temporarily when executing the methods one by one.\n",
     "\n",
-    "    Here is an example where we change the parallel method to `bpmapply` .\n",
-    "```\n"
+    "    Here is an example where we change the parallel method to `bpmapply` , thus we need an extra bpparam object got from the get_bpparam() function. (Details of the function is included in :doc:`Get BPPARAM <./bpparam>` section)\n",
+    "```"
    ]
   },
   {
@@ -166,7 +167,7 @@
    },
    "outputs": [],
    "source": [
-    "bpparam = pyscDesign3.get_bpparam(mode=\"SnowParam\", show=False)\n",
+    "bpparam = pyscDesign3.get_bpparam(mode=\"MulticoreParam\", show=False)\n",
     "marginal = test.fit_marginal(\n",
     "    data=const_data,\n",
     "    mu_formula=\"s(pseudotime, k = 10, bs = 'cr')\",\n",
@@ -181,13 +182,15 @@
   },
   {
    "cell_type": "markdown",
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-output"
+    ]
+   },
    "source": [
     "```{eval-rst}\n",
     ".. Warning::\n",
-    "    So far there has been some problem in converting the `fit_marginal` result to a more pythonic version, so the return type is `rpy2.robjects.ListVector`.\n",
-    "\n",
-    "    You can manipulate the result by following the tutorial instruction.\n",
+    "    So far there has been an unfixed problem in converting the marginal list to OrdDict. Use .rx2 method to get values.\n",
     "```\n",
     "\n",
     "**If you want to manipulate the results**\n"
@@ -213,6 +216,33 @@
    ]
   },
   {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# marginal[\"Pyy\"][\"fit\"][\"coefficients\"]"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "# marginal[\"Pyy\"][\"fit\"][\"coefficients\"][0] = 1.96\n",
+    "# marginal[\"Pyy\"][\"fit\"][\"coefficients\"]"
+   ]
+  },
+  {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
@@ -227,7 +257,7 @@
    "execution_count": null,
    "metadata": {
     "tags": [
-     "hide-output"
+     "remove-output"
     ]
    },
    "outputs": [],
@@ -301,7 +331,11 @@
   {
    "cell_type": "code",
    "execution_count": null,
-   "metadata": {},
+   "metadata": {
+    "tags": [
+     "remove-output"
+    ]
+   },
    "outputs": [],
    "source": [
     "para = test.extract_para(\n",
@@ -340,7 +374,7 @@
    "execution_count": null,
    "metadata": {
     "tags": [
-     "hide-output"
+     "remove-output"
     ]
    },
    "outputs": [],
@@ -390,7 +424,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.9.17"
+   "version": "3.11.5"
   },
   "orig_nbformat": 4
  },

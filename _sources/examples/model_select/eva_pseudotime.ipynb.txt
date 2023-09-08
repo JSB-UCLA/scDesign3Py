@@ -1,0 +1,149 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "import sys\n",
+    "\n",
+    "os.chdir(\"../..\")\n",
+    "sys.path.append(\"../../\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Evaluate pseudotime goodness-of-fit\n",
+    "\n",
+    "## Introduction\n",
+    "\n",
+    "In this example, we will show how to use pyscDesign3 to evaluate the pseudotime goodness-of-fit for different pseudotime labels. If the true labels are unavailable and we have little prior knowledge, the pyscDesign3 BIC can serve as an unsupervised metric. In this example, we will first use the **R** package `dyngen` to generate a dataset with ground truth \"pseudotime\". Then, we will perturb the ground truth pseudotime to worsen its quality and use pyscDesign3’s BIC to examine pseudotime goodness-of-fit.\n",
+    "\n",
+    "## Step 1: Import packages and Read in data\n",
+    "\n",
+    "### import pacakges"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R\n"
+     ]
+    }
+   ],
+   "source": [
+    "import anndata as ad\n",
+    "import rpy2.robjects as ro\n",
+    "import pyscDesign3"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Generation of reference dataset\n",
+    "\n",
+    "We will first use `dyngen` to generate a dataset with ground truth “pseudotime”."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "tags": [
+     "remove-output"
+    ]
+   },
+   "outputs": [
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Error in utils::download.file(url, destfile = file, quiet = !verbose) : \n",
+      "  download from 'https://github.com/dynverse/dyngen/raw/data_files/regulatorycircuits_32_lung_epithelium_lung_cancer.rds' failed\n",
+      "\n"
+     ]
+    },
+    {
+     "ename": "RRuntimeError",
+     "evalue": "Error in utils::download.file(url, destfile = file, quiet = !verbose) : \n  download from 'https://github.com/dynverse/dyngen/raw/data_files/regulatorycircuits_32_lung_epithelium_lung_cancer.rds' failed\n",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[0;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[0;31mRRuntimeError\u001b[0m                             Traceback (most recent call last)",
+      "Cell \u001b[0;32mIn[3], line 2\u001b[0m\n\u001b[1;32m      1\u001b[0m \u001b[39mwith\u001b[39;00m (ro\u001b[39m.\u001b[39mnumpy2ri\u001b[39m.\u001b[39mconverter \u001b[39m+\u001b[39m ro\u001b[39m.\u001b[39mdefault_converter \u001b[39m+\u001b[39m ro\u001b[39m.\u001b[39mpandas2ri\u001b[39m.\u001b[39mconverter)\u001b[39m.\u001b[39mcontext():\n\u001b[0;32m----> 2\u001b[0m     dyngen_res \u001b[39m=\u001b[39m ro\u001b[39m.\u001b[39mr(\u001b[39m\"\"\"\u001b[39m\n\u001b[1;32m      3\u001b[0m \u001b[39m        backbone <- dyngen::backbone_linear_simple()\u001b[39m\n\u001b[1;32m      4\u001b[0m \u001b[39m        config <-\u001b[39m\n\u001b[1;32m      5\u001b[0m \u001b[39m        dyngen::initialise_model(\u001b[39m\n\u001b[1;32m      6\u001b[0m \u001b[39m            backbone = backbone,\u001b[39m\n\u001b[1;32m      7\u001b[0m \u001b[39m            num_cells = 500,\u001b[39m\n\u001b[1;32m      8\u001b[0m \u001b[39m            num_tfs = nrow(backbone$module_info),\u001b[39m\n\u001b[1;32m      9\u001b[0m \u001b[39m            num_targets = 100,\u001b[39m\n\u001b[1;32m     10\u001b[0m \u001b[39m            num_hks = 50,\u001b[39m\n\u001b[1;32m     11\u001b[0m \u001b[39m            verbose = FALSE\u001b[39m\n\u001b[1;32m     12\u001b[0m \u001b[39m        )\u001b[39m\n\u001b[1;32m     13\u001b[0m \u001b[39m        out <- dyngen::generate_dataset(\u001b[39m\n\u001b[1;32m     14\u001b[0m \u001b[39m        config,\u001b[39m\n\u001b[1;32m     15\u001b[0m \u001b[39m        format = \u001b[39m\u001b[39m\"\u001b[39m\u001b[39msce\u001b[39m\u001b[39m\"\u001b[39m\u001b[39m,\u001b[39m\n\u001b[1;32m     16\u001b[0m \u001b[39m        make_plots = FALSE\u001b[39m\n\u001b[1;32m     17\u001b[0m \u001b[39m        )\u001b[39m\n\u001b[1;32m     18\u001b[0m \u001b[39m        out\u001b[39m\u001b[39m\"\"\"\u001b[39m)\n",
+      "File \u001b[0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/robjects/__init__.py:459\u001b[0m, in \u001b[0;36mR.__call__\u001b[0;34m(self, string)\u001b[0m\n\u001b[1;32m    457\u001b[0m \u001b[39mdef\u001b[39;00m \u001b[39m__call__\u001b[39m(\u001b[39mself\u001b[39m, string):\n\u001b[1;32m    458\u001b[0m     p \u001b[39m=\u001b[39m rinterface\u001b[39m.\u001b[39mparse(string)\n\u001b[0;32m--> 459\u001b[0m     res \u001b[39m=\u001b[39m \u001b[39mself\u001b[39m\u001b[39m.\u001b[39meval(p)\n\u001b[1;32m    460\u001b[0m     \u001b[39mreturn\u001b[39;00m conversion\u001b[39m.\u001b[39mget_conversion()\u001b[39m.\u001b[39mrpy2py(res)\n",
+      "File \u001b[0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/robjects/functions.py:208\u001b[0m, in \u001b[0;36mSignatureTranslatedFunction.__call__\u001b[0;34m(self, *args, **kwargs)\u001b[0m\n\u001b[1;32m    206\u001b[0m         v \u001b[39m=\u001b[39m kwargs\u001b[39m.\u001b[39mpop(k)\n\u001b[1;32m    207\u001b[0m         kwargs[r_k] \u001b[39m=\u001b[39m v\n\u001b[0;32m--> 208\u001b[0m \u001b[39mreturn\u001b[39;00m (\u001b[39msuper\u001b[39m(SignatureTranslatedFunction, \u001b[39mself\u001b[39m)\n\u001b[1;32m    209\u001b[0m         \u001b[39m.\u001b[39m\u001b[39m__call__\u001b[39m(\u001b[39m*\u001b[39margs, \u001b[39m*\u001b[39m\u001b[39m*\u001b[39mkwargs))\n",
+      "File \u001b[0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/robjects/functions.py:131\u001b[0m, in \u001b[0;36mFunction.__call__\u001b[0;34m(self, *args, **kwargs)\u001b[0m\n\u001b[1;32m    129\u001b[0m     \u001b[39melse\u001b[39;00m:\n\u001b[1;32m    130\u001b[0m         new_kwargs[k] \u001b[39m=\u001b[39m cv\u001b[39m.\u001b[39mpy2rpy(v)\n\u001b[0;32m--> 131\u001b[0m res \u001b[39m=\u001b[39m \u001b[39msuper\u001b[39m(Function, \u001b[39mself\u001b[39m)\u001b[39m.\u001b[39m\u001b[39m__call__\u001b[39m(\u001b[39m*\u001b[39mnew_args, \u001b[39m*\u001b[39m\u001b[39m*\u001b[39mnew_kwargs)\n\u001b[1;32m    132\u001b[0m res \u001b[39m=\u001b[39m cv\u001b[39m.\u001b[39mrpy2py(res)\n\u001b[1;32m    133\u001b[0m \u001b[39mreturn\u001b[39;00m res\n",
+      "File \u001b[0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/rinterface_lib/conversion.py:45\u001b[0m, in \u001b[0;36m_cdata_res_to_rinterface.<locals>._\u001b[0;34m(*args, **kwargs)\u001b[0m\n\u001b[1;32m     44\u001b[0m \u001b[39mdef\u001b[39;00m \u001b[39m_\u001b[39m(\u001b[39m*\u001b[39margs, \u001b[39m*\u001b[39m\u001b[39m*\u001b[39mkwargs):\n\u001b[0;32m---> 45\u001b[0m     cdata \u001b[39m=\u001b[39m function(\u001b[39m*\u001b[39margs, \u001b[39m*\u001b[39m\u001b[39m*\u001b[39mkwargs)\n\u001b[1;32m     46\u001b[0m     \u001b[39m# TODO: test cdata is of the expected CType\u001b[39;00m\n\u001b[1;32m     47\u001b[0m     \u001b[39mreturn\u001b[39;00m _cdata_to_rinterface(cdata)\n",
+      "File \u001b[0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/rinterface.py:817\u001b[0m, in \u001b[0;36mSexpClosure.__call__\u001b[0;34m(self, *args, **kwargs)\u001b[0m\n\u001b[1;32m    810\u001b[0m     res \u001b[39m=\u001b[39m rmemory\u001b[39m.\u001b[39mprotect(\n\u001b[1;32m    811\u001b[0m         openrlib\u001b[39m.\u001b[39mrlib\u001b[39m.\u001b[39mR_tryEval(\n\u001b[1;32m    812\u001b[0m             call_r,\n\u001b[1;32m    813\u001b[0m             call_context\u001b[39m.\u001b[39m__sexp__\u001b[39m.\u001b[39m_cdata,\n\u001b[1;32m    814\u001b[0m             error_occured)\n\u001b[1;32m    815\u001b[0m     )\n\u001b[1;32m    816\u001b[0m     \u001b[39mif\u001b[39;00m error_occured[\u001b[39m0\u001b[39m]:\n\u001b[0;32m--> 817\u001b[0m         \u001b[39mraise\u001b[39;00m embedded\u001b[39m.\u001b[39mRRuntimeError(_rinterface\u001b[39m.\u001b[39m_geterrmessage())\n\u001b[1;32m    818\u001b[0m \u001b[39mreturn\u001b[39;00m res\n",
+      "\u001b[0;31mRRuntimeError\u001b[0m: Error in utils::download.file(url, destfile = file, quiet = !verbose) : \n  download from 'https://github.com/dynverse/dyngen/raw/data_files/regulatorycircuits_32_lung_epithelium_lung_cancer.rds' failed\n"
+     ]
+    }
+   ],
+   "source": [
+    "with (ro.numpy2ri.converter + ro.default_converter + ro.pandas2ri.converter).context():\n",
+    "    dyngen_res = ro.r(\"\"\"\n",
+    "        backbone <- dyngen::backbone_linear_simple()\n",
+    "        config <-\n",
+    "        dyngen::initialise_model(\n",
+    "            backbone = backbone,\n",
+    "            num_cells = 500,\n",
+    "            num_tfs = nrow(backbone$module_info),\n",
+    "            num_targets = 100,\n",
+    "            num_hks = 50,\n",
+    "            verbose = FALSE\n",
+    "        )\n",
+    "        out <- dyngen::generate_dataset(\n",
+    "        config,\n",
+    "        format = \"sce\",\n",
+    "        make_plots = FALSE\n",
+    "        )\n",
+    "        out\"\"\")"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "pyscdesign",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.5"
+  },
+  "orig_nbformat": 4
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

@@ -67,8 +67,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">More examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/data_simu/index.html">Data simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/data_simu/index.html">Data simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/model_select/index.html">Model selection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/model_alter/index.html">Model alteration</a></li>
 </ul>
@@ -97,7 +97,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="perform-likelihood-ratio-test">
+  <section class="tex2jax_ignore mathjax_ignore" id="perform-likelihood-ratio-test">
 <h1>Perform likelihood ratio test<a class="headerlink" href="#perform-likelihood-ratio-test" title="Permalink to this heading"></a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
@@ -116,7 +116,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at D:/Code_env/R-4.3.1
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -148,12 +148,9 @@
 <h2>Step 2: Run the <code class="docutils literal notranslate"><span class="pre">fit_marginal()</span></code> method to create the marginal models<a class="headerlink" href="#step-2-run-the-fit-marginal-method-to-create-the-marginal-models" title="Permalink to this heading"></a></h2>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set bpparam</span>
-<span class="n">bpparam</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;SnowParam&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">stop_on_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="c1"># create the instance</span>
-<span class="n">test1</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">test2</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the instance</span>
+<span class="n">test1</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">test1</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 
 <span class="c1"># construct data</span>
 <span class="n">test1</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
@@ -163,6 +160,25 @@
     <span class="n">pseudotime</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
     <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="c1"># fit marginal</span>
+<span class="n">marginal1</span> <span class="o">=</span> <span class="n">test1</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the instance</span>
+<span class="n">test2</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">test2</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+
+<span class="c1"># construct data</span>
 <span class="n">test2</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
     <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
     <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
@@ -173,12 +189,6 @@
 <span class="p">)</span>
 
 <span class="c1"># fit marginal</span>
-<span class="n">marginal1</span> <span class="o">=</span> <span class="n">test1</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
-    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
-    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
-    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span>
 <span class="n">marginal2</span> <span class="o">=</span> <span class="n">test1</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
     <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, bs = &#39;cr&#39;, k = 10)&quot;</span><span class="p">,</span>
     <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>

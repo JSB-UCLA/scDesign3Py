@@ -1,0 +1,205 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-cell"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "import sys\n",
+    "\n",
+    "os.chdir(\"../..\")\n",
+    "sys.path.append(\"../../\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Simulate spatial transcriptomic data\n",
+    "\n",
+    "## Introduction\n",
+    "\n",
+    "In this example, we show how to use pyscDesign3 to simulate the single-cell spatial data.\n",
+    "\n",
+    "## Import packages and Read in data\n",
+    "\n",
+    "### import pacakges"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import anndata as ad\n",
+    "import numpy as np\n",
+    "import pandas as pd\n",
+    "import pyscDesign3"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "### Read in the reference data\n",
+    "\n",
+    "The raw data is from the [Seurat](https://satijalab.org/seurat/articles/spatial_vignette.html), which is a dataset generated with the Visium technology from 10x Genomics. We pre-select the top spatial variable genes. To save time, we only use the top 10 genes."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "data = ad.read_h5ad(\"data/VISIUM.h5ad\")\n",
+    "data = data[:,0:10]\n",
+    "data"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Simulation\n",
+    "\n",
+    "Then, we can use this spatial dataset to generate new data by setting the parameter mu_formula as a smooth terms for the spatial coordinates."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "remove-output"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "test = pyscDesign3.scDesign3(n_cores=6,parallelization=\"pbmcmapply\")\n",
+    "test.set_r_random_seed(123)\n",
+    "simu_res = test.scdesign3(\n",
+    "    anndata = data,\n",
+    "    default_assay_name = \"counts\",\n",
+    "    celltype = \"cell_type\",\n",
+    "    spatial = [\"spatial1\", \"spatial2\"],\n",
+    "    mu_formula = \"s(spatial1, spatial2, bs = 'gp', k= 400)\",\n",
+    "    sigma_formula = \"1\",\n",
+    "    family_use = \"nb\",\n",
+    "    usebam = True,\n",
+    "    corr_formula = \"1\",\n",
+    "    copula = \"gaussian\",\n",
+    "  )"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Then we can construct new data using the simulated count matrix."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "simu_data = ad.AnnData(X=simu_res[\"new_count\"], obs=simu_res[\"new_covariate\"])\n",
+    "simu_data.layers[\"log_transformed\"] = np.log1p(simu_data.X)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## Visualization\n",
+    "\n",
+    "We plot a selected gene as an example showing the gene expression and the spatial locations."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import matplotlib.pyplot as plt\n",
+    "import seaborn as sns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "tags": [
+     "hide-input"
+    ]
+   },
+   "outputs": [],
+   "source": [
+    "gene_name = \"Nrgn\"\n",
+    "\n",
+    "df = pd.concat([data.obs[[\"spatial1\",\"spatial2\"]],simu_data.obs[[\"spatial1\",\"spatial2\"]]],axis=0)\n",
+    "df[\"Expression\"] = np.concatenate([data[:,gene_name].X.toarray().flatten(),simu_data[:,gene_name].X.toarray().flatten()])\n",
+    "df[\"Method\"] = [\"Reference\"]*data.n_obs + [\"scDesign3\"]*simu_data.n_obs\n",
+    "\n",
+    "\n",
+    "# plot\n",
+    "sns.set(style=\"whitegrid\")\n",
+    "methods = df.groupby(\"Method\")\n",
+    "fig, axes = plt.subplots(1, len(methods), figsize=(len(methods) * 5, 1 * 5), sharey=True, sharex=True)\n",
+    "fig.tight_layout()\n",
+    "\n",
+    "for i, (method, exp) in enumerate(methods):\n",
+    "    ax = axes[i]\n",
+    "\n",
+    "    scatter = ax.scatter(\n",
+    "        exp[\"spatial1\"],\n",
+    "        exp[\"spatial2\"],\n",
+    "        c=exp[\"Expression\"],\n",
+    "        alpha=1,\n",
+    "        s=20,\n",
+    "    )\n",
+    "    ax.set_title(method)\n",
+    "\n",
+    "fig.text(0.5, 0, \"X\", ha=\"center\")\n",
+    "fig.text(0, 0.5, \"Y\", va=\"center\", rotation=\"vertical\")\n",
+    "position = fig.add_axes([0.2, -0.07, 0.60, 0.025])\n",
+    "fig.colorbar(scatter,                cax=position,\n",
+    "                orientation=\"horizontal\",\n",
+    "                label=f\"{gene_name} Expression\",)\n",
+    "fig.show()"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "pyscdesign",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.5"
+  },
+  "orig_nbformat": 4
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}

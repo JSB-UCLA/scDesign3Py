@@ -21,6 +21,8 @@
         <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/clipboard.min.js"></script>
         <script src="../../_static/copybutton.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -67,12 +69,12 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">More examples</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../data_simu/index.html">Data simulation</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Model parameter</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Marginal distribution for genes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="comp_gau_vine.html">Compare Gaussian copula and Vine copula</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../data_simu/index.html">Data simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../model_select/index.html">Model selection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../model_alter/index.html">Model alteration</a></li>
 </ul>
@@ -102,7 +104,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="marginal-distribution-for-genes">
+  <section class="tex2jax_ignore mathjax_ignore" id="marginal-distribution-for-genes">
 <h1>Marginal distribution for genes<a class="headerlink" href="#marginal-distribution-for-genes" title="Permalink to this heading"></a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
@@ -110,9 +112,68 @@
 </section>
 <section id="notation">
 <h2>Notation<a class="headerlink" href="#notation" title="Permalink to this heading"></a></h2>
+<p>The following notations are used:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\({\mathbf{Y}} = [Y_{ij}] \in \mathbb{R}^{n \times m}\)</span>: the cell-by-feature matrix with <span class="math notranslate nohighlight">\(n\)</span> cells as rows, <span class="math notranslate nohighlight">\(m\)</span> features as columns, and <span class="math notranslate nohighlight">\(Y_{ij}\)</span> as the measurement of feature <span class="math notranslate nohighlight">\(j\)</span> in cell <span class="math notranslate nohighlight">\(i\)</span>; for single-cell sequencing data, <span class="math notranslate nohighlight">\({\mathbf{Y}}\)</span> is often a count matrix.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{X} = [\mathbf{x}_1, \cdots, \mathbf{x}_n]^T \in \mathbb{R}^{n\times p}\)</span>: the cell-by-state-covariate matrix with <span class="math notranslate nohighlight">\(n\)</span> cells as rows and <span class="math notranslate nohighlight">\(p\)</span> cell-state covariates as columns; example covariates are cell type, cell pseudotime, and cell spatial locations.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathbf{Z} = [\mathbf{b}, \mathbf{c}]\)</span>: <span class="math notranslate nohighlight">\(\mathbf{b} = (b_1, \ldots, b_n)^T\)</span> has <span class="math notranslate nohighlight">\(b_i \in \{1, \ldots, B \}\)</span> representing cell <span class="math notranslate nohighlight">\(i\)</span>’s batch, and <span class="math notranslate nohighlight">\(\mathbf{c} = (c_1, \ldots, c_n)^T\)</span> has <span class="math notranslate nohighlight">\(c_i \in \{1, \ldots, C \}\)</span> representing cell <span class="math notranslate nohighlight">\(i\)</span>’s condition.</p></li>
+</ul>
+<p>For each feature <span class="math notranslate nohighlight">\(j=1,\ldots,m\)</span> in every cell <span class="math notranslate nohighlight">\(i=1,\ldots,n\)</span>, the measurement <span class="math notranslate nohighlight">\(Y_{ij}\)</span>—conditional on cell <span class="math notranslate nohighlight">\(i\)</span>’s state covariates <span class="math notranslate nohighlight">\(\mathbf{x_i}\)</span> and design covariates <span class="math notranslate nohighlight">\(\mathbf{z}_i = (b_i, c_i)^T\)</span>—is assumed to follow a distribution <span class="math notranslate nohighlight">\(F_{j}( \cdot~|~\mathbf{x}_i, \mathbf{z}_i~;~\mu_{ij}, \sigma_{ij}, p_{ij})\)</span>, which is specified as the generalized additive model for location, scale and shape (GAMLSS).</p>
+<p>The various specifications of <span class="math notranslate nohighlight">\(f_{jc_i}(\cdot)\)</span>, <span class="math notranslate nohighlight">\(g_{jc_i}(\cdot)\)</span>, and <span class="math notranslate nohighlight">\(h_{jc_i}(\cdot)\)</span> are summarized in the next section.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{equation}
+\begin{cases}
+    Y_{ij}~|~\mathbf{x}_i, \mathbf{z}_i &amp;\overset{\mathrm{ind}}{\sim} F_{j}( \cdot~|~\mathbf{x}_i, \mathbf{z}_i~;~\mu_{ij}, \sigma_{ij}, p_{ij})\\
+    \theta_{j}(\mu_{ij}) &amp;= \alpha_{j0} + \alpha_{jb_i} + \alpha_{jc_i} + f_{jc_i}(\mathbf{x}_i) \\
+    \log(\sigma_{ij}) &amp;= \beta_{j0}+ \beta_{jb_i} + \beta_{jc_i} + g_{jc_i}(\mathbf{x}_i) \\
+    \operatorname{logit}(p_{ij}) &amp;= \gamma_{j0} + \gamma_{jb_i}+ \gamma_{jc_i}+ h_{jc_i}(\mathbf{x}_i) \\
+\end{cases} \,
+\end{equation}\end{split}\]</div>
 </section>
 <section id="summary">
 <h2>Summary<a class="headerlink" href="#summary" title="Permalink to this heading"></a></h2>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p>Covariate type</p></th>
+<th class="head"><p>Covariate form</p></th>
+<th class="head"><p>Function form</p></th>
+<th class="head"><p>Explaination</p></th>
+<th class="head"><p>Geometric meaning</p></th>
+<th class="head"><p>Code Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Discrete cell type</p></td>
+<td><p><span class="math notranslate nohighlight">\(x_i \in \left\{1, \ldots, K_C\right\}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(f_{jc_i}(x_i) = \alpha_{jc_ix_i}\)</span></p></td>
+<td><p>Cell type <span class="math notranslate nohighlight">\(x_i\)</span> has the effect <span class="math notranslate nohighlight">\(\alpha_{jc_ix_i}\)</span>; for identifiability, <span class="math notranslate nohighlight">\(\alpha_{jc_ix_i} = 0\)</span> if <span class="math notranslate nohighlight">\(x_i = 1\)</span></p></td>
+<td><p>One intercept for each cell type</p></td>
+<td><p>mu_formula = “cell_type”</p></td>
+</tr>
+<tr class="row-odd"><td><p>Continuous pseudotime in one lineage</p></td>
+<td><p><span class="math notranslate nohighlight">\(x_i \in [0,\infty)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(f_{jc_i}({x}_i) = \sum_{k = 1}^Kb_{jc_ik}(x_{i})\beta_{jc_ik}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(b_{jc_ik}(\cdot)\)</span> is a basis function of cubic spline; <span class="math notranslate nohighlight">\(K\)</span> is the dimension of the basis</p></td>
+<td><p>A curve along the pseudotime</p></td>
+<td><p>mu_formula = “s(pseudotime)”</p></td>
+</tr>
+<tr class="row-even"><td><p>Continuous pseudotimes in <span class="math notranslate nohighlight">\(p\)</span> lineages</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathbf{x}_i = (x_{i1}, \ldots, x_{ip})^T \in [0,\infty)^{p}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(f_{jc_i}(\mathbf{x}_i) = \sum_{l = 1}^p \sum_{k = 1}^Kb_{jc_ilk}(x_{il})\beta_{jc_ilk}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(b_{jc_ilk}(\cdot)\)</span> is a basis function of cubic spline; <span class="math notranslate nohighlight">\(K\)</span> is the the dimension of the basis (default <span class="math notranslate nohighlight">\(K=10\)</span>)</p></td>
+<td><p>One curve along each lineage</p></td>
+<td><p>mu_formula = “s(pseudotime1, k = 10, by = l1, bs = ‘cr’) + s(pseudotime2, k = 10, by = l2, bs = ‘cr’)”, <span class="math notranslate nohighlight">\(p = 2\)</span> in this case</p></td>
+</tr>
+<tr class="row-odd"><td><p>Spatial location</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathbf{x}_i = (x_{i1}, x_{i2})^T \in \mathbb{R}^{2}\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(f_{jc_i}(\mathbf{x}_i) = f_{jc_i}^{\operatorname{GP}}(x_{i1}, x_{i2}, K)\)</span></p></td>
+<td><p><span class="math notranslate nohighlight">\(f_{jc_i}^{\operatorname{GP}}(\cdot, \cdot, K)\)</span> is a Gaussian process smoother; <span class="math notranslate nohighlight">\(K\)</span> is the dimension of the basis (default <span class="math notranslate nohighlight">\(K=400\)</span>)</p></td>
+<td><p>A smooth surface</p></td>
+<td><p>mu_formula = “s(spatial1, spatial2, bs = ‘gp’, k = 400)”</p></td>
+</tr>
+</tbody>
+</table>
+<p>For simplicity, we only show the form of <span class="math notranslate nohighlight">\(f_{jc_i}(\cdot)\)</span> because <span class="math notranslate nohighlight">\(g_{jc_i}(\cdot)\)</span> and <span class="math notranslate nohighlight">\(h_{jc_i}(\cdot)\)</span> have the same form.</p>
 </section>
 </section>
 

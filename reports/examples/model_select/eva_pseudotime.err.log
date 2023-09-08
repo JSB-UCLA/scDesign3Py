@@ -1,0 +1,107 @@
+Traceback (most recent call last):
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 1305, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 166, in wrapped
+    return loop.run_until_complete(inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/asyncio/base_events.py", line 653, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 705, in async_execute
+    await self.async_execute_cell(
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 1058, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 914, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+with (ro.numpy2ri.converter + ro.default_converter + ro.pandas2ri.converter).context():
+    dyngen_res = ro.r("""
+        backbone <- dyngen::backbone_linear_simple()
+        config <-
+        dyngen::initialise_model(
+            backbone = backbone,
+            num_cells = 500,
+            num_tfs = nrow(backbone$module_info),
+            num_targets = 100,
+            num_hks = 50,
+            verbose = FALSE
+        )
+        out <- dyngen::generate_dataset(
+        config,
+        format = "sce",
+        make_plots = FALSE
+        )
+        out""")
+------------------
+
+----- stderr -----
+R[write to console]: Error in utils::download.file(url, destfile = file, quiet = !verbose) : 
+  cannot open URL 'https://github.com/dynverse/dyngen/raw/data_files/regulatorycircuits_01_neurons_fetal_brain.rds'
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mRRuntimeError[0m                             Traceback (most recent call last)
+Cell [0;32mIn[3], line 2[0m
+[1;32m      1[0m [38;5;28;01mwith[39;00m (ro[38;5;241m.[39mnumpy2ri[38;5;241m.[39mconverter [38;5;241m+[39m ro[38;5;241m.[39mdefault_converter [38;5;241m+[39m ro[38;5;241m.[39mpandas2ri[38;5;241m.[39mconverter)[38;5;241m.[39mcontext():
+[0;32m----> 2[0m     dyngen_res [38;5;241m=[39m ro[38;5;241m.[39mr([38;5;124m"""[39m
+[1;32m      3[0m [38;5;124m        backbone <- dyngen::backbone_linear_simple()[39m
+[1;32m      4[0m [38;5;124m        config <-[39m
+[1;32m      5[0m [38;5;124m        dyngen::initialise_model([39m
+[1;32m      6[0m [38;5;124m            backbone = backbone,[39m
+[1;32m      7[0m [38;5;124m            num_cells = 500,[39m
+[1;32m      8[0m [38;5;124m            num_tfs = nrow(backbone$module_info),[39m
+[1;32m      9[0m [38;5;124m            num_targets = 100,[39m
+[1;32m     10[0m [38;5;124m            num_hks = 50,[39m
+[1;32m     11[0m [38;5;124m            verbose = FALSE[39m
+[1;32m     12[0m [38;5;124m        )[39m
+[1;32m     13[0m [38;5;124m        out <- dyngen::generate_dataset([39m
+[1;32m     14[0m [38;5;124m        config,[39m
+[1;32m     15[0m [38;5;124m        format = [39m[38;5;124m"[39m[38;5;124msce[39m[38;5;124m"[39m[38;5;124m,[39m
+[1;32m     16[0m [38;5;124m        make_plots = FALSE[39m
+[1;32m     17[0m [38;5;124m        )[39m
+[1;32m     18[0m [38;5;124m        out[39m[38;5;124m"""[39m)
+
+File [0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/robjects/__init__.py:459[0m, in [0;36mR.__call__[0;34m(self, string)[0m
+[1;32m    457[0m [38;5;28;01mdef[39;00m [38;5;21m__call__[39m([38;5;28mself[39m, string):
+[1;32m    458[0m     p [38;5;241m=[39m rinterface[38;5;241m.[39mparse(string)
+[0;32m--> 459[0m     res [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39meval(p)
+[1;32m    460[0m     [38;5;28;01mreturn[39;00m conversion[38;5;241m.[39mget_conversion()[38;5;241m.[39mrpy2py(res)
+
+File [0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/robjects/functions.py:208[0m, in [0;36mSignatureTranslatedFunction.__call__[0;34m(self, *args, **kwargs)[0m
+[1;32m    206[0m         v [38;5;241m=[39m kwargs[38;5;241m.[39mpop(k)
+[1;32m    207[0m         kwargs[r_k] [38;5;241m=[39m v
+[0;32m--> 208[0m [38;5;28;01mreturn[39;00m ([38;5;28msuper[39m(SignatureTranslatedFunction, [38;5;28mself[39m)
+[1;32m    209[0m         [38;5;241m.[39m[38;5;21m__call__[39m([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs))
+
+File [0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/robjects/functions.py:131[0m, in [0;36mFunction.__call__[0;34m(self, *args, **kwargs)[0m
+[1;32m    129[0m     [38;5;28;01melse[39;00m:
+[1;32m    130[0m         new_kwargs[k] [38;5;241m=[39m cv[38;5;241m.[39mpy2rpy(v)
+[0;32m--> 131[0m res [38;5;241m=[39m [38;5;28msuper[39m(Function, [38;5;28mself[39m)[38;5;241m.[39m[38;5;21m__call__[39m([38;5;241m*[39mnew_args, [38;5;241m*[39m[38;5;241m*[39mnew_kwargs)
+[1;32m    132[0m res [38;5;241m=[39m cv[38;5;241m.[39mrpy2py(res)
+[1;32m    133[0m [38;5;28;01mreturn[39;00m res
+
+File [0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/rinterface_lib/conversion.py:45[0m, in [0;36m_cdata_res_to_rinterface.<locals>._[0;34m(*args, **kwargs)[0m
+[1;32m     44[0m [38;5;28;01mdef[39;00m [38;5;21m_[39m([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs):
+[0;32m---> 45[0m     cdata [38;5;241m=[39m function([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs)
+[1;32m     46[0m     [38;5;66;03m# TODO: test cdata is of the expected CType[39;00m
+[1;32m     47[0m     [38;5;28;01mreturn[39;00m _cdata_to_rinterface(cdata)
+
+File [0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/rinterface.py:817[0m, in [0;36mSexpClosure.__call__[0;34m(self, *args, **kwargs)[0m
+[1;32m    810[0m     res [38;5;241m=[39m rmemory[38;5;241m.[39mprotect(
+[1;32m    811[0m         openrlib[38;5;241m.[39mrlib[38;5;241m.[39mR_tryEval(
+[1;32m    812[0m             call_r,
+[1;32m    813[0m             call_context[38;5;241m.[39m__sexp__[38;5;241m.[39m_cdata,
+[1;32m    814[0m             error_occured)
+[1;32m    815[0m     )
+[1;32m    816[0m     [38;5;28;01mif[39;00m error_occured[[38;5;241m0[39m]:
+[0;32m--> 817[0m         [38;5;28;01mraise[39;00m embedded[38;5;241m.[39mRRuntimeError(_rinterface[38;5;241m.[39m_geterrmessage())
+[1;32m    818[0m [38;5;28;01mreturn[39;00m res
+
+[0;31mRRuntimeError[0m: Error in utils::download.file(url, destfile = file, quiet = !verbose) : 
+  cannot open URL 'https://github.com/dynverse/dyngen/raw/data_files/regulatorycircuits_01_neurons_fetal_brain.rds'
+
+

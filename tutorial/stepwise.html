@@ -21,6 +21,8 @@
         <script src="../_static/sphinx_highlight.js"></script>
         <script src="../_static/clipboard.min.js"></script>
         <script src="../_static/copybutton.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -67,8 +69,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">More examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/data_simu/index.html">Data simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/data_simu/index.html">Data simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/model_select/index.html">Model selection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/model_alter/index.html">Model alteration</a></li>
 </ul>
@@ -97,7 +99,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="run-pyscdesign3-pipeline-step-by-step">
+  <section class="tex2jax_ignore mathjax_ignore" id="run-pyscdesign3-pipeline-step-by-step">
 <h1>Run pyscDesign3 pipeline step by step<a class="headerlink" href="#run-pyscdesign3-pipeline-step-by-step" title="Permalink to this heading"></a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
@@ -124,7 +126,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at D:/Code_env/R-4.3.1
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -155,7 +157,8 @@
 <h3>Create the <code class="docutils literal notranslate"><span class="pre">scDesign3</span></code> instance<a class="headerlink" href="#create-the-scdesign3-instance" title="Permalink to this heading"></a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -255,11 +258,11 @@
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Though we have already set the parallel method when creating the instance, we can change the setting temporarily when executing the methods one by one.</p>
-<p>Here is an example where we change the parallel method to <cite>bpmapply</cite> .</p>
+<p>Here is an example where we change the parallel method to <cite>bpmapply</cite> , thus we need an extra bpparam object got from the get_bpparam() function. (Details of the function is included in <a class="reference internal" href="bpparam.html"><span class="doc">Get BPPARAM</span></a> section)</p>
 </div>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bpparam</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;SnowParam&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bpparam</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;MulticoreParam&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">marginal</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
     <span class="n">data</span><span class="o">=</span><span class="n">const_data</span><span class="p">,</span>
     <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
@@ -276,8 +279,7 @@
 </div>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>So far there has been some problem in converting the <cite>fit_marginal</cite> result to a more pythonic version, so the return type is <cite>rpy2.robjects.ListVector</cite>.</p>
-<p>You can manipulate the result by following the tutorial instruction.</p>
+<p>So far there has been an unfixed problem in converting the marginal list to OrdDict. Use .rx2 method to get values.</p>
 </div>
 <p><strong>If you want to manipulate the results</strong></p>
 <div class="cell docutils container">
@@ -315,8 +317,8 @@ s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9
 <section id="step-3-fit-copula">
 <span id="id3"></span><h2>Step 3: Fit copula<a class="headerlink" href="#step-3-fit-copula" title="Permalink to this heading"></a></h2>
 <p>Fit a copula, obtain AIC and BIC.</p>
-<div class="cell tag_hide-output docutils container">
-<div class="cell_input above-output-prompt docutils container">
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">copula</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">fit_copula</span><span class="p">(</span>
     <span class="n">input_data</span><span class="o">=</span><span class="n">const_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">],</span>
     <span class="n">marginal_dict</span><span class="o">=</span><span class="n">marginal</span><span class="p">,</span>
@@ -326,44 +328,6 @@ s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9
 </pre></div>
 </div>
 </div>
-<details class="hide below-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
-<span class="expanded">Hide code cell output</span>
-</summary>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Convert Residuals to Uniform
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Converting End
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Copula group 1 starts
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Vine Copula Estimation Starts
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Time difference of 
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>8.093516
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>secs
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Vine Copula Estimation Ends
-</pre></div>
-</div>
-</div>
-</details>
 </div>
 <p>We can evaluate the model by checking the AIC.</p>
 <div class="cell docutils container">
@@ -373,9 +337,9 @@ s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>aic.marginal    271021.35384
-aic.copula       -2270.60594
-aic.total       268750.74790
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>aic.marginal    271021.353838
+aic.copula       -2248.034744
+aic.total       268773.319094
 dtype: float64
 </pre></div>
 </div>
@@ -407,8 +371,8 @@ dtype: float64
 <li><p>a cell-by-gene mean matrix</p></li>
 <li><p>a sigma matrix which is:</p>
 <ul>
-<li><p>a cell-by-gene matrix of $\frac{1}{\phi}$ for negative binomial distribution</p></li>
-<li><p>a cell-by-gene matrix of the standard deviation $\sigma$ for Gaussian distribution</p></li>
+<li><p>a cell-by-gene matrix of <span class="math notranslate nohighlight">\(\frac{1}{\phi}\)</span> for negative binomial distribution</p></li>
+<li><p>a cell-by-gene matrix of the standard deviation <span class="math notranslate nohighlight">\(\sigma\)</span> for Gaussian distribution</p></li>
 <li><p>a cell-by-gene matrix of 1 for poisson distribution</p></li>
 </ul>
 </li>
@@ -419,7 +383,7 @@ dtype: float64
 </ul>
 </li>
 </ul>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">para</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">extract_para</span><span class="p">(</span>
     <span class="n">marginal_dict</span><span class="o">=</span><span class="n">marginal</span><span class="p">,</span>
@@ -519,8 +483,8 @@ dtype: float64
 </section>
 <section id="step-5-simulate-new-data">
 <span id="id5"></span><h2>Step 5: Simulate new data<a class="headerlink" href="#step-5-simulate-new-data" title="Permalink to this heading"></a></h2>
-<div class="cell tag_hide-output docutils container">
-<div class="cell_input above-output-prompt docutils container">
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_new</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">simu_new</span><span class="p">(</span>
     <span class="n">mean_mat</span><span class="o">=</span><span class="n">para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">],</span>
     <span class="n">sigma_mat</span><span class="o">=</span><span class="n">para</span><span class="p">[</span><span class="s2">&quot;sigma_mat&quot;</span><span class="p">],</span>
@@ -534,20 +498,6 @@ dtype: float64
 </pre></div>
 </div>
 </div>
-<details class="hide below-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
-<span class="expanded">Hide code cell output</span>
-</summary>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Use Copula to sample a multivariate quantile matrix
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Sample Copula group 1 starts
-</pre></div>
-</div>
-</div>
-</details>
 </div>
 <p>The final simulated result is also a <code class="docutils literal notranslate"><span class="pre">pandas.DataFrame</span></code> object.</p>
 <div class="cell docutils container">
@@ -586,57 +536,57 @@ dtype: float64
   <tbody>
     <tr>
       <th>AAACCTGAGAGGGATA</th>
-      <td>22.0</td>
-      <td>-0.0</td>
-      <td>19.0</td>
-      <td>5.0</td>
+      <td>16.0</td>
       <td>0.0</td>
-      <td>41.0</td>
+      <td>81.0</td>
+      <td>15.0</td>
+      <td>0.0</td>
+      <td>13.0</td>
     </tr>
     <tr>
       <th>AAACCTGGTAAGTGGC</th>
       <td>0.0</td>
-      <td>-0.0</td>
-      <td>10.0</td>
-      <td>0.0</td>
       <td>1.0</td>
       <td>5.0</td>
+      <td>-0.0</td>
+      <td>1.0</td>
+      <td>1.0</td>
     </tr>
     <tr>
       <th>AAACGGGCAAAGAATC</th>
-      <td>173.0</td>
-      <td>14.0</td>
-      <td>17.0</td>
-      <td>3.0</td>
+      <td>167.0</td>
+      <td>2.0</td>
+      <td>115.0</td>
+      <td>32.0</td>
       <td>-0.0</td>
-      <td>6.0</td>
+      <td>32.0</td>
     </tr>
     <tr>
       <th>AAACGGGGTACAGTTC</th>
-      <td>23.0</td>
-      <td>83.0</td>
+      <td>5.0</td>
+      <td>230.0</td>
+      <td>19.0</td>
+      <td>63.0</td>
       <td>0.0</td>
-      <td>29.0</td>
-      <td>0.0</td>
-      <td>31.0</td>
+      <td>9.0</td>
     </tr>
     <tr>
       <th>AAACGGGGTGAAATCA</th>
-      <td>0.0</td>
-      <td>0.0</td>
       <td>1.0</td>
       <td>1.0</td>
       <td>-0.0</td>
-      <td>2.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
+      <td>-0.0</td>
     </tr>
     <tr>
       <th>AAACGGGTCAAACAAG</th>
+      <td>0.0</td>
       <td>-0.0</td>
-      <td>1.0</td>
-      <td>-0.0</td>
-      <td>-0.0</td>
-      <td>6.0</td>
-      <td>-0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>5.0</td>
+      <td>0.0</td>
     </tr>
   </tbody>
 </table>

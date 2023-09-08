@@ -21,10 +21,12 @@
         <script src="../../_static/sphinx_highlight.js"></script>
         <script src="../../_static/clipboard.min.js"></script>
         <script src="../../_static/copybutton.js"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Model Parameter" href="../model_para/index.html" />
+    <link rel="next" title="Simulate datasets with multiple lineages" href="mul_lineage.html" />
     <link rel="prev" title="Data Simulation" href="index.html" /> 
 </head>
 
@@ -67,11 +69,13 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">More examples</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../model_para/index.html">Model parameter</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">Data simulation</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Simulate datasets with cell library size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mul_lineage.html">Simulate datasets with multiple lineages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spatial.html">Simulate spatial transcriptomic data</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../model_para/index.html">Model parameter</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../model_select/index.html">Model selection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../model_alter/index.html">Model alteration</a></li>
 </ul>
@@ -101,26 +105,28 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="simulate-datasets-with-cell-library-size">
+  <section class="tex2jax_ignore mathjax_ignore" id="simulate-datasets-with-cell-library-size">
 <h1>Simulate datasets with cell library size<a class="headerlink" href="#simulate-datasets-with-cell-library-size" title="Permalink to this heading"></a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
 <p>In this example, we will show how to use pyscDesign3 to simulate datasets adjusted by cell library size. The purpose of this example is to show that including the library size when modeling the marginal distribution for each gene can help cells in the synthetic data have more similar library sizes as the cells in the real data.</p>
 </section>
-<section id="step-1-import-packages-and-read-in-data">
-<h2>Step 1: Import packages and Read in data<a class="headerlink" href="#step-1-import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
+<section id="import-packages-and-read-in-data">
+<h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
 <section id="import-pacakges">
 <h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Permalink to this heading"></a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
 <span class="kn">import</span> <span class="nn">pyscDesign3</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at D:/Code_env/R-4.3.1
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -128,58 +134,139 @@
 </section>
 <section id="read-in-the-reference-data">
 <h3>Read in the reference data<a class="headerlink" href="#read-in-the-reference-data" title="Permalink to this heading"></a></h3>
-<p>The raw data is from the R package <code class="docutils literal notranslate"><span class="pre">DuoClustering2018</span></code> which contain a set of datasets with true cell type labels.</p>
+<p>The raw data is from the R package <code class="docutils literal notranslate"><span class="pre">DuoClustering2018</span></code> which contain a set of datasets with true cell type labels and converted to <code class="docutils literal notranslate"><span class="pre">.h5ad</span></code> file using the R package <code class="docutils literal notranslate"><span class="pre">sceasy</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sce</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;a&quot;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="s2">&quot;b&quot;</span><span class="p">:[</span><span class="s2">&quot;x&quot;</span><span class="p">,</span><span class="s2">&quot;y&quot;</span><span class="p">,</span><span class="s2">&quot;z&quot;</span><span class="p">]})</span>
-<span class="n">sce</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/Zhengmix4eq.h5ad&quot;</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;phenoid&quot;</span><span class="p">]</span>
+<span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We then calculate the library size for each cell.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_qc_metrics</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;total_counts&#39;</span><span class="p">:</span><span class="s1">&#39;library&#39;</span><span class="p">},</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>a</th>
-      <th>b</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>1</td>
-      <td>x</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>2</td>
-      <td>y</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>3</td>
-      <td>z</td>
-    </tr>
-  </tbody>
-</table>
-</div></div></div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 3555 × 1556
+    obs: &#39;barcode&#39;, &#39;phenoid&#39;, &#39;total_features&#39;, &#39;log10_total_features&#39;, &#39;library&#39;, &#39;log10_total_counts&#39;, &#39;pct_counts_top_50_features&#39;, &#39;pct_counts_top_100_features&#39;, &#39;pct_counts_top_200_features&#39;, &#39;pct_counts_top_500_features&#39;, &#39;sizeFactor&#39;, &#39;cell_type&#39;, &#39;n_genes_by_counts&#39;, &#39;log1p_n_genes_by_counts&#39;, &#39;log1p_total_counts&#39;, &#39;pct_counts_in_top_50_genes&#39;, &#39;pct_counts_in_top_100_genes&#39;, &#39;pct_counts_in_top_200_genes&#39;, &#39;pct_counts_in_top_500_genes&#39;
+    var: &#39;id&#39;, &#39;symbol&#39;, &#39;mean_counts&#39;, &#39;log10_mean_counts&#39;, &#39;rank_counts&#39;, &#39;n_cells_counts&#39;, &#39;pct_dropout_counts&#39;, &#39;total_counts&#39;, &#39;log10_total_counts&#39;, &#39;n_cells_by_counts&#39;, &#39;log1p_mean_counts&#39;, &#39;pct_dropout_by_counts&#39;, &#39;log1p_total_counts&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_tsne&#39;
+    layers: &#39;logcounts&#39;, &#39;normcounts&#39;
+</pre></div>
+</div>
+</div>
 </div>
 </section>
+</section>
+<section id="simulation">
+<h2>Simulation<a class="headerlink" href="#simulation" title="Permalink to this heading"></a></h2>
+<p>Then, we set the mu_formula as cell_type and offsetted by the cell library size to generate new dataset adjusted by library size. The library size is log-transformed because the link function for <span class="math notranslate nohighlight">\(\mu\)</span> of the negative binomial distribution in GAMLSS is <strong>log</strong>.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">)</span>
+<span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">simu_res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span>    
+    <span class="n">anndata</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span>
+    <span class="n">default_assay_name</span> <span class="o">=</span> <span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">other_covariates</span> <span class="o">=</span> <span class="s2">&quot;library&quot;</span><span class="p">,</span>
+    <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type + offset(log(library))&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+    <span class="n">important_feature</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we can construct new data using the simulated count matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">simu_res</span><span class="p">[</span><span class="s2">&quot;new_count&quot;</span><span class="p">],</span> <span class="n">obs</span><span class="o">=</span><span class="n">simu_res</span><span class="p">[</span><span class="s2">&quot;new_covariate&quot;</span><span class="p">])</span>
+<span class="n">simu_data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">simu_data</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this heading"></a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
+    <span class="n">ref_anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">anndata_list</span><span class="o">=</span><span class="n">simu_data</span><span class="p">,</span>
+    <span class="n">name_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">,</span> <span class="s2">&quot;scDesign3&quot;</span><span class="p">],</span>
+    <span class="n">assay_use</span><span class="o">=</span><span class="s2">&quot;log_transformed&quot;</span><span class="p">,</span>
+    <span class="n">if_plot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">color_by</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">n_pc</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">point_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">[</span><span class="s2">&quot;p_umap&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/7bdcea6d86c7683dcc2c310ee69dd331dbd02f7542753ef75b3486f0b328bd9a.png" src="../../_images/7bdcea6d86c7683dcc2c310ee69dd331dbd02f7542753ef75b3486f0b328bd9a.png" />
+</div>
+</div>
+<p>The violin plot below shows the cells in simulated dataset have similar library size as the cells in the reference dataset.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_qc_metrics</span><span class="p">(</span><span class="n">simu_data</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">simu_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;total_counts&#39;</span><span class="p">:</span><span class="s1">&#39;simu_library&#39;</span><span class="p">},</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;library&quot;</span><span class="p">],</span><span class="n">simu_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;simu_library&quot;</span><span class="p">]],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># plot</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Method&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;library&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">ticks</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">,</span><span class="s2">&quot;scDesign3&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../../_images/8245d3cab4d6b0aa8b4fadb4a500eea7ee830a8018808e330150c0b642baed67.png" src="../../_images/8245d3cab4d6b0aa8b4fadb4a500eea7ee830a8018808e330150c0b642baed67.png" />
+</div>
+</div>
 </section>
 </section>
 
@@ -188,7 +275,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="Data Simulation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../model_para/index.html" class="btn btn-neutral float-right" title="Model Parameter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mul_lineage.html" class="btn btn-neutral float-right" title="Simulate datasets with multiple lineages" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

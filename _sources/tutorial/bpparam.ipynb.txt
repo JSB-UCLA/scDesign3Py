@@ -68,7 +68,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "bpparam = pyscDesign3.get_bpparam(mode=\"SnowParam\", show=True, stop_on_error=False)"
+    "bpparam = pyscDesign3.get_bpparam(mode=\"MulticoreParam\", show=True, stop_on_error=False)"
    ]
   },
   {
@@ -109,8 +109,8 @@
    "outputs": [],
    "source": [
     "# create the instance\n",
-    "test1 = pyscDesign3.scDesign3(n_cores=1, parallelization=\"bpmapply\", bpparam=bpparam, return_py=False)\n",
-    "test2 = pyscDesign3.scDesign3(n_cores=4, parallelization=\"bpmapply\", bpparam=bpparam, return_py=False)\n",
+    "test1 = pyscDesign3.scDesign3(n_cores=2, parallelization=\"bpmapply\", bpparam=bpparam, return_py=False)\n",
+    "test2 = pyscDesign3.scDesign3(n_cores=6, parallelization=\"bpmapply\", bpparam=bpparam, return_py=False)\n",
     "\n",
     "# construct data\n",
     "test1.construct_data(\n",
@@ -133,7 +133,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Fit marginal using 1 core"
+    "Fit marginal using 2 core"
    ]
   },
   {
@@ -150,14 +150,14 @@
     "    usebam=False,\n",
     ")\n",
     "end = time.time()\n",
-    "print(\"Total time cost when using 1 core is {:.2f} sec\".format(end-start))"
+    "print(\"Total time cost when using 2 core is {:.2f} sec\".format(end-start))"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Fit marginal using 4 cores"
+    "Fit marginal using 6 cores"
    ]
   },
   {
@@ -174,7 +174,7 @@
     "    usebam=False,\n",
     ")\n",
     "end = time.time()\n",
-    "print(\"Total time cost when using 4 cores is {:.2f} sec\".format(end-start))"
+    "print(\"Total time cost when using 6 cores is {:.2f} sec\".format(end-start))"
    ]
   }
  ],
@@ -194,7 +194,7 @@
    "name": "python",
    "nbconvert_exporter": "python",
    "pygments_lexer": "ipython3",
-   "version": "3.9.17"
+   "version": "3.11.5"
   },
   "orig_nbformat": 4
  },

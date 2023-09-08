@@ -17,6 +17,7 @@
       ~scDesign3.fit_marginal
       ~scDesign3.scdesign3
       ~scDesign3.simu_new
+      ~scDesign3.set_r_random_seed
 
    
 

@@ -24,7 +24,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Data Simulation" href="../examples/data_simu/index.html" />
+    <link rel="next" title="Model Parameter" href="../examples/model_para/index.html" />
     <link rel="prev" title="Perform likelihood ratio test" href="lrt.html" /> 
 </head>
 
@@ -67,8 +67,8 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">More examples</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../examples/data_simu/index.html">Data simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/data_simu/index.html">Data simulation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/model_select/index.html">Model selection</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/model_alter/index.html">Model alteration</a></li>
 </ul>
@@ -97,7 +97,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="plot-for-visualization">
+  <section class="tex2jax_ignore mathjax_ignore" id="plot-for-visualization">
 <h1>Plot for visualization<a class="headerlink" href="#plot-for-visualization" title="Permalink to this heading"></a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
@@ -118,7 +118,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at D:/Code_env/R-4.3.1
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -148,11 +148,11 @@
 </section>
 <section id="step-2-use-scdesign3-class-to-simulate-reads-for-comparison">
 <h2>Step 2: Use <code class="docutils literal notranslate"><span class="pre">scDesign3</span></code> class to simulate reads for comparison<a class="headerlink" href="#step-2-use-scdesign3-class-to-simulate-reads-for-comparison" title="Permalink to this heading"></a></h2>
-<div class="cell tag_hide-output docutils container">
-<div class="cell_input above-output-prompt docutils container">
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the instance and set the parallel method</span>
-<span class="n">bpparam</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;SnowParam&quot;</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span><span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span><span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 
 <span class="c1"># all-in-one simulation</span>
 <span class="n">simu_res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span>
@@ -170,312 +170,6 @@
 </pre></div>
 </div>
 </div>
-<details class="hide below-input">
-<summary aria-label="Toggle hidden content">
-<span class="collapsed">Show code cell output</span>
-<span class="expanded">Hide code cell output</span>
-</summary>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Input Data Construction Start
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Input Data Construction End
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Start Marginal Fitting
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Marginal Fitting End
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Start Copula Fitting
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Convert Residuals to Multivariate Gaussian
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: 载入需要的程辑包：SingleCellExperiment
-载入需要的程辑包：SummarizedExperiment
-载入需要的程辑包：MatrixGenerics
-载入需要的程辑包：matrixStats
-
-载入程辑包：&#39;MatrixGenerics&#39;
-
-The following objects are masked from &#39;package:matrixStats&#39;:
-
-    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
-    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
-    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
-    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
-    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
-    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
-    colWeightedMeans, colWeightedMedians, colWeightedSds,
-    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
-    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
-    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
-    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
-    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
-    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
-    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
-    rowWeightedSds, rowWeightedVars
-
-载入需要的程辑包：GenomicRanges
-载入需要的程辑包：stats4
-载入需要的程辑包：BiocGenerics
-
-载入程辑包：&#39;BiocGenerics&#39;
-
-The following objects are masked from &#39;package:stats&#39;:
-
-    IQR, mad, sd, var, xtabs
-
-The following objects are masked from &#39;package:base&#39;:
-
-    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
-    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
-    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
-    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
-    Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,
-    table, tapply, union, unique, unsplit, which.max, which.min
-
-载入需要的程辑包：S4Vectors
-
-载入程辑包：&#39;S4Vectors&#39;
-
-The following object is masked from &#39;package:utils&#39;:
-
-    findMatches
-
-The following objects are masked from &#39;package:base&#39;:
-
-    expand.grid, I, unname
-
-载入需要的程辑包：IRanges
-
-载入程辑包：&#39;IRanges&#39;
-
-The following object is masked from &#39;package:grDevices&#39;:
-
-    windows
-
-载入需要的程辑包：GenomeInfoDb
-载入需要的程辑包：Biobase
-Welcome to Bioconductor
-
-    Vignettes contain introductory material; view with
-    &#39;browseVignettes()&#39;. To cite Bioconductor, see
-    &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.
-
-
-载入程辑包：&#39;Biobase&#39;
-
-The following object is masked from &#39;package:MatrixGenerics&#39;:
-
-    rowMedians
-
-The following objects are masked from &#39;package:matrixStats&#39;:
-
-    anyMissing, rowMedians
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: 载入需要的程辑包：SingleCellExperiment
-载入需要的程辑包：SummarizedExperiment
-载入需要的程辑包：MatrixGenerics
-载入需要的程辑包：matrixStats
-
-载入程辑包：&#39;MatrixGenerics&#39;
-
-The following objects are masked from &#39;package:matrixStats&#39;:
-
-    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
-    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
-    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
-    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
-    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
-    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
-    colWeightedMeans, colWeightedMedians, colWeightedSds,
-    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
-    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
-    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
-    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
-    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
-    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
-    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
-    rowWeightedSds, rowWeightedVars
-
-载入需要的程辑包：GenomicRanges
-载入需要的程辑包：stats4
-载入需要的程辑包：BiocGenerics
-
-载入程辑包：&#39;BiocGenerics&#39;
-
-The following objects are masked from &#39;package:stats&#39;:
-
-    IQR, mad, sd, var, xtabs
-
-The following objects are masked from &#39;package:base&#39;:
-
-    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
-    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
-    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
-    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
-    Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,
-    table, tapply, union, unique, unsplit, which.max, which.min
-
-载入需要的程辑包：S4Vectors
-
-载入程辑包：&#39;S4Vectors&#39;
-
-The following object is masked from &#39;package:utils&#39;:
-
-    findMatches
-
-The following objects are masked from &#39;package:base&#39;:
-
-    expand.grid, I, unname
-
-载入需要的程辑包：IRanges
-
-载入程辑包：&#39;IRanges&#39;
-
-The following object is masked from &#39;package:grDevices&#39;:
-
-    windows
-
-载入需要的程辑包：GenomeInfoDb
-载入需要的程辑包：Biobase
-Welcome to Bioconductor
-
-    Vignettes contain introductory material; view with
-    &#39;browseVignettes()&#39;. To cite Bioconductor, see
-    &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.
-
-
-载入程辑包：&#39;Biobase&#39;
-
-The following object is masked from &#39;package:MatrixGenerics&#39;:
-
-    rowMedians
-
-The following objects are masked from &#39;package:matrixStats&#39;:
-
-    anyMissing, rowMedians
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: 载入需要的程辑包：SingleCellExperiment
-载入需要的程辑包：SummarizedExperiment
-载入需要的程辑包：MatrixGenerics
-载入需要的程辑包：matrixStats
-
-载入程辑包：&#39;MatrixGenerics&#39;
-
-The following objects are masked from &#39;package:matrixStats&#39;:
-
-    colAlls, colAnyNAs, colAnys, colAvgsPerRowSet, colCollapse,
-    colCounts, colCummaxs, colCummins, colCumprods, colCumsums,
-    colDiffs, colIQRDiffs, colIQRs, colLogSumExps, colMadDiffs,
-    colMads, colMaxs, colMeans2, colMedians, colMins, colOrderStats,
-    colProds, colQuantiles, colRanges, colRanks, colSdDiffs, colSds,
-    colSums2, colTabulates, colVarDiffs, colVars, colWeightedMads,
-    colWeightedMeans, colWeightedMedians, colWeightedSds,
-    colWeightedVars, rowAlls, rowAnyNAs, rowAnys, rowAvgsPerColSet,
-    rowCollapse, rowCounts, rowCummaxs, rowCummins, rowCumprods,
-    rowCumsums, rowDiffs, rowIQRDiffs, rowIQRs, rowLogSumExps,
-    rowMadDiffs, rowMads, rowMaxs, rowMeans2, rowMedians, rowMins,
-    rowOrderStats, rowProds, rowQuantiles, rowRanges, rowRanks,
-    rowSdDiffs, rowSds, rowSums2, rowTabulates, rowVarDiffs, rowVars,
-    rowWeightedMads, rowWeightedMeans, rowWeightedMedians,
-    rowWeightedSds, rowWeightedVars
-
-载入需要的程辑包：GenomicRanges
-载入需要的程辑包：stats4
-载入需要的程辑包：BiocGenerics
-
-载入程辑包：&#39;BiocGenerics&#39;
-
-The following objects are masked from &#39;package:stats&#39;:
-
-    IQR, mad, sd, var, xtabs
-
-The following objects are masked from &#39;package:base&#39;:
-
-    anyDuplicated, aperm, append, as.data.frame, basename, cbind,
-    colnames, dirname, do.call, duplicated, eval, evalq, Filter, Find,
-    get, grep, grepl, intersect, is.unsorted, lapply, Map, mapply,
-    match, mget, order, paste, pmax, pmax.int, pmin, pmin.int,
-    Position, rank, rbind, Reduce, rownames, sapply, setdiff, sort,
-    table, tapply, union, unique, unsplit, which.max, which.min
-
-载入需要的程辑包：S4Vectors
-
-载入程辑包：&#39;S4Vectors&#39;
-
-The following object is masked from &#39;package:utils&#39;:
-
-    findMatches
-
-The following objects are masked from &#39;package:base&#39;:
-
-    expand.grid, I, unname
-
-载入需要的程辑包：IRanges
-
-载入程辑包：&#39;IRanges&#39;
-
-The following object is masked from &#39;package:grDevices&#39;:
-
-    windows
-
-载入需要的程辑包：GenomeInfoDb
-载入需要的程辑包：Biobase
-Welcome to Bioconductor
-
-    Vignettes contain introductory material; view with
-    &#39;browseVignettes()&#39;. To cite Bioconductor, see
-    &#39;citation(&quot;Biobase&quot;)&#39;, and for packages &#39;citation(&quot;pkgname&quot;)&#39;.
-
-
-载入程辑包：&#39;Biobase&#39;
-
-The following object is masked from &#39;package:MatrixGenerics&#39;:
-
-    rowMedians
-
-The following objects are masked from &#39;package:matrixStats&#39;:
-
-    anyMissing, rowMedians
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Converting End
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Copula group 1 starts
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Copula Fitting End
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Start Parameter Extraction
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Parameter
-Extraction End
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Start Generate New Data
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Use Copula to sample a multivariate quantile matrix
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Sample Copula group 1 starts
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: New Data Generating End
-</pre></div>
-</div>
-</div>
-</details>
 </div>
 </section>
 <section id="step-3-use-the-simulated-counts-to-construct-the-new-anndata-anndata-object">
@@ -520,7 +214,7 @@ Extraction End
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2913f64cecdb86a8bde3f206adcff358f292dfe833c46aa2c7cb8c57a5ec49bb.png" src="../_images/2913f64cecdb86a8bde3f206adcff358f292dfe833c46aa2c7cb8c57a5ec49bb.png" />
+<img alt="../_images/5765e27d4e5d7518ee641e76bebbc057710640739876754e9be4cd8779017e1b.png" src="../_images/5765e27d4e5d7518ee641e76bebbc057710640739876754e9be4cd8779017e1b.png" />
 </div>
 </div>
 <p>PCA plot</p>
@@ -531,7 +225,7 @@ Extraction End
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/6b262c6e6c89056a0e703c42fae0bc19b5eec0f88cc383694252f332d32c4e92.png" src="../_images/6b262c6e6c89056a0e703c42fae0bc19b5eec0f88cc383694252f332d32c4e92.png" />
+<img alt="../_images/a3514f27a0abd13ab0ba8d8c1b433de0174c899477e1ede97f0d2562f2a78912.png" src="../_images/a3514f27a0abd13ab0ba8d8c1b433de0174c899477e1ede97f0d2562f2a78912.png" />
 </div>
 </div>
 </section>
@@ -593,46 +287,46 @@ Extraction End
       <th>1</th>
       <td>Reference</td>
       <td>0.677236</td>
-      <td>-2.303983</td>
-      <td>-2.020007</td>
-      <td>-1.163920</td>
-      <td>2.828052</td>
+      <td>2.303983</td>
+      <td>2.020007</td>
+      <td>0.194286</td>
+      <td>-3.162657</td>
     </tr>
     <tr>
       <th>2</th>
       <td>Reference</td>
       <td>0.431569</td>
-      <td>2.346135</td>
-      <td>-1.611974</td>
-      <td>-3.410640</td>
-      <td>-1.855024</td>
+      <td>-2.346135</td>
+      <td>1.611974</td>
+      <td>4.608735</td>
+      <td>2.313833</td>
     </tr>
     <tr>
       <th>3</th>
       <td>Reference</td>
       <td>0.749373</td>
-      <td>-3.688469</td>
-      <td>-0.252404</td>
-      <td>0.260395</td>
-      <td>4.697861</td>
+      <td>3.688469</td>
+      <td>0.252404</td>
+      <td>-1.265807</td>
+      <td>-5.046228</td>
     </tr>
     <tr>
       <th>4</th>
       <td>Reference</td>
       <td>0.925441</td>
-      <td>-6.045197</td>
-      <td>2.888025</td>
-      <td>3.459597</td>
-      <td>5.232064</td>
+      <td>6.045197</td>
+      <td>-2.888025</td>
+      <td>-4.568501</td>
+      <td>-5.640080</td>
     </tr>
     <tr>
       <th>5</th>
       <td>Reference</td>
       <td>0.380345</td>
-      <td>3.650479</td>
-      <td>-1.347464</td>
-      <td>-2.377468</td>
-      <td>-1.830252</td>
+      <td>-3.650479</td>
+      <td>1.347464</td>
+      <td>1.760515</td>
+      <td>1.599070</td>
     </tr>
   </tbody>
 </table>
@@ -646,7 +340,7 @@ Extraction End
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="lrt.html" class="btn btn-neutral float-left" title="Perform likelihood ratio test" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../examples/data_simu/index.html" class="btn btn-neutral float-right" title="Data Simulation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../examples/model_para/index.html" class="btn btn-neutral float-right" title="Model Parameter" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
