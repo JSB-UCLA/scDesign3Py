@@ -144,11 +144,11 @@
 </div>
 </div>
 </div>
-<p>For demonstration purpose, we use the <code class="docutils literal notranslate"><span class="pre">Zhengmix4eq</span></code> dataset in the package with top 30 highly variable genes and the corresponding k-means clustering results with <span class="math notranslate nohighlight">\(k = 2,5,8,10\)</span>.</p>
+<p>For demonstration purpose, we use the <code class="docutils literal notranslate"><span class="pre">Zhengmix4eq</span></code> dataset in the package with top 30 highly variable genes and the corresponding k-means clustering results with <span class="math notranslate nohighlight">\(k = 2,5,7,10\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">kmeans_res</span> <span class="o">=</span> <span class="n">cluster_res</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;k&quot;</span><span class="p">)</span>
-<span class="n">kmeans_res</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">kmeans_res</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">10</span><span class="p">]}</span>
+<span class="n">kmeans_res</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">kmeans_res</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">]}</span>
 <span class="n">ncell</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">n_obs</span>
 <span class="n">ngene</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="n">ntrain</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">ncell</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span>
@@ -190,104 +190,25 @@
 </div>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="n">value</span> <span class="o">=</span> <span class="n">kmeans_res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-<span class="n">tmp</span> <span class="o">=</span> <span class="n">value</span><span class="p">[[</span><span class="s2">&quot;cell&quot;</span><span class="p">,</span><span class="s2">&quot;cluster&quot;</span><span class="p">]]</span>
-<span class="n">tmp</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;cell&quot;</span><span class="p">]</span>
-<span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="n">kmeans_res</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">value</span><span class="p">[[</span><span class="s2">&quot;cell&quot;</span><span class="p">,</span><span class="s2">&quot;cluster&quot;</span><span class="p">]]</span>
+    <span class="n">tmp</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;cell&quot;</span><span class="p">]</span>
+    <span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
 
-<span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
-<span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span><span class="n">anndata</span><span class="o">=</span><span class="n">train_data</span><span class="p">,</span> 
-                    <span class="n">celltype</span> <span class="o">=</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">,</span>
-                    <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> 
-                    <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> 
-                    <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> 
-                    <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> 
-                    <span class="n">default_assay_name</span> <span class="o">=</span> <span class="s2">&quot;counts&quot;</span><span class="p">,</span> 
-                    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-                    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span><span class="n">anndata</span><span class="o">=</span><span class="n">train_data</span><span class="p">,</span> 
+                        <span class="n">celltype</span> <span class="o">=</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">,</span>
+                        <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> 
+                        <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> 
+                        <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> 
+                        <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> 
+                        <span class="n">default_assay_name</span> <span class="o">=</span> <span class="s2">&quot;counts&quot;</span><span class="p">,</span> 
+                        <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+                        <span class="n">usebam</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 
-<span class="n">simu_res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_remove-output docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="n">value</span> <span class="o">=</span> <span class="n">kmeans_res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-<span class="n">tmp</span> <span class="o">=</span> <span class="n">value</span><span class="p">[[</span><span class="s2">&quot;cell&quot;</span><span class="p">,</span><span class="s2">&quot;cluster&quot;</span><span class="p">]]</span>
-<span class="n">tmp</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;cell&quot;</span><span class="p">]</span>
-<span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
-
-<span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
-<span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span><span class="n">anndata</span><span class="o">=</span><span class="n">train_data</span><span class="p">,</span> 
-                    <span class="n">celltype</span> <span class="o">=</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">,</span>
-                    <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> 
-                    <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> 
-                    <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> 
-                    <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> 
-                    <span class="n">default_assay_name</span> <span class="o">=</span> <span class="s2">&quot;counts&quot;</span><span class="p">,</span> 
-                    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-                    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-
-<span class="n">simu_res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_remove-output docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="mi">8</span>
-<span class="n">value</span> <span class="o">=</span> <span class="n">kmeans_res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-<span class="n">tmp</span> <span class="o">=</span> <span class="n">value</span><span class="p">[[</span><span class="s2">&quot;cell&quot;</span><span class="p">,</span><span class="s2">&quot;cluster&quot;</span><span class="p">]]</span>
-<span class="n">tmp</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;cell&quot;</span><span class="p">]</span>
-<span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
-
-<span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
-<span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span><span class="n">anndata</span><span class="o">=</span><span class="n">train_data</span><span class="p">,</span> 
-                    <span class="n">celltype</span> <span class="o">=</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">,</span>
-                    <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> 
-                    <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> 
-                    <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> 
-                    <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> 
-                    <span class="n">default_assay_name</span> <span class="o">=</span> <span class="s2">&quot;counts&quot;</span><span class="p">,</span> 
-                    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-                    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-
-<span class="n">simu_res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell tag_remove-output docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">key</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">value</span> <span class="o">=</span> <span class="n">kmeans_res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
-<span class="n">tmp</span> <span class="o">=</span> <span class="n">value</span><span class="p">[[</span><span class="s2">&quot;cell&quot;</span><span class="p">,</span><span class="s2">&quot;cluster&quot;</span><span class="p">]]</span>
-<span class="n">tmp</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="s2">&quot;cell&quot;</span><span class="p">]</span>
-<span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="s2">&quot;cluster&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
-<span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">train_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;str&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;category&quot;</span><span class="p">)</span>
-
-<span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
-<span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
-<span class="n">res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span><span class="n">anndata</span><span class="o">=</span><span class="n">train_data</span><span class="p">,</span> 
-                    <span class="n">celltype</span> <span class="o">=</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">,</span>
-                    <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> 
-                    <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> 
-                    <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> 
-                    <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> 
-                    <span class="n">default_assay_name</span> <span class="o">=</span> <span class="s2">&quot;counts&quot;</span><span class="p">,</span> 
-                    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-                    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
-
-<span class="n">simu_res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span>
+    <span class="n">simu_res</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span>
 </pre></div>
 </div>
 </div>
@@ -295,7 +216,7 @@
 </section>
 <section id="visualization">
 <h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this heading"></a></h2>
-<p>After the simulations, we can check the BIC provided by our package and the calculated ARI to evaluate k-means clustering qualities.</p>
+<p>After the simulations, we can check the BIC and the calculated ARI to evaluate k-means clustering qualities.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -319,6 +240,7 @@
 </div>
 </div>
 </div>
+<p><img alt="res" src="../../_images/out.png" /></p>
 </section>
 </section>
 

@@ -72,7 +72,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "For demonstration purpose, we use the `Zhengmix4eq` dataset in the package with top 30 highly variable genes and the corresponding k-means clustering results with $k = 2,5,8,10$."
+    "For demonstration purpose, we use the `Zhengmix4eq` dataset in the package with top 30 highly variable genes and the corresponding k-means clustering results with $k = 2,5,7,10$."
    ]
   },
   {
@@ -82,7 +82,7 @@
    "outputs": [],
    "source": [
     "kmeans_res = cluster_res.groupby(\"k\")\n",
-    "kmeans_res = {k: v for k,v in kmeans_res if k in [2,5,8,10]}\n",
+    "kmeans_res = {k: v for k,v in kmeans_res if k in [2,5,7,10]}\n",
     "ncell = data.n_obs\n",
     "ngene = 30\n",
     "ntrain = int(ncell/5)\n",
@@ -126,122 +126,25 @@
    },
    "outputs": [],
    "source": [
-    "key = 2\n",
-    "value = kmeans_res[key]\n",
-    "tmp = value[[\"cell\",\"cluster\"]]\n",
-    "tmp.index = tmp[\"cell\"]\n",
-    "train_data.obs[\"cell_type\"] = tmp.loc[train_data.obs.index,\"cluster\"].tolist()\n",
-    "train_data.obs[\"cell_type\"] = train_data.obs[\"cell_type\"].astype(\"int\").astype(\"str\").astype(\"category\")\n",
+    "for key,value in kmeans_res.items():\n",
+    "    tmp = value[[\"cell\",\"cluster\"]]\n",
+    "    tmp.index = tmp[\"cell\"]\n",
+    "    train_data.obs[\"cell_type\"] = tmp.loc[train_data.obs.index,\"cluster\"].tolist()\n",
+    "    train_data.obs[\"cell_type\"] = train_data.obs[\"cell_type\"].astype(\"int\").astype(\"str\").astype(\"category\")\n",
     "\n",
-    "test = pyscDesign3.scDesign3(n_cores=6)\n",
-    "test.set_r_random_seed(123)\n",
-    "res = test.scdesign3(anndata=train_data, \n",
-    "                    celltype = 'cell_type',\n",
-    "                    corr_formula = \"1\", \n",
-    "                    mu_formula = \"cell_type\", \n",
-    "                    sigma_formula = \"cell_type\", \n",
-    "                    copula = \"gaussian\", \n",
-    "                    default_assay_name = \"counts\", \n",
-    "                    family_use = \"nb\",\n",
-    "                    usebam = True)\n",
+    "    test = pyscDesign3.scDesign3(n_cores=6)\n",
+    "    test.set_r_random_seed(123)\n",
+    "    res = test.scdesign3(anndata=train_data, \n",
+    "                        celltype = 'cell_type',\n",
+    "                        corr_formula = \"1\", \n",
+    "                        mu_formula = \"cell_type\", \n",
+    "                        sigma_formula = \"cell_type\", \n",
+    "                        copula = \"gaussian\", \n",
+    "                        default_assay_name = \"counts\", \n",
+    "                        family_use = \"nb\",\n",
+    "                        usebam = True)\n",
     "\n",
-    "simu_res[key] = res"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "tags": [
-     "remove-output"
-    ]
-   },
-   "outputs": [],
-   "source": [
-    "key = 5\n",
-    "value = kmeans_res[key]\n",
-    "tmp = value[[\"cell\",\"cluster\"]]\n",
-    "tmp.index = tmp[\"cell\"]\n",
-    "train_data.obs[\"cell_type\"] = tmp.loc[train_data.obs.index,\"cluster\"].tolist()\n",
-    "train_data.obs[\"cell_type\"] = train_data.obs[\"cell_type\"].astype(\"int\").astype(\"str\").astype(\"category\")\n",
-    "\n",
-    "test = pyscDesign3.scDesign3(n_cores=6)\n",
-    "test.set_r_random_seed(123)\n",
-    "res = test.scdesign3(anndata=train_data, \n",
-    "                    celltype = 'cell_type',\n",
-    "                    corr_formula = \"1\", \n",
-    "                    mu_formula = \"cell_type\", \n",
-    "                    sigma_formula = \"cell_type\", \n",
-    "                    copula = \"gaussian\", \n",
-    "                    default_assay_name = \"counts\", \n",
-    "                    family_use = \"nb\",\n",
-    "                    usebam = True)\n",
-    "\n",
-    "simu_res[key] = res"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "tags": [
-     "remove-output"
-    ]
-   },
-   "outputs": [],
-   "source": [
-    "key = 8\n",
-    "value = kmeans_res[key]\n",
-    "tmp = value[[\"cell\",\"cluster\"]]\n",
-    "tmp.index = tmp[\"cell\"]\n",
-    "train_data.obs[\"cell_type\"] = tmp.loc[train_data.obs.index,\"cluster\"].tolist()\n",
-    "train_data.obs[\"cell_type\"] = train_data.obs[\"cell_type\"].astype(\"int\").astype(\"str\").astype(\"category\")\n",
-    "\n",
-    "test = pyscDesign3.scDesign3(n_cores=6)\n",
-    "test.set_r_random_seed(123)\n",
-    "res = test.scdesign3(anndata=train_data, \n",
-    "                    celltype = 'cell_type',\n",
-    "                    corr_formula = \"1\", \n",
-    "                    mu_formula = \"cell_type\", \n",
-    "                    sigma_formula = \"cell_type\", \n",
-    "                    copula = \"gaussian\", \n",
-    "                    default_assay_name = \"counts\", \n",
-    "                    family_use = \"nb\",\n",
-    "                    usebam = True)\n",
-    "\n",
-    "simu_res[key] = res"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "tags": [
-     "remove-output"
-    ]
-   },
-   "outputs": [],
-   "source": [
-    "key = 10\n",
-    "value = kmeans_res[key]\n",
-    "tmp = value[[\"cell\",\"cluster\"]]\n",
-    "tmp.index = tmp[\"cell\"]\n",
-    "train_data.obs[\"cell_type\"] = tmp.loc[train_data.obs.index,\"cluster\"].tolist()\n",
-    "train_data.obs[\"cell_type\"] = train_data.obs[\"cell_type\"].astype(\"int\").astype(\"str\").astype(\"category\")\n",
-    "\n",
-    "test = pyscDesign3.scDesign3(n_cores=6)\n",
-    "test.set_r_random_seed(123)\n",
-    "res = test.scdesign3(anndata=train_data, \n",
-    "                    celltype = 'cell_type',\n",
-    "                    corr_formula = \"1\", \n",
-    "                    mu_formula = \"cell_type\", \n",
-    "                    sigma_formula = \"cell_type\", \n",
-    "                    copula = \"gaussian\", \n",
-    "                    default_assay_name = \"counts\", \n",
-    "                    family_use = \"nb\",\n",
-    "                    usebam = True)\n",
-    "\n",
-    "simu_res[key] = res"
+    "    simu_res[key] = res"
    ]
   },
   {
@@ -250,7 +153,7 @@
    "source": [
     "## Visualization\n",
     "\n",
-    "After the simulations, we can check the BIC provided by our package and the calculated ARI to evaluate k-means clustering qualities."
+    "After the simulations, we can check the BIC and the calculated ARI to evaluate k-means clustering qualities."
    ]
   },
   {
@@ -280,6 +183,13 @@
     "plt.ylabel('scDesign3 BIC')\n",
     "plt.text(x=0.25,y=25500,s=\"Spearman Correlation: %.2f\" % spearman_corr)\n",
     "plt.show()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "![res](out.png)"
    ]
   }
  ],

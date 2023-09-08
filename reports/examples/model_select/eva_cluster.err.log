@@ -1,4 +1,17 @@
 Traceback (most recent call last):
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 778, in _async_poll_for_reply
+    msg = await ensure_async(self.kc.shell_channel.get_msg(timeout=new_timeout))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/jupyter_core/utils/__init__.py", line 182, in ensure_async
+    result = await obj
+             ^^^^^^^^^
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/jupyter_client/channels.py", line 315, in get_msg
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
   File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
     executenb(
   File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 1305, in execute
@@ -12,156 +25,20 @@ Traceback (most recent call last):
            ^^^^^^^^^^^^^^^
   File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 705, in async_execute
     await self.async_execute_cell(
-  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 1058, in async_execute_cell
-    await self._check_raise_for_error(cell, cell_index, exec_reply)
-  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 914, in _check_raise_for_error
-    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
-nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
-------------------
-key = 2
-value = kmeans_res[key]
-tmp = value[["cell","cluster"]]
-tmp.index = tmp["cell"]
-train_data.obs["cell_type"] = tmp.loc[train_data.obs.index,"cluster"].tolist()
-train_data.obs["cell_type"] = train_data.obs["cell_type"].astype("int").astype("str").astype("category")
-
-test = pyscDesign3.scDesign3(n_cores=6)
-test.set_r_random_seed(123)
-res = test.scdesign3(anndata=train_data, 
-                    celltype = 'cell_type',
-                    corr_formula = "1", 
-                    mu_formula = "cell_type", 
-                    sigma_formula = "cell_type", 
-                    copula = "gaussian", 
-                    default_assay_name = "counts", 
-                    family_use = "nb",
-                    usebam = True)
-
-simu_res[key] = res
-------------------
-
------ stderr -----
-/tmp/ipykernel_311629/2325755464.py:5: ImplicitModificationWarning: Trying to modify attribute `.obs` of view, initializing view as actual.
-  train_data.obs["cell_type"] = tmp.loc[train_data.obs.index,"cluster"].tolist()
------ stderr -----
-R[write to console]: Input Data Construction Start
------ stderr -----
-R[write to console]: Input Data Construction End
------ stderr -----
-R[write to console]: Start Marginal Fitting
------ stderr -----
-R[write to console]: Marginal Fitting End
------ stderr -----
-R[write to console]: Start Copula Fitting
------ stderr -----
-R[write to console]: Convert Residuals to Multivariate Gaussian
------ stderr -----
-R[write to console]: Converting End
------ stderr -----
-R[write to console]: Copula group 1 starts
------ stderr -----
-R[write to console]: Copula Fitting End
------ stderr -----
-R[write to console]: Start Parameter Extraction
------ stderr -----
-R[write to console]: Parameter
-Extraction End
------ stderr -----
-R[write to console]: Start Generate New Data
------ stderr -----
-R[write to console]: Use Copula to sample a multivariate quantile matrix
------ stderr -----
-R[write to console]: Sample Copula group 1 starts
------ stderr -----
-R[write to console]:
-------------------
-
-[0;31m---------------------------------------------------------------------------[0m
-[0;31mRRuntimeError[0m                             Traceback (most recent call last)
-Cell [0;32mIn[6], line 10[0m
-[1;32m      8[0m test [38;5;241m=[39m pyscDesign3[38;5;241m.[39mscDesign3(n_cores[38;5;241m=[39m[38;5;241m6[39m)
-[1;32m      9[0m test[38;5;241m.[39mset_r_random_seed([38;5;241m123[39m)
-[0;32m---> 10[0m res [38;5;241m=[39m test[38;5;241m.[39mscdesign3(anndata[38;5;241m=[39mtrain_data, 
-[1;32m     11[0m                     celltype [38;5;241m=[39m [38;5;124m'[39m[38;5;124mcell_type[39m[38;5;124m'[39m,
-[1;32m     12[0m                     corr_formula [38;5;241m=[39m [38;5;124m"[39m[38;5;124m1[39m[38;5;124m"[39m, 
-[1;32m     13[0m                     mu_formula [38;5;241m=[39m [38;5;124m"[39m[38;5;124mcell_type[39m[38;5;124m"[39m, 
-[1;32m     14[0m                     sigma_formula [38;5;241m=[39m [38;5;124m"[39m[38;5;124mcell_type[39m[38;5;124m"[39m, 
-[1;32m     15[0m                     copula [38;5;241m=[39m [38;5;124m"[39m[38;5;124mgaussian[39m[38;5;124m"[39m, 
-[1;32m     16[0m                     default_assay_name [38;5;241m=[39m [38;5;124m"[39m[38;5;124mcounts[39m[38;5;124m"[39m, 
-[1;32m     17[0m                     family_use [38;5;241m=[39m [38;5;124m"[39m[38;5;124mnb[39m[38;5;124m"[39m,
-[1;32m     18[0m                     usebam [38;5;241m=[39m [38;5;28;01mTrue[39;00m)
-[1;32m     20[0m simu_res[key] [38;5;241m=[39m res
-
-File [0;32m~/work/pyscDesign/docs/source/../../pyscDesign3/_utils/_format.py:173[0m, in [0;36m_typecheck.<locals>.decorator.<locals>.wrapper[0;34m(*args, **kwargs)[0m
-[1;32m    171[0m                 right_types [38;5;241m=[39m bound_types[name][38;5;241m.[39m[38;5;18m__name__[39m
-[1;32m    172[0m                 [38;5;28;01mraise[39;00m [38;5;167;01mTypeError[39;00m([38;5;124mf[39m[38;5;124m"[39m[38;5;124mArgument [39m[38;5;132;01m{[39;00mname[38;5;132;01m}[39;00m[38;5;124m must be [39m[38;5;132;01m{[39;00mright_types[38;5;132;01m}[39;00m[38;5;124m"[39m)
-[0;32m--> 173[0m [38;5;28;01mreturn[39;00m func([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs)
-
-File [0;32m~/work/pyscDesign/docs/source/../../pyscDesign3/_core.py:1292[0m, in [0;36mscDesign3.scdesign3[0;34m(self, anndata, corr_formula, mu_formula, sigma_formula, family_use, usebam, assay_use, default_assay_name, celltype, pseudotime, spatial, other_covariates, ncell, copula, empirical_quantile, family_set, important_feature, dt, pseudo_obs, fastmvn, nonnegative, nonzerovar, return_model, n_cores, parallelization, bpparam, trace, return_py)[0m
-[1;32m   1289[0m [38;5;28;01melse[39;00m:
-[1;32m   1290[0m     bpparam [38;5;241m=[39m _bpparamcheck(parallelization, bpparam)
-[0;32m-> 1292[0m [38;5;28mself[39m[38;5;241m.[39mwhole_pipeline_res [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39m_rscdesign[38;5;241m.[39mscdesign3(
-[1;32m   1293[0m     sce[38;5;241m=[39m[38;5;28mself[39m[38;5;241m.[39msce,
-[1;32m   1294[0m     assay_use[38;5;241m=[39m[38;5;28mself[39m[38;5;241m.[39massay_use,
-[1;32m   1295[0m     corr_formula[38;5;241m=[39mcorr_formula,
-[1;32m   1296[0m     celltype[38;5;241m=[39mcelltype,
-[1;32m   1297[0m     pseudotime[38;5;241m=[39mpseudotime,
-[1;32m   1298[0m     spatial[38;5;241m=[39mspatial,
-[1;32m   1299[0m     other_covariates[38;5;241m=[39mother_covariates,
-[1;32m   1300[0m     ncell[38;5;241m=[39mncell,
-[1;32m   1301[0m     mu_formula[38;5;241m=[39mmu_formula,
-[1;32m   1302[0m     sigma_formula[38;5;241m=[39msigma_formula,
-[1;32m   1303[0m     family_use[38;5;241m=[39mfamily_use,
-[1;32m   1304[0m     usebam[38;5;241m=[39musebam,
-[1;32m   1305[0m     empirical_quantile[38;5;241m=[39mempirical_quantile,
-[1;32m   1306[0m     copula[38;5;241m=[39mcopula,
-[1;32m   1307[0m     fastmvn[38;5;241m=[39mfastmvn,
-[1;32m   1308[0m     DT[38;5;241m=[39mdt,
-[1;32m   1309[0m     pseudo_obs[38;5;241m=[39mpseudo_obs,
-[1;32m   1310[0m     family_set[38;5;241m=[39mfamily_set,
-[1;32m   1311[0m     important_feature[38;5;241m=[39mimportant_feature,
-[1;32m   1312[0m     nonnegative[38;5;241m=[39mnonnegative,
-[1;32m   1313[0m     nonzerovar[38;5;241m=[39mnonzerovar,
-[1;32m   1314[0m     return_model[38;5;241m=[39mreturn_model,
-[1;32m   1315[0m     n_cores[38;5;241m=[39mn_cores,
-[1;32m   1316[0m     parallelization[38;5;241m=[39mparallelization,
-[1;32m   1317[0m     BPPARAM[38;5;241m=[39mbpparam,
-[1;32m   1318[0m     trace[38;5;241m=[39mtrace,
-[1;32m   1319[0m )
-[1;32m   1321[0m [38;5;28;01mif[39;00m return_py:
-[1;32m   1322[0m     [38;5;28;01mwith[39;00m [38;5;28mself[39m[38;5;241m.[39m__convert[38;5;241m.[39mcontext():
-
-File [0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/robjects/functions.py:208[0m, in [0;36mSignatureTranslatedFunction.__call__[0;34m(self, *args, **kwargs)[0m
-[1;32m    206[0m         v [38;5;241m=[39m kwargs[38;5;241m.[39mpop(k)
-[1;32m    207[0m         kwargs[r_k] [38;5;241m=[39m v
-[0;32m--> 208[0m [38;5;28;01mreturn[39;00m ([38;5;28msuper[39m(SignatureTranslatedFunction, [38;5;28mself[39m)
-[1;32m    209[0m         [38;5;241m.[39m[38;5;21m__call__[39m([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs))
-
-File [0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/robjects/functions.py:131[0m, in [0;36mFunction.__call__[0;34m(self, *args, **kwargs)[0m
-[1;32m    129[0m     [38;5;28;01melse[39;00m:
-[1;32m    130[0m         new_kwargs[k] [38;5;241m=[39m cv[38;5;241m.[39mpy2rpy(v)
-[0;32m--> 131[0m res [38;5;241m=[39m [38;5;28msuper[39m(Function, [38;5;28mself[39m)[38;5;241m.[39m[38;5;21m__call__[39m([38;5;241m*[39mnew_args, [38;5;241m*[39m[38;5;241m*[39mnew_kwargs)
-[1;32m    132[0m res [38;5;241m=[39m cv[38;5;241m.[39mrpy2py(res)
-[1;32m    133[0m [38;5;28;01mreturn[39;00m res
-
-File [0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/rinterface_lib/conversion.py:45[0m, in [0;36m_cdata_res_to_rinterface.<locals>._[0;34m(*args, **kwargs)[0m
-[1;32m     44[0m [38;5;28;01mdef[39;00m [38;5;21m_[39m([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs):
-[0;32m---> 45[0m     cdata [38;5;241m=[39m function([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs)
-[1;32m     46[0m     [38;5;66;03m# TODO: test cdata is of the expected CType[39;00m
-[1;32m     47[0m     [38;5;28;01mreturn[39;00m _cdata_to_rinterface(cdata)
-
-File [0;32m~/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/rpy2/rinterface.py:817[0m, in [0;36mSexpClosure.__call__[0;34m(self, *args, **kwargs)[0m
-[1;32m    810[0m     res [38;5;241m=[39m rmemory[38;5;241m.[39mprotect(
-[1;32m    811[0m         openrlib[38;5;241m.[39mrlib[38;5;241m.[39mR_tryEval(
-[1;32m    812[0m             call_r,
-[1;32m    813[0m             call_context[38;5;241m.[39m__sexp__[38;5;241m.[39m_cdata,
-[1;32m    814[0m             error_occured)
-[1;32m    815[0m     )
-[1;32m    816[0m     [38;5;28;01mif[39;00m error_occured[[38;5;241m0[39m]:
-[0;32m--> 817[0m         [38;5;28;01mraise[39;00m embedded[38;5;241m.[39mRRuntimeError(_rinterface[38;5;241m.[39m_geterrmessage())
-[1;32m    818[0m [38;5;28;01mreturn[39;00m res
-
-[0;31mRRuntimeError[0m: Error in get(as.character(FUN), mode = "function", envir = envir) : 
-  object 'as.SimpleList' of mode 'function' was not found
-
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 1001, in async_execute_cell
+    exec_reply = await self.task_poll_for_reply
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 802, in _async_poll_for_reply
+    error_on_timeout_execute_reply = await self._async_handle_timeout(timeout, cell)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/anaconda3/envs/pyscdesign/lib/python3.11/site-packages/nbclient/client.py", line 852, in _async_handle_timeout
+    raise CellTimeoutError.error_from_timeout_and_cell(
+nbclient.exceptions.CellTimeoutError: A cell timed out while it was being executed, after 600 seconds.
+The message was: Cell execution timed out.
+Here is a preview of the cell contents:
+-------------------
+['for key,value in kmeans_res.items():', '    tmp = value[["cell","cluster"]]', '    tmp.index = tmp["cell"]', '    train_data.obs["cell_type"] = tmp.loc[train_data.obs.index,"cluster"].tolist()', '    train_data.obs["cell_type"] = train_data.obs["cell_type"].astype("int").astype("str").astype("category")']
+...
+['                        default_assay_name = "counts", ', '                        family_use = "nb",', '                        usebam = True)', '', '    simu_res[key] = res']
+-------------------
 
