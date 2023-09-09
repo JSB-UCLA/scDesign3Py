@@ -3,3 +3,6 @@
 
 # ignore doc local build
 docs/build/
+
+# ignore .egg-info
+pyscDesign3.egg-info/**
