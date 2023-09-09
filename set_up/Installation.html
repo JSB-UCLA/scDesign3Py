@@ -121,13 +121,43 @@
 <p>Even if you forget to install the <strong>scDesign3</strong> <strong>R</strong> package, the interface will try to install <strong>scDesign3</strong> automatically, which may cost extra time when importing the package for the first time. However, if there’s unexpected error occurred during automatical installation, please install the <strong>scDesign3</strong> <strong>R</strong> package manually in <strong>R</strong>.</p>
 </div>
 </section>
-<section id="step-3-install-pyscdesign3">
-<h2>Step 3: Install pyscDesign3<a class="headerlink" href="#step-3-install-pyscdesign3" title="Permalink to this heading"></a></h2>
+<section id="step-3-specify-r-home">
+<h2>Step 3: Specify <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code><a class="headerlink" href="#step-3-specify-r-home" title="Permalink to this heading"></a></h2>
+<p>When installing pyscDesign3, <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> package will be installed using pip. To make sure <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> can be correctly installed, you need to first specify the intended <strong>R</strong> interpreter by add the corresponding <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code> to SYSTEM variable.</p>
+<p>To get <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code>, run the following code in <strong>R</strong> console.</p>
+<div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">R.home</span><span class="p">()</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For linux users</p></li>
+</ul>
+<p><strong>Please specify the <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code> before you install the <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> !</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">R_HOME</span><span class="o">=</span>your_R_HOME_path
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>For windows users</p></li>
+</ul>
+<p>Please specify the <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code> before you use the package and it’s fine to set the SYSTEM variable after installing the <code class="docutils literal notranslate"><span class="pre">rpy2</span></code>.</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">setx</span> <span class="n">R_HOME</span> <span class="s2">&quot;your_R_HOME_path&quot;</span>
+</pre></div>
+</div>
+<p>Or from GUI</p>
+<ol class="arabic simple">
+<li><p>Press <strong>Windows + R</strong> to open the Windows Run prompt.</p></li>
+<li><p>Type in <strong>sysdm.cpl</strong> and click <strong>OK</strong>.</p></li>
+<li><p>Open the <strong>Advanced</strong> tab and click on the <strong>Environment Variables</strong> button in the System Properties window.</p></li>
+<li><p>Click the <strong>New…</strong> button under the user-specific section.</p></li>
+<li><p>Set variable name as <strong>R_HOME</strong> and value as <strong>your_R_HOME_path</strong>.</p></li>
+</ol>
+</section>
+<section id="step-4-install-pyscdesign3">
+<h2>Step 4: Install pyscDesign3<a class="headerlink" href="#step-4-install-pyscdesign3" title="Permalink to this heading"></a></h2>
 <p>To install the latest version from <a class="reference external" href="https://github.com/DILIU899/pyscDesign3">Github</a>,</p>
 <p>run:</p>
 <div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">DILIU899</span><span class="p">/</span><span class="n">pyscDesign3</span><span class="p">.</span><span class="n">git</span>
 <span class="nb">cd </span><span class="n">pyscDesign3</span>
-<span class="n">pip</span> <span class="n">install</span> <span class="n">pyscDesign3</span>
+<span class="n">pip</span> <span class="n">install</span> <span class="p">.</span>
 </pre></div>
 </div>
 <p>Or quick install from PyPI:</p>
@@ -138,6 +168,14 @@
 <p class="admonition-title">Note</p>
 <p>If there’s any problem in installing <cite>rpy2</cite>, please refer to <a class="reference external" href="https://pypi.org/project/rpy2/">rpy2 installation tutorial</a>.</p>
 </div>
+</section>
+<section id="check-for-installation">
+<h2>Check for installation<a class="headerlink" href="#check-for-installation" title="Permalink to this heading"></a></h2>
+<p>Run the following code in python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyscDesign3</span>
+</pre></div>
+</div>
+<p>If successfully installed and imported, the R loacation will be printed.</p>
 </section>
 </section>
 
