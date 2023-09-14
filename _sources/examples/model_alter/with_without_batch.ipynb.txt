@@ -133,7 +133,7 @@
     "                        mu_formula = \"cell_type + batch\", \n",
     "                        sigma_formula = \"1\", \n",
     "                        family_use = \"nb\", \n",
-    "                        usebam = True, \n",
+    "                        usebam = False, \n",
     "                        corr_formula = \"1\", \n",
     "                        copula = \"gaussian\",)\n",
     "simu_count = simu_res[\"new_count\"]"

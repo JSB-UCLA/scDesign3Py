@@ -172,7 +172,7 @@
     "    data=const_data,\n",
     "    mu_formula=\"s(pseudotime, k = 10, bs = 'cr')\",\n",
     "    sigma_formula=\"1\",\n",
-    "    usebam=True,\n",
+    "    usebam=False,\n",
     "    family_use=\"nb\",\n",
     "    n_cores=3,\n",
     "    parallelization=\"bpmapply\",\n",

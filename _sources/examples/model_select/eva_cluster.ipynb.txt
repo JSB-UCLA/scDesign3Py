@@ -142,7 +142,7 @@
     "                        copula = \"gaussian\", \n",
     "                        default_assay_name = \"counts\", \n",
     "                        family_use = \"nb\",\n",
-    "                        usebam = True)\n",
+    "                        usebam = False)\n",
     "\n",
     "    simu_res[key] = res"
    ]

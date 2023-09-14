@@ -110,7 +110,7 @@
     "    mu_formula=\"s(pseudotime1, k = 10, by = l1, bs = 'cr') + s(pseudotime2, k = 10, by = l2, bs = 'cr')\",\n",
     "    sigma_formula=\"1\",\n",
     "    family_use=\"nb\",\n",
-    "    usebam=True,\n",
+    "    usebam=False,\n",
     "    corr_formula=\"1\",\n",
     "    copula=\"gaussian\",\n",
     ")"

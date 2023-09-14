@@ -120,7 +120,7 @@
     "    mu_formula = \"cell_type + offset(log(library))\",\n",
     "    sigma_formula = \"1\",\n",
     "    family_use = \"nb\",\n",
-    "    usebam = True,\n",
+    "    usebam = False,\n",
     "    corr_formula = \"1\",\n",
     "    copula = \"gaussian\",\n",
     "    important_feature = \"auto\")"

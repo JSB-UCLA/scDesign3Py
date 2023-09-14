@@ -39,6 +39,6 @@ Here is a preview of the cell contents:
 -------------------
 ['for key,value in kmeans_res.items():', '    tmp = value[["cell","cluster"]]', '    tmp.index = tmp["cell"]', '    train_data.obs["cell_type"] = tmp.loc[train_data.obs.index,"cluster"].tolist()', '    train_data.obs["cell_type"] = train_data.obs["cell_type"].astype("int").astype("str").astype("category")']
 ...
-['                        default_assay_name = "counts", ', '                        family_use = "nb",', '                        usebam = True)', '', '    simu_res[key] = res']
+['                        default_assay_name = "counts", ', '                        family_use = "nb",', '                        usebam = False)', '', '    simu_res[key] = res']
 -------------------
 

@@ -93,7 +93,7 @@
     "    mu_formula = \"s(spatial1, spatial2, bs = 'gp', k= 400)\",\n",
     "    sigma_formula = \"1\",\n",
     "    family_use = \"nb\",\n",
-    "    usebam = True,\n",
+    "    usebam = False,\n",
     "    corr_formula = \"1\",\n",
     "    copula = \"gaussian\",\n",
     "  )"

@@ -53,11 +53,11 @@
    "source": [
     "## Step 2: Call `get_bpparam` function\n",
     "\n",
-    "- For Linux/Mac users:\n",
+    "- **For Linux/Mac users**:\n",
     "\n",
     "The possible parallel method include `mcmapply`, `pbmcmapply` and `bpmapply`. If you are using the `bpmapply` method, then you should run this function and you can choose either `MulticoreParam` or `SnowParam` mode.\n",
     "\n",
-    "- For windows users:\n",
+    "- **For windows users**:\n",
     "\n",
     "The only choice is to choose `bpmapply` method and run this function with `SnowParam` mode. **Setting more than 1 core is not allowed in other methods.**"
    ]

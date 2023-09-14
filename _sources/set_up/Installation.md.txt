@@ -36,23 +36,27 @@ To get `R_HOME`, run the following code in **R** console.
 R.home()
 ```
 
-- For linux users
+Then you can add the `R_HOME` to SYSTEM variable in **Terminal**.
+
+- **For linux users**
 
 **Please specify the `R_HOME` before you install the `rpy2` !**
 
 ```bash
+# bash
 export R_HOME=your_R_HOME_path
 ```
 
-- For windows users
+- **For windows users**
 
 Please specify the `R_HOME` before you use the package and it's fine to set the SYSTEM variable after installing the `rpy2`.
 
 ```powershell
+# powershell
 setx R_HOME "your_R_HOME_path"
 ```
 
-Or from GUI
+Or from **GUI** (for windows users)
 
 1. Press **Windows + R** to open the Windows Run prompt.
 2. Type in **sysdm.cpl** and click **OK**.
@@ -64,7 +68,7 @@ Or from GUI
 
 To install the latest version from [Github](https://github.com/DILIU899/pyscDesign3),
 
-run:
+run the following code in **Terminal**:
 
 ```powershell
 git clone https://github.com/DILIU899/pyscDesign3.git
@@ -85,7 +89,7 @@ pip install pyscDesign3
 
 ## Check for installation
 
-Run the following code in python:
+Run the following code in **python**:
 
 ```python
 import pyscDesign3
