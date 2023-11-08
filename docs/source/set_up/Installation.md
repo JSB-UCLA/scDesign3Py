@@ -2,7 +2,7 @@
 
 ```{eval-rst}
 .. Attention::
-    The **pyscDesign3** package is developed based on `rpy2` and utilize the R interpreter on user's computer.
+    The **scDesign3Py** package is developed based on `rpy2` and utilize the R interpreter on user's computer.
 ```
 
 ## Step 1: Install R
@@ -28,7 +28,7 @@ devtools::install_github("SONGDONGYUAN1994/scDesign3")
 
 ## Step 3: Specify `R_HOME`
 
-When installing pyscDesign3, `rpy2` package will be installed using pip. To make sure `rpy2` can be correctly installed, you need to first specify the intended **R** interpreter by add the corresponding `R_HOME` to SYSTEM variable.
+When installing scDesign3Py, `rpy2` package will be installed using pip. To make sure `rpy2` can be correctly installed, you need to first specify the intended **R** interpreter by add the corresponding `R_HOME` to SYSTEM variable.
 
 To get `R_HOME`, run the following code in **R** console.
 
@@ -60,22 +60,22 @@ Or from GUI
 4. Click the **New…** button under the user-specific section.
 5. Set variable name as **R_HOME** and value as **your_R_HOME_path**.
 
-## Step 4: Install pyscDesign3
+## Step 4: Install scDesign3Py
 
-To install the latest version from [Github](https://github.com/DILIU899/pyscDesign3),
+To install the latest version from [Github](https://github.com/DILIU899/scDesign3Py),
 
 run:
 
 ```powershell
-git clone https://github.com/DILIU899/pyscDesign3.git
-cd pyscDesign3
+git clone https://github.com/DILIU899/scDesign3Py.git
+cd scDesign3Py
 pip install .
 ```
 
 Or quick install from PyPI:
 
 ```powershell
-pip install pyscDesign3
+pip install scDesign3Py
 ```
 
 ```{eval-rst}
@@ -88,7 +88,7 @@ pip install pyscDesign3
 Run the following code in python:
 
 ```python
-import pyscDesign3
+import scDesign3Py
 ```
 
 If successfully installed and imported, the R loacation will be printed.

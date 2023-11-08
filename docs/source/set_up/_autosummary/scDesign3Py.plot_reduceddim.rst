@@ -1,6 +1,6 @@
-﻿pyscDesign3.plot\_reduceddim
+﻿scDesign3Py.plot\_reduceddim
 ============================
 
-.. currentmodule:: pyscDesign3
+.. currentmodule:: scDesign3Py
 
 .. autofunction:: plot_reduceddim

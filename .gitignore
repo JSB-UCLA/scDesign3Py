@@ -5,4 +5,4 @@
 docs/build/
 
 # ignore .egg-info
-pyscDesign3.egg-info/**
+scDesign3Py.egg-info/**

@@ -1,10 +1,10 @@
-# **pyscDesign3**: python interface for **scDesign3** **R** package
+# **scDesign3Py**: python interface for **scDesign3** **R** package
 
 ## About
 
-**pyscDesign3** is a python interface developed for the **scDesign3** **R** package based on `rpy2`, enabling python users to easily use the **scDesign3** functions and share almost the same usage as the **R** version.
+**scDesign3Py** is a python interface developed for the **scDesign3** **R** package based on `rpy2`, enabling python users to easily use the **scDesign3** functions and share almost the same usage as the **R** version.
 
-- For detailed tutorial of this package, please visit the [document website](https://diliu899.github.io/pyscDesign3/).
+- For detailed tutorial of this package, please visit the [document website](https://diliu899.github.io/scDesign3Py/).
 
 - To find out more details about **scDesign3**, you can check out manuscript on Nature Biotechnology:
 
@@ -14,18 +14,18 @@
 
 ## Installation
 
-You can install the most latest version from [Github](https://github.com/DILIU899/pyscDesign3/) by running the following command
+You can install the most latest version from [Github](https://github.com/DILIU899/scDesign3Py/) by running the following command
 
 ```powershell
-git clone https://github.com/DILIU899/pyscDesign3.git
-cd pyscDesign3
+git clone https://github.com/DILIU899/scDesign3Py.git
+cd scDesign3Py
 pip install .
 ```
 
 Or quick install from PyPI:
 
 ```powershell
-pip install pyscDesign3
+pip install scDesign3Py
 ```
 
 ## License

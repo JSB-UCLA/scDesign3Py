@@ -1,6 +1,6 @@
-﻿pyscDesign3.scDesign3.simu\_new
+﻿scDesign3Py.scDesign3.simu\_new
 ===============================
 
-.. currentmodule:: pyscDesign3
+.. currentmodule:: scDesign3Py
 
 .. automethod:: scDesign3.simu_new

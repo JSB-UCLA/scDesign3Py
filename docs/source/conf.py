@@ -20,7 +20,7 @@ autodoc_mock_imports = ["rpy2", "numpy", "pandas", "matplotlib", "anndata", "sea
 
 # -- Project information -----------------------------------------------------
 
-project = "pyscDesign3"
+project = "scDesign3Py"
 copyright = "2023, Di Liu"
 author = "Di Liu"
 version = "1.0.0"
@@ -93,8 +93,8 @@ html_theme_options = {
 html_context = {
     "display_github": True,
     "github_user": "DILIU899",
-    "github_repo": "pyscDesign3",
-    "github_version": "develop/docs/source/",
+    "github_repo": "scDesign3Py",
+    "github_version": "main/docs/source/",
 }
 html_show_sphinx = False
 
@@ -106,4 +106,4 @@ html_static_path = ["_static"]
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "pyscDesign3doc"
+htmlhelp_basename = "scDesign3Pydoc"

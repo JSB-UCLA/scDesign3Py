@@ -1,12 +1,13 @@
-﻿pyscDesign3.scDesign3
+﻿scDesign3Py.scDesign3
 =====================
 
-.. currentmodule:: pyscDesign3
+.. currentmodule:: scDesign3Py
 
 .. autoclass:: scDesign3
 
-   Methods
-   --------
+   
+   
+   .. rubric:: Methods
 
    .. autosummary::
    
@@ -16,11 +17,8 @@
       ~scDesign3.fit_copula
       ~scDesign3.fit_marginal
       ~scDesign3.scdesign3
-      ~scDesign3.simu_new
       ~scDesign3.set_r_random_seed
-
-   
-
+      ~scDesign3.simu_new
    
    
 

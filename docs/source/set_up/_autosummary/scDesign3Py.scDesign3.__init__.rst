@@ -1,6 +1,6 @@
-﻿pyscDesign3.scDesign3.\_\_init\_\_
+﻿scDesign3Py.scDesign3.\_\_init\_\_
 ==================================
 
-.. currentmodule:: pyscDesign3
+.. currentmodule:: scDesign3Py
 
 .. automethod:: scDesign3.__init__

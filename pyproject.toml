@@ -6,7 +6,7 @@ requires = [
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pyscDesign3"
+name = "scDesign3Py"
 version = "1.0.0"
 description = "The python interface for scDesign3 R package."
 readme = "README.md"
@@ -28,4 +28,4 @@ dependencies = [
 requires-python = ">=3.9"
 
 [project.urls]
-Homepage = "https://github.com/DILIU899/pyscDesign3/"
+Homepage = "https://github.com/DILIU899/scDesign3Py/"
