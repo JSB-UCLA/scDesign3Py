@@ -4,7 +4,7 @@ Model Parameter
 Introduction
 -------------
 
-In this section, we will show the model parameters of pyscDesign3, serving as a reference when you are setting them.
+In this section, we will show the model parameters of scDesign3Py, serving as a reference when you are setting them.
 
 The provided examples are shown as below.
 

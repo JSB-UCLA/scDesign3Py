@@ -1,14 +1,14 @@
-.. pyscDesign3 documentation master file, created by
+.. scDesign3Py documentation master file, created by
    sphinx-quickstart on Tue Aug 29 21:15:19 2023.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-**pyscDesign3**: python interface for **scDesign3** **R** package
+**scDesign3Py**: python interface for **scDesign3** **R** package
 ====================================================================
 
 The **R** package **scDesign3** is a unified probabilistic framework that generates realistic in silico high-dimensional single-cell omics data of various cell states, including discrete cell types, continuous trajectories, and spatial locations by learning from real datasets. 
 
-**pyscDesign3** is the python interface of the **R** package **scDesign3**, enabling python users to easily use the **scDesign3** functions and share almost the same usage as the **R** version.
+**scDesign3Py** is the python interface of the **R** package **scDesign3**, enabling python users to easily use the **scDesign3** functions and share almost the same usage as the **R** version.
 
 Summary of usage of **scDesign3**
 -----------------------------------
@@ -33,7 +33,7 @@ For tutorial of **R** package **scDesign3**, you can check the `tutorial website
    Installation <set_up/Installation>
    API <set_up/API>
    Quick Start <tutorial/quick_start> 
-   About pyscDesign3 <set_up/info>
+   About scDesign3Py <set_up/info>
 
 .. toctree::
    :maxdepth: 1

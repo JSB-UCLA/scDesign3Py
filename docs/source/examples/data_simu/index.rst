@@ -4,7 +4,7 @@ Data Simulation
 Introduction
 -------------
 
-In this section, we will show how to use pyscDesign3 to simulate data.
+In this section, we will show how to use scDesign3Py to simulate data.
 
 The provided examples are shown as below.
 
