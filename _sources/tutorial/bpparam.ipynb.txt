@@ -27,7 +27,7 @@
     "\n",
     "In this section, we will show how to use `get_bpparam()` function to get a **R** `BiocParallel::MulticoreParam` or `BiocParallel::SnowParam` object to combine with @parallelization = `bpmapply`.\n",
     "\n",
-    "To get detailed information of the input and output of the function, please check [API](../set_up/_autosummary/pyscDesign3.get_bpparam.rst).\n",
+    "To get detailed information of the input and output of the function, please check [API](../set_up/_autosummary/scDesign3Py.get_bpparam.rst).\n",
     "\n",
     "To get more information on `BiocParallel` **R** package to help you set the parameters, please check the [document](https://www.bioconductor.org/packages/devel/bioc/manuals/BiocParallel/man/BiocParallel.pdf).\n",
     "\n",
@@ -44,7 +44,7 @@
    "source": [
     "import time\n",
     "import anndata as ad\n",
-    "import pyscDesign3"
+    "import scDesign3Py"
    ]
   },
   {
@@ -53,11 +53,11 @@
    "source": [
     "## Step 2: Call `get_bpparam` function\n",
     "\n",
-    "- **For Linux/Mac users**:\n",
+    "- For Linux/Mac users:\n",
     "\n",
     "The possible parallel method include `mcmapply`, `pbmcmapply` and `bpmapply`. If you are using the `bpmapply` method, then you should run this function and you can choose either `MulticoreParam` or `SnowParam` mode.\n",
     "\n",
-    "- **For windows users**:\n",
+    "- For windows users:\n",
     "\n",
     "The only choice is to choose `bpmapply` method and run this function with `SnowParam` mode. **Setting more than 1 core is not allowed in other methods.**"
    ]
@@ -68,7 +68,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "bpparam = pyscDesign3.get_bpparam(mode=\"MulticoreParam\", show=True, stop_on_error=False)"
+    "bpparam = scDesign3Py.get_bpparam(mode=\"MulticoreParam\", show=True, stop_on_error=False)"
    ]
   },
   {
@@ -109,8 +109,8 @@
    "outputs": [],
    "source": [
     "# create the instance\n",
-    "test1 = pyscDesign3.scDesign3(n_cores=2, parallelization=\"bpmapply\", bpparam=bpparam, return_py=False)\n",
-    "test2 = pyscDesign3.scDesign3(n_cores=6, parallelization=\"bpmapply\", bpparam=bpparam, return_py=False)\n",
+    "test1 = scDesign3Py.scDesign3(n_cores=1, parallelization=\"bpmapply\", bpparam=bpparam, return_py=False)\n",
+    "test2 = scDesign3Py.scDesign3(n_cores=3, parallelization=\"bpmapply\", bpparam=bpparam, return_py=False)\n",
     "\n",
     "# construct data\n",
     "test1.construct_data(\n",

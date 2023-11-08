@@ -27,13 +27,13 @@
     "\n",
     "In this section, we will show how to use `scDesign3` method `scdesign3()` to perform all-in-one simulation and get the new dataset.\n",
     "\n",
-    "To get detailed information of the input and output of the function, please check [API](../set_up/_autosummary/pyscDesign3.scDesign3.scdesign3.rst).\n",
+    "To get detailed information of the input and output of the function, please check [API](../set_up/_autosummary/scDesign3Py.scDesign3.scdesign3.rst).\n",
     "\n",
     "## Step 1: Import packages and Read in data\n",
     "\n",
     "### import packages\n",
     "\n",
-    "When importing the `pyscDesign3` package, the initiation process includes finding the **R** interpreter and detect whether the **R** package **scDesign3** is installed. If the **R** package **scDesign3** isn't installed, `pyscDesign3` will try to automatically install the dependency."
+    "When importing the `scDesign3Py` package, the initiation process includes finding the **R** interpreter and detect whether the **R** package **scDesign3** is installed. If the **R** package **scDesign3** isn't installed, `scDesign3Py` will try to automatically install the dependency."
    ]
   },
   {
@@ -44,7 +44,7 @@
    "source": [
     "import anndata as ad\n",
     "import pandas as pd\n",
-    "import pyscDesign3"
+    "import scDesign3Py"
    ]
   },
   {
@@ -82,7 +82,12 @@
     "\n",
     "When creating the instance, the basic setting can be specified, including how many cores used to computing, which parallel method to use and whether to return a more pythonic output.\n",
     "\n",
-    "Details of the settings are shown in [API](../set_up/_autosummary/pyscDesign3.scDesign3.__init__.rst)."
+    "Details of the settings are shown in [API](../set_up/_autosummary/scDesign3Py.scDesign3.__init__.rst).\n",
+    "\n",
+    "```{eval-rst}\n",
+    ".. Note::\n",
+    "    If you are a windows user, please refer to :doc:`Get BPPARAM <./bpparam>` section to use more than one core for parallel computing.\n",
+    "```"
    ]
   },
   {
@@ -91,7 +96,7 @@
    "metadata": {},
    "outputs": [],
    "source": [
-    "test = pyscDesign3.scDesign3(n_cores=6, parallelization=\"mcmapply\",return_py=True)\n",
+    "test = scDesign3Py.scDesign3(n_cores=3, parallelization=\"mcmapply\",return_py=True)\n",
     "test.set_r_random_seed(123)"
    ]
   },
@@ -120,7 +125,7 @@
     "    mu_formula=\"s(pseudotime, k = 10, bs = 'cr')\",\n",
     "    sigma_formula=\"s(pseudotime, k = 5, bs = 'cr')\",\n",
     "    family_use=\"nb\",\n",
-    "    usebam=False,\n",
+    "    usebam=True,\n",
     "    corr_formula=\"1\",\n",
     "    copula=\"gaussian\",\n",
     ")"
@@ -157,7 +162,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "The class property `whole_pipeline_res` also stores the simulation result, however, in `rpy2.robjects.vectors.ListVector` version. (To check all class property, please refer to [API](../set_up/_autosummary/pyscDesign3.scDesign3.rst))\n",
+    "The class property `whole_pipeline_res` also stores the simulation result, however, in `rpy2.robjects.vectors.ListVector` version. (To check all class property, please refer to [API](../set_up/_autosummary/scDesign3Py.scDesign3.rst))\n",
     "\n",
     "Actually, if `return_py` = False, the return value is exactly the same as that in the property. You can call `print()` to show the result, which will give you a totally **R** style output."
    ]

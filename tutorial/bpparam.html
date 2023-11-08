@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Get the bpparam for bpmapply &mdash; pyscDesign3  documentation</title>
+  <title>Get the bpparam for bpmapply &mdash; scDesign3Py  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Perform likelihood ratio test" href="lrt.html" />
-    <link rel="prev" title="Run pyscDesign3 pipeline step by step" href="stepwise.html" /> 
+    <link rel="prev" title="Run scDesign3Py pipeline step by step" href="stepwise.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,7 +37,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            pyscDesign3
+            scDesign3Py
           </a>
               <div class="version">
                 1.0.0
@@ -55,7 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../set_up/Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../set_up/API.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../set_up/info.html">About pyscDesign3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../set_up/info.html">About scDesign3Py</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
@@ -79,7 +79,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">pyscDesign3</a>
+          <a href="../index.html">scDesign3Py</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -89,7 +89,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Get the bpparam for <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code></li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/tutorial/bpparam.ipynb" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/tutorial/bpparam.ipynb" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -102,7 +102,7 @@
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
 <p>In this section, we will show how to use <code class="docutils literal notranslate"><span class="pre">get_bpparam()</span></code> function to get a <strong>R</strong> <code class="docutils literal notranslate"><span class="pre">BiocParallel::MulticoreParam</span></code> or <code class="docutils literal notranslate"><span class="pre">BiocParallel::SnowParam</span></code> object to combine with &#64;parallelization = <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code>.</p>
-<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/pyscDesign3.get_bpparam.html"><span class="doc std std-doc">API</span></a>.</p>
+<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/scDesign3Py.get_bpparam.html"><span class="doc std std-doc">API</span></a>.</p>
 <p>To get more information on <code class="docutils literal notranslate"><span class="pre">BiocParallel</span></code> <strong>R</strong> package to help you set the parameters, please check the <a class="reference external" href="https://www.bioconductor.org/packages/devel/bioc/manuals/BiocParallel/man/BiocParallel.pdf">document</a>.</p>
 </section>
 <section id="step-1-import-packages">
@@ -111,12 +111,12 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
-<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -125,22 +125,22 @@
 <section id="step-2-call-get-bpparam-function">
 <h2>Step 2: Call <code class="docutils literal notranslate"><span class="pre">get_bpparam</span></code> function<a class="headerlink" href="#step-2-call-get-bpparam-function" title="Permalink to this heading"></a></h2>
 <ul class="simple">
-<li><p><strong>For Linux/Mac users</strong>:</p></li>
+<li><p>For Linux/Mac users:</p></li>
 </ul>
 <p>The possible parallel method include <code class="docutils literal notranslate"><span class="pre">mcmapply</span></code>, <code class="docutils literal notranslate"><span class="pre">pbmcmapply</span></code> and <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code>. If you are using the <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code> method, then you should run this function and you can choose either <code class="docutils literal notranslate"><span class="pre">MulticoreParam</span></code> or <code class="docutils literal notranslate"><span class="pre">SnowParam</span></code> mode.</p>
 <ul class="simple">
-<li><p><strong>For windows users</strong>:</p></li>
+<li><p>For windows users:</p></li>
 </ul>
 <p>The only choice is to choose <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code> method and run this function with <code class="docutils literal notranslate"><span class="pre">SnowParam</span></code> mode. <strong>Setting more than 1 core is not allowed in other methods.</strong></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bpparam</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;MulticoreParam&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stop_on_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bpparam</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;MulticoreParam&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">stop_on_error</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>class: MulticoreParam
-  bpisup: FALSE; bpnworkers: 30; bptasks: 0; bpjobname: BPJOB
+  bpisup: FALSE; bpnworkers: 6; bptasks: 0; bpjobname: BPJOB
   bplog: FALSE; bpthreshold: INFO; bpstopOnError: FALSE
   bpRNGseed: ; bptimeout: NA; bpprogressbar: FALSE
   bpexportglobals: TRUE; bpexportvariables: FALSE; bpforceGC: FALSE
@@ -177,8 +177,8 @@
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the instance</span>
-<span class="n">test1</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">test2</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">test1</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">test2</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span> <span class="n">bpparam</span><span class="o">=</span><span class="n">bpparam</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
 <span class="c1"># construct data</span>
 <span class="n">test1</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
@@ -215,7 +215,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total time cost when using 2 core is 63.15 sec
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total time cost when using 2 core is 164.04 sec
 </pre></div>
 </div>
 </div>
@@ -236,7 +236,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total time cost when using 6 cores is 48.72 sec
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total time cost when using 6 cores is 114.14 sec
 </pre></div>
 </div>
 </div>
@@ -248,7 +248,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="stepwise.html" class="btn btn-neutral float-left" title="Run pyscDesign3 pipeline step by step" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="stepwise.html" class="btn btn-neutral float-left" title="Run scDesign3Py pipeline step by step" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="lrt.html" class="btn btn-neutral float-right" title="Perform likelihood ratio test" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

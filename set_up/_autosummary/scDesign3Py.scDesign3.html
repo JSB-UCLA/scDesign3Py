@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>scDesign3Py.scDesign3 &mdash; scDesign3Py  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/sphinx_highlight.js"></script>
+        <script src="../../_static/clipboard.min.js"></script>
+        <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="scDesign3Py.scDesign3.__init__" href="scDesign3Py.scDesign3.__init__.html" />
+    <link rel="prev" title="API" href="../API.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            scDesign3Py
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../Installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../API.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">scDesign3Py.scDesign3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.scDesign3.__init__.html">scDesign3Py.scDesign3.__init__</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.scDesign3.construct_data.html">scDesign3Py.scDesign3.construct_data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.scDesign3.fit_marginal.html">scDesign3Py.scDesign3.fit_marginal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.scDesign3.fit_copula.html">scDesign3Py.scDesign3.fit_copula</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.scDesign3.extract_para.html">scDesign3Py.scDesign3.extract_para</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.scDesign3.simu_new.html">scDesign3Py.scDesign3.simu_new</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.scDesign3.scdesign3.html">scDesign3Py.scDesign3.scdesign3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.scDesign3.set_r_random_seed.html">scDesign3Py.scDesign3.set_r_random_seed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.get_bpparam.html">scDesign3Py.get_bpparam</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.perform_lrt.html">scDesign3Py.perform_lrt</a></li>
+<li class="toctree-l2"><a class="reference internal" href="scDesign3Py.plot_reduceddim.html">scDesign3Py.plot_reduceddim</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../info.html">About scDesign3Py</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/all_in_one.html">All in one simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/stepwise.html">Step by step simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bpparam.html">Get BPPARAM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/lrt.html">Perform likelihood ratio test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/plot.html">Plot results</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/data_simu/index.html">Data simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/model_select/index.html">Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/model_alter/index.html">Model alteration</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">scDesign3Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../API.html">API</a></li>
+      <li class="breadcrumb-item active">scDesign3Py.scDesign3</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/set_up/_autosummary/scDesign3Py.scDesign3.rst" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="scdesign3py-scdesign3">
+<h1>scDesign3Py.scDesign3<a class="headerlink" href="#scdesign3py-scdesign3" title="Permalink to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="scDesign3Py.scDesign3">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">scDesign3Py.</span></span><span class="sig-name descname"><span class="pre">scDesign3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_cores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallelization</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'mcmapply'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'bpmapply'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'pbmcmapply'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mcmapply'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bpparam</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">rpy2.robjects.methods.RS4</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_py</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scDesign3Py/_core.html#scDesign3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scDesign3Py.scDesign3" title="Permalink to this definition"></a></dt>
+<dd><p>Python interface for scDesign3</p>
+<p>All functions are arranged in scDesign3 class for easy reuse generated results.</p>
+<section id="attributes">
+<h2>Attributes:<a class="headerlink" href="#attributes" title="Permalink to this heading"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">sce<span class="colon">:</span></dt>
+<dd class="field-odd"><p>SingleCellExperiment R object changed from the given Anndata object</p>
+</dd>
+<dt class="field-even">assay_use<span class="colon">:</span></dt>
+<dd class="field-even"><p>The name of the assay used for modeling</p>
+</dd>
+<dt class="field-odd">all_covar<span class="colon">:</span></dt>
+<dd class="field-odd"><p>All covariates (explainary variables) used to model gene expression pattern</p>
+</dd>
+<dt class="field-even">family_use<span class="colon">:</span></dt>
+<dd class="field-even"><p>The set marginal distribution of each gene.</p>
+</dd>
+<dt class="field-odd">copula<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The copula type you set.</p>
+</dd>
+<dt class="field-even">n_cores<span class="colon">:</span></dt>
+<dd class="field-even"><p>The number of cores used for model fitting.</p>
+</dd>
+<dt class="field-odd">parallelization<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The parallelization method.</p>
+</dd>
+<dt class="field-even">bpparam<span class="colon">:</span></dt>
+<dd class="field-even"><p>If &#64;parallelization is ‘bpmapply’, the corresponding R object to set the parallelization parameters.</p>
+</dd>
+<dt class="field-odd">return_py<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Whether the functions will return a result easy for manipulation.</p>
+</dd>
+<dt class="field-even">construct_data_res<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result of calling &#64;construct_data</p>
+</dd>
+<dt class="field-odd">fit_marginal_res<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Result of calling &#64;fit_marginal</p>
+</dd>
+<dt class="field-even">fit_copula_res<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result of calling &#64;fit_copula</p>
+</dd>
+<dt class="field-odd">model_paras<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Result of calling &#64;extract_para</p>
+</dd>
+<dt class="field-even">simu_res<span class="colon">:</span></dt>
+<dd class="field-even"><p>Result of calling &#64;simu_new</p>
+</dd>
+<dt class="field-odd">whole_pipeline_res<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Result of calling &#64;scdesign3</p>
+</dd>
+</dl>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="scDesign3Py.scDesign3.__init__.html#scDesign3Py.scDesign3.__init__" title="scDesign3Py.scDesign3.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([n_cores, parallelization, ...])</p></td>
+<td><p>Decide basic settings when running the class methods.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scDesign3Py.scDesign3.construct_data.html#scDesign3Py.scDesign3.construct_data" title="scDesign3Py.scDesign3.construct_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">construct_data</span></code></a>(anndata, corr_formula[, ...])</p></td>
+<td><p>Construct the input data</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scDesign3Py.scDesign3.extract_para.html#scDesign3Py.scDesign3.extract_para" title="scDesign3Py.scDesign3.extract_para"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_para</span></code></a>([data, new_covariate, ...])</p></td>
+<td><p>Extract the parameters of each cell's distribution</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scDesign3Py.scDesign3.fit_copula.html#scDesign3Py.scDesign3.fit_copula" title="scDesign3Py.scDesign3.fit_copula"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_copula</span></code></a>([input_data, copula, ...])</p></td>
+<td><p>Fit the copula model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scDesign3Py.scDesign3.fit_marginal.html#scDesign3Py.scDesign3.fit_marginal" title="scDesign3Py.scDesign3.fit_marginal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_marginal</span></code></a>(mu_formula, sigma_formula, ...)</p></td>
+<td><p>Fit the marginal models</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scDesign3Py.scDesign3.scdesign3.html#scDesign3Py.scDesign3.scdesign3" title="scDesign3Py.scDesign3.scdesign3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scdesign3</span></code></a>(anndata, corr_formula, mu_formula, ...)</p></td>
+<td><p>The wrapper for the whole scDesign3 pipeline</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="scDesign3Py.scDesign3.set_r_random_seed.html#scDesign3Py.scDesign3.set_r_random_seed" title="scDesign3Py.scDesign3.set_r_random_seed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_r_random_seed</span></code></a>(seed)</p></td>
+<td><p>Set the R random seed</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="scDesign3Py.scDesign3.simu_new.html#scDesign3Py.scDesign3.simu_new" title="scDesign3Py.scDesign3.simu_new"><code class="xref py py-obj docutils literal notranslate"><span class="pre">simu_new</span></code></a>([mean_mat, sigma_mat, zero_mat, ...])</p></td>
+<td><p>Simulate new data</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../API.html" class="btn btn-neutral float-left" title="API" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="scDesign3Py.scDesign3.__init__.html" class="btn btn-neutral float-right" title="scDesign3Py.scDesign3.__init__" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Di Liu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

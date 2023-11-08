@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation &mdash; pyscDesign3  documentation</title>
+  <title>Installation &mdash; scDesign3Py  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="API" href="API.html" />
-    <link rel="prev" title="pyscDesign3: python interface for scDesign3 R package" href="../index.html" /> 
+    <link rel="prev" title="scDesign3Py: python interface for scDesign3 R package" href="../index.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,7 +37,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            pyscDesign3
+            scDesign3Py
           </a>
               <div class="version">
                 1.0.0
@@ -55,7 +55,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="API.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../tutorial/quick_start.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="info.html">About pyscDesign3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="info.html">About scDesign3Py</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
@@ -79,7 +79,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">pyscDesign3</a>
+          <a href="../index.html">scDesign3Py</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -89,7 +89,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Installation</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/set_up/Installation.md" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/set_up/Installation.md" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -101,7 +101,7 @@
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h1>
 <div class="admonition attention">
 <p class="admonition-title">Attention</p>
-<p>The <strong>pyscDesign3</strong> package is developed based on <cite>rpy2</cite> and utilize the R interpreter on user’s computer.</p>
+<p>The <strong>scDesign3Py</strong> package is developed based on <cite>rpy2</cite> and utilize the R interpreter on user’s computer.</p>
 </div>
 <section id="step-1-install-r">
 <h2>Step 1: Install R<a class="headerlink" href="#step-1-install-r" title="Permalink to this heading"></a></h2>
@@ -123,29 +123,26 @@
 </section>
 <section id="step-3-specify-r-home">
 <h2>Step 3: Specify <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code><a class="headerlink" href="#step-3-specify-r-home" title="Permalink to this heading"></a></h2>
-<p>When installing pyscDesign3, <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> package will be installed using pip. To make sure <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> can be correctly installed, you need to first specify the intended <strong>R</strong> interpreter by add the corresponding <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code> to SYSTEM variable.</p>
+<p>When installing scDesign3Py, <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> package will be installed using pip. To make sure <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> can be correctly installed, you need to first specify the intended <strong>R</strong> interpreter by add the corresponding <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code> to SYSTEM variable.</p>
 <p>To get <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code>, run the following code in <strong>R</strong> console.</p>
 <div class="highlight-r notranslate"><div class="highlight"><pre><span></span><span class="nf">R.home</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>Then you can add the <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code> to SYSTEM variable in <strong>Terminal</strong>.</p>
 <ul class="simple">
-<li><p><strong>For linux users</strong></p></li>
+<li><p>For linux users</p></li>
 </ul>
 <p><strong>Please specify the <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code> before you install the <code class="docutils literal notranslate"><span class="pre">rpy2</span></code> !</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># bash</span>
-<span class="nb">export</span><span class="w"> </span><span class="nv">R_HOME</span><span class="o">=</span>your_R_HOME_path
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">R_HOME</span><span class="o">=</span>your_R_HOME_path
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><strong>For windows users</strong></p></li>
+<li><p>For windows users</p></li>
 </ul>
 <p>Please specify the <code class="docutils literal notranslate"><span class="pre">R_HOME</span></code> before you use the package and it’s fine to set the SYSTEM variable after installing the <code class="docutils literal notranslate"><span class="pre">rpy2</span></code>.</p>
-<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="c"># powershell</span>
-<span class="n">setx</span> <span class="n">R_HOME</span> <span class="s2">&quot;your_R_HOME_path&quot;</span>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">setx</span> <span class="n">R_HOME</span> <span class="s2">&quot;your_R_HOME_path&quot;</span>
 </pre></div>
 </div>
-<p>Or from <strong>GUI</strong> (for windows users)</p>
+<p>Or from GUI</p>
 <ol class="arabic simple">
 <li><p>Press <strong>Windows + R</strong> to open the Windows Run prompt.</p></li>
 <li><p>Type in <strong>sysdm.cpl</strong> and click <strong>OK</strong>.</p></li>
@@ -154,17 +151,17 @@
 <li><p>Set variable name as <strong>R_HOME</strong> and value as <strong>your_R_HOME_path</strong>.</p></li>
 </ol>
 </section>
-<section id="step-4-install-pyscdesign3">
-<h2>Step 4: Install pyscDesign3<a class="headerlink" href="#step-4-install-pyscdesign3" title="Permalink to this heading"></a></h2>
-<p>To install the latest version from <a class="reference external" href="https://github.com/DILIU899/pyscDesign3">Github</a>,</p>
-<p>run the following code in <strong>Terminal</strong>:</p>
-<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">DILIU899</span><span class="p">/</span><span class="n">pyscDesign3</span><span class="p">.</span><span class="n">git</span>
-<span class="nb">cd </span><span class="n">pyscDesign3</span>
+<section id="step-4-install-scdesign3py">
+<h2>Step 4: Install scDesign3Py<a class="headerlink" href="#step-4-install-scdesign3py" title="Permalink to this heading"></a></h2>
+<p>To install the latest version from <a class="reference external" href="https://github.com/DILIU899/scDesign3Py">Github</a>,</p>
+<p>run:</p>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">DILIU899</span><span class="p">/</span><span class="n">scDesign3Py</span><span class="p">.</span><span class="n">git</span>
+<span class="nb">cd </span><span class="n">scDesign3Py</span>
 <span class="n">pip</span> <span class="n">install</span> <span class="p">.</span>
 </pre></div>
 </div>
 <p>Or quick install from PyPI:</p>
-<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pyscDesign3</span>
+<div class="highlight-powershell notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">scDesign3Py</span>
 </pre></div>
 </div>
 <div class="admonition note">
@@ -174,8 +171,8 @@
 </section>
 <section id="check-for-installation">
 <h2>Check for installation<a class="headerlink" href="#check-for-installation" title="Permalink to this heading"></a></h2>
-<p>Run the following code in <strong>python</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyscDesign3</span>
+<p>Run the following code in python:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scDesign3Py</span>
 </pre></div>
 </div>
 <p>If successfully installed and imported, the R loacation will be printed.</p>
@@ -186,7 +183,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../index.html" class="btn btn-neutral float-left" title="pyscDesign3: python interface for scDesign3 R package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../index.html" class="btn btn-neutral float-left" title="scDesign3Py: python interface for scDesign3 R package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="API.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

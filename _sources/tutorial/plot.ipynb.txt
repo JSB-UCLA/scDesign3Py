@@ -27,7 +27,7 @@
     "\n",
     "In this section, we will show how to use function `plot_reduceddim()` to realize dimension reduction and automatically plot the result.\n",
     "\n",
-    "To get detailed information of the input and output of the function, please check [API](../set_up/_autosummary/pyscDesign3.plot_reduceddim.rst).\n",
+    "To get detailed information of the input and output of the function, please check [API](../set_up/_autosummary/scDesign3Py.plot_reduceddim.rst).\n",
     "\n",
     "## Step 1: Import packages and Read in data\n",
     "\n",
@@ -43,7 +43,7 @@
     "import anndata as ad\n",
     "import numpy as np\n",
     "import pandas as pd\n",
-    "import pyscDesign3"
+    "import scDesign3Py"
    ]
   },
   {
@@ -84,7 +84,7 @@
    "outputs": [],
    "source": [
     "# create the instance and set the parallel method\n",
-    "test = pyscDesign3.scDesign3(n_cores=6, parallelization=\"mcmapply\", return_py=True)\n",
+    "test = scDesign3Py.scDesign3(n_cores=3, parallelization=\"mcmapply\", return_py=True)\n",
     "test.set_r_random_seed(123)\n",
     "\n",
     "# all-in-one simulation\n",
@@ -96,7 +96,7 @@
     "    mu_formula=\"s(pseudotime, k = 10, bs = 'cr')\",\n",
     "    sigma_formula=\"s(pseudotime, k = 5, bs = 'cr')\",\n",
     "    family_use=\"nb\",\n",
-    "    usebam=False,\n",
+    "    usebam=True,\n",
     "    corr_formula=\"1\",\n",
     "    copula=\"gaussian\",\n",
     ")"
@@ -143,7 +143,7 @@
    },
    "outputs": [],
    "source": [
-    "plot = pyscDesign3.plot_reduceddim(\n",
+    "plot = scDesign3Py.plot_reduceddim(\n",
     "    ref_anndata=data,\n",
     "    anndata_list=simu_data,\n",
     "    name_list=[\"Reference\", \"scDesign3\"],\n",
@@ -208,7 +208,7 @@
    },
    "outputs": [],
    "source": [
-    "res = pyscDesign3.plot_reduceddim(\n",
+    "res = scDesign3Py.plot_reduceddim(\n",
     "    ref_anndata=data,\n",
     "    anndata_list=simu_data,\n",
     "    name_list=[\"Reference\", \"scDesign3\"],\n",

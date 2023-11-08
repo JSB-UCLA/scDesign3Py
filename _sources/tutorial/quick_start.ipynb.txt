@@ -25,9 +25,9 @@
     "\n",
     "## Introduction\n",
     "\n",
-    "The **R** package **scDesign3** is a unified probabilistic framework that generates realistic in silico high-dimensional single-cell omics data of various cell states, including discrete cell types, continuous trajectories, and spatial locations by learning from real datasets. **pyscDesign3** is the python interface for **scDesign3**.\n",
+    "The **R** package **scDesign3** is a unified probabilistic framework that generates realistic in silico high-dimensional single-cell omics data of various cell states, including discrete cell types, continuous trajectories, and spatial locations by learning from real datasets. **scDesign3Py** is the python interface for **scDesign3**.\n",
     "\n",
-    "As a quick start, we demonstrate how to use **pyscDesign3** to simulate an scRNA-seq dataset with one continuous developmental trajectory.\n",
+    "As a quick start, we demonstrate how to use **scDesign3Py** to simulate an scRNA-seq dataset with one continuous developmental trajectory.\n",
     "\n",
     "## Step 1: Import packages and Read in data\n",
     "\n",
@@ -42,7 +42,7 @@
    "source": [
     "import anndata as ad\n",
     "import numpy as np\n",
-    "import pyscDesign3"
+    "import scDesign3Py"
    ]
   },
   {
@@ -73,7 +73,12 @@
    "source": [
     "## Step 2: `scdesign3()` performs all-in-one simulation\n",
     "\n",
-    "First create an instance of the `scDesign` class to use the `scdesign3()` method, when creating the instance, we can also set up the basic settings when initializing."
+    "First create an instance of the `scDesign` class to use the `scdesign3()` method, when creating the instance, we can also set up the basic settings when initializing.\n",
+    "\n",
+    "```{eval-rst}\n",
+    ".. Note::\n",
+    "    If you are a windows user, please refer to :doc:`Get BPPARAM <./bpparam>` section to use more than one core for parallel computing.\n",
+    "```"
    ]
   },
   {
@@ -84,7 +89,7 @@
    },
    "outputs": [],
    "source": [
-    "test = pyscDesign3.scDesign3(n_cores=6)\n",
+    "test = scDesign3Py.scDesign3(n_cores=3)\n",
     "test.set_r_random_seed(123)"
    ]
   },
@@ -113,7 +118,7 @@
     "    mu_formula=\"s(pseudotime, k = 10, bs = 'cr')\",\n",
     "    sigma_formula=\"s(pseudotime, k = 5, bs = 'cr')\",\n",
     "    family_use=\"nb\",\n",
-    "    usebam=False,\n",
+    "    usebam=True,\n",
     "    corr_formula=\"1\",\n",
     "    copula=\"gaussian\",\n",
     ")"
@@ -166,7 +171,7 @@
    },
    "outputs": [],
    "source": [
-    "plot = pyscDesign3.plot_reduceddim(\n",
+    "plot = scDesign3Py.plot_reduceddim(\n",
     "    ref_anndata=data,\n",
     "    anndata_list=simu_data,\n",
     "    name_list=[\"Reference\", \"scDesign3\"],\n",

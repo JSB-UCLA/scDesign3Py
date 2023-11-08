@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulate datasets with batch effect &mdash; pyscDesign3  documentation</title>
+  <title>Simulate datasets with batch effect &mdash; scDesign3Py  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -36,7 +36,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            pyscDesign3
+            scDesign3Py
           </a>
               <div class="version">
                 1.0.0
@@ -54,7 +54,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../set_up/Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../set_up/API.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About pyscDesign3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About scDesign3Py</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
@@ -81,7 +81,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pyscDesign3</a>
+          <a href="../../index.html">scDesign3Py</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -92,7 +92,7 @@
           <li class="breadcrumb-item"><a href="index.html">Model Alteration</a></li>
       <li class="breadcrumb-item active">Simulate datasets with batch effect</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/examples/model_alter/with_without_batch.ipynb" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/examples/model_alter/with_without_batch.ipynb" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -104,7 +104,7 @@
 <h1>Simulate datasets with batch effect<a class="headerlink" href="#simulate-datasets-with-batch-effect" title="Permalink to this heading"></a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
-<p>In this example, we will show how to use pyscDesign3 to simulate data with original batch effects and how to remove the batch effects. We will also demostrate how to add ariticial batch effects.</p>
+<p>In this example, we will show how to use scDesign3Py to simulate data with original batch effects and how to remove the batch effects. We will also demostrate how to add ariticial batch effects.</p>
 </section>
 <section id="import-packages-and-read-in-data">
 <h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
@@ -115,12 +115,12 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -174,7 +174,7 @@ Categories (2, object): [&#39;10x Chromium (v2)&#39;, &#39;10x Chromium (v3)&#39
 <p>We can simulate a new data with batch effect information.</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 <span class="n">simu_res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span><span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> 
                         <span class="n">default_assay_name</span> <span class="o">=</span> <span class="s2">&quot;counts&quot;</span><span class="p">,</span> 
@@ -183,7 +183,7 @@ Categories (2, object): [&#39;10x Chromium (v2)&#39;, &#39;10x Chromium (v3)&#39
                         <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type + batch&quot;</span><span class="p">,</span> 
                         <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> 
                         <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span> 
-                        <span class="n">usebam</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> 
+                        <span class="n">usebam</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
                         <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> 
                         <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,)</span>
 <span class="n">simu_count</span> <span class="o">=</span> <span class="n">simu_res</span><span class="p">[</span><span class="s2">&quot;new_count&quot;</span><span class="p">]</span>
@@ -195,7 +195,7 @@ Categories (2, object): [&#39;10x Chromium (v2)&#39;, &#39;10x Chromium (v3)&#39
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create instance</span>
-<span class="n">batch</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">batch</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -210,6 +210,18 @@ Categories (2, object): [&#39;10x Chromium (v2)&#39;, &#39;10x Chromium (v3)&#39
     <span class="n">other_covariates</span> <span class="o">=</span> <span class="s2">&quot;batch&quot;</span><span class="p">,</span>
     <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span>
 <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;count_mat&#39;, &#39;dat&#39;, &#39;newCovariate&#39;, &#39;filtered_gene&#39;)
 </pre></div>
 </div>
 </div>
@@ -238,7 +250,7 @@ Categories (2, object): [&#39;10x Chromium (v2)&#39;, &#39;10x Chromium (v3)&#39
 <p>In here, we remove the batch effect by setting its coefficient to zero for all genes’ marginal fits. Then, we use the new sets of coefficients to generate the parameters for all genes across all cells.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_null</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_null</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">batch_data_null</span> <span class="o">=</span> <span class="n">batch_null</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
     <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
     <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
@@ -284,12 +296,12 @@ Categories (2, object): [&#39;10x Chromium (v2)&#39;, &#39;10x Chromium (v3)&#39
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Here, as we direct use another copula model result, to tell the pyscDesign3 how to change the copula dict back to R list, the class property <cite>copula</cite> should be specified.</p>
+<p>Here, as we direct use another copula model result, to tell the scDesign3Py how to change the copula dict back to R list, the class property <cite>copula</cite> should be specified.</p>
 </div>
 <p>Additionally, we can alter the batch effect information by mannually change the estimated coefficient for batch effect in each gene’s marginal model. Then, we can simulate new dataset with altered batch effect information.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_alter</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_alter</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">batch_data_alter</span> <span class="o">=</span> <span class="n">batch_alter</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
     <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
     <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
@@ -320,7 +332,7 @@ Categories (2, object): [&#39;10x Chromium (v2)&#39;, &#39;10x Chromium (v3)&#39
 </div>
 </div>
 </div>
-<div class="cell docutils container">
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_alter</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 <span class="n">batch_alter</span><span class="o">.</span><span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span>
@@ -329,14 +341,6 @@ Categories (2, object): [&#39;10x Chromium (v2)&#39;, &#39;10x Chromium (v3)&#39
     <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
     <span class="n">important_feature</span><span class="o">=</span><span class="n">batch_copula</span><span class="p">[</span><span class="s2">&quot;important_feature&quot;</span><span class="p">],</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Use Copula to sample a multivariate quantile matrix
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R[write to console]: Sample Copula group 1 starts
 </pre></div>
 </div>
 </div>
@@ -358,7 +362,7 @@ Categories (2, object): [&#39;10x Chromium (v2)&#39;, &#39;10x Chromium (v3)&#39
 <h2>Visulization<a class="headerlink" href="#visulization" title="Permalink to this heading"></a></h2>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
     <span class="n">ref_anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
     <span class="n">anndata_list</span><span class="o">=</span><span class="n">simu_anndata_list</span><span class="p">,</span>
     <span class="n">name_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">,</span> <span class="s2">&quot;w/ Batch&quot;</span><span class="p">,</span> <span class="s2">&quot;w/o Batch&quot;</span><span class="p">,</span> <span class="s2">&quot;Aritifical Batch&quot;</span><span class="p">],</span>
@@ -381,7 +385,7 @@ Categories (2, object): [&#39;10x Chromium (v2)&#39;, &#39;10x Chromium (v3)&#39
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/0cbb0e6424649de7cc1fa058ce19ff7c45a4462c10cdcd57ea8b599dd8084d91.png" src="../../_images/0cbb0e6424649de7cc1fa058ce19ff7c45a4462c10cdcd57ea8b599dd8084d91.png" />
+<img alt="../../_images/7b0ddb225c31b98c869514eb048467befd1e92c3c10a2677814623717ba985e2.png" src="../../_images/7b0ddb225c31b98c869514eb048467befd1e92c3c10a2677814623717ba985e2.png" />
 </div>
 </div>
 </section>

@@ -25,7 +25,7 @@
     "\n",
     "## Introduction\n",
     "\n",
-    "In this example, we will show how to use pyscDesign3 to simulate the multiple lineages single-cell data.\n",
+    "In this example, we will show how to use scDesign3Py to simulate multiple lineages single-cell data.\n",
     "\n",
     "## Import packages and Read in data\n",
     "\n",
@@ -40,7 +40,7 @@
    "source": [
     "import anndata as ad\n",
     "import numpy as np\n",
-    "import pyscDesign3"
+    "import scDesign3Py"
    ]
   },
   {
@@ -100,7 +100,7 @@
    },
    "outputs": [],
    "source": [
-    "test = pyscDesign3.scDesign3(n_cores=6)\n",
+    "test = scDesign3Py.scDesign3(n_cores=3)\n",
     "test.set_r_random_seed(123)\n",
     "simu_res = test.scdesign3(\n",
     "    anndata=data,\n",
@@ -155,7 +155,7 @@
    },
    "outputs": [],
    "source": [
-    "plot1 = pyscDesign3.plot_reduceddim(\n",
+    "plot1 = scDesign3Py.plot_reduceddim(\n",
     "    ref_anndata=data,\n",
     "    anndata_list=simu_data,\n",
     "    name_list=[\"Reference\", \"scDesign3\"],\n",
@@ -165,7 +165,7 @@
     "    n_pc=20,\n",
     "    point_size=5,\n",
     ")\n",
-    "plot2 = pyscDesign3.plot_reduceddim(\n",
+    "plot2 = scDesign3Py.plot_reduceddim(\n",
     "    ref_anndata=data,\n",
     "    anndata_list=simu_data,\n",
     "    name_list=[\"Reference\", \"scDesign3\"],\n",

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Plot for visualization &mdash; pyscDesign3  documentation</title>
+  <title>Plot for visualization &mdash; scDesign3Py  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            pyscDesign3
+            scDesign3Py
           </a>
               <div class="version">
                 1.0.0
@@ -55,7 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../set_up/Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../set_up/API.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../set_up/info.html">About pyscDesign3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../set_up/info.html">About scDesign3Py</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
@@ -79,7 +79,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">pyscDesign3</a>
+          <a href="../index.html">scDesign3Py</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -89,7 +89,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Plot for visualization</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/tutorial/plot.ipynb" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/tutorial/plot.ipynb" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -102,7 +102,7 @@
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
 <p>In this section, we will show how to use function <code class="docutils literal notranslate"><span class="pre">plot_reduceddim()</span></code> to realize dimension reduction and automatically plot the result.</p>
-<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/pyscDesign3.plot_reduceddim.html"><span class="doc std std-doc">API</span></a>.</p>
+<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/scDesign3Py.plot_reduceddim.html"><span class="doc std std-doc">API</span></a>.</p>
 </section>
 <section id="step-1-import-packages-and-read-in-data">
 <h2>Step 1: Import packages and Read in data<a class="headerlink" href="#step-1-import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
@@ -113,12 +113,12 @@
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -151,7 +151,7 @@
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the instance and set the parallel method</span>
-<span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 
 <span class="c1"># all-in-one simulation</span>
@@ -163,7 +163,7 @@
     <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
     <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 5, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
     <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
     <span class="n">copula</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
 <span class="p">)</span>
@@ -191,7 +191,7 @@
 <p>For example, all involved count matrix should all be stored either in <code class="docutils literal notranslate"><span class="pre">anndata.AnnData.X</span></code> or <code class="docutils literal notranslate"><span class="pre">anndata.AnnData.layers[assay_use]</span></code> and all share the same name.</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
     <span class="n">ref_anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
     <span class="n">anndata_list</span><span class="o">=</span><span class="n">simu_data</span><span class="p">,</span>
     <span class="n">name_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">,</span> <span class="s2">&quot;scDesign3&quot;</span><span class="p">],</span>
@@ -214,7 +214,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/926df5290360deaf625dedb88d3aa68dc958e8063074c5ad5f82d2d74d1fa6f8.png" src="../_images/926df5290360deaf625dedb88d3aa68dc958e8063074c5ad5f82d2d74d1fa6f8.png" />
+<img alt="../_images/1232cf49602914745798bef65478cc3e87c38d5fb00e019b3d6e9aec0490ae0e.png" src="../_images/1232cf49602914745798bef65478cc3e87c38d5fb00e019b3d6e9aec0490ae0e.png" />
 </div>
 </div>
 <p>PCA plot</p>
@@ -225,7 +225,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/35567e78e03a775a5d64dfbdd7877ac0c92566fc6f011b0dbab5a9fa629b803a.png" src="../_images/35567e78e03a775a5d64dfbdd7877ac0c92566fc6f011b0dbab5a9fa629b803a.png" />
+<img alt="../_images/814b4ed26404a5b9aaaaebbec073482214c02d179d59e882d2053999d25f95df.png" src="../_images/814b4ed26404a5b9aaaaebbec073482214c02d179d59e882d2053999d25f95df.png" />
 </div>
 </div>
 </section>
@@ -234,7 +234,7 @@
 <p>If you are not satisfied with the automatically generated plot result, you can set <code class="docutils literal notranslate"><span class="pre">if_plot</span></code> = False. Then you will get the dimension reduction result and customize your manipulation.</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">res</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
     <span class="n">ref_anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
     <span class="n">anndata_list</span><span class="o">=</span><span class="n">simu_data</span><span class="p">,</span>
     <span class="n">name_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">,</span> <span class="s2">&quot;scDesign3&quot;</span><span class="p">],</span>
@@ -289,8 +289,8 @@
       <td>0.677236</td>
       <td>2.303983</td>
       <td>2.020007</td>
-      <td>0.194286</td>
-      <td>-3.162657</td>
+      <td>0.631412</td>
+      <td>-2.877883</td>
     </tr>
     <tr>
       <th>2</th>
@@ -298,8 +298,8 @@
       <td>0.431569</td>
       <td>-2.346135</td>
       <td>1.611974</td>
-      <td>4.608735</td>
-      <td>2.313833</td>
+      <td>3.804450</td>
+      <td>1.322171</td>
     </tr>
     <tr>
       <th>3</th>
@@ -307,8 +307,8 @@
       <td>0.749373</td>
       <td>3.688469</td>
       <td>0.252404</td>
-      <td>-1.265807</td>
-      <td>-5.046228</td>
+      <td>-0.996037</td>
+      <td>-4.582421</td>
     </tr>
     <tr>
       <th>4</th>
@@ -316,8 +316,8 @@
       <td>0.925441</td>
       <td>6.045197</td>
       <td>-2.888025</td>
-      <td>-4.568501</td>
-      <td>-5.640080</td>
+      <td>-4.195196</td>
+      <td>-5.028492</td>
     </tr>
     <tr>
       <th>5</th>
@@ -325,8 +325,8 @@
       <td>0.380345</td>
       <td>-3.650479</td>
       <td>1.347464</td>
-      <td>1.760515</td>
-      <td>1.599070</td>
+      <td>2.750727</td>
+      <td>1.911773</td>
     </tr>
   </tbody>
 </table>

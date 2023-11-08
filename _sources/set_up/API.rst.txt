@@ -1,11 +1,11 @@
 API
 ===
 
-.. module:: pyscDesign3
+.. module:: scDesign3Py
 
-Import **pyscDesign3** as::
+Import **scDesign3Py** as::
 
-   import pyscDesign3
+   import scDesign3Py
 
 
 scDesign3

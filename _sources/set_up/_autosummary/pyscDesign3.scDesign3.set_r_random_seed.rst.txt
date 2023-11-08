@@ -1,6 +1,0 @@
-﻿pyscDesign3.scDesign3.set\_r\_random\_seed
-==========================================
-
-.. currentmodule:: pyscDesign3
-
-.. automethod:: scDesign3.set_r_random_seed

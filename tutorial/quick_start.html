@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quick Start &mdash; pyscDesign3  documentation</title>
+  <title>Quick Start &mdash; scDesign3Py  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
@@ -24,8 +24,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="About pyscDesign3" href="../set_up/info.html" />
-    <link rel="prev" title="pyscDesign3.plot_reduceddim" href="../set_up/_autosummary/pyscDesign3.plot_reduceddim.html" /> 
+    <link rel="next" title="About scDesign3Py" href="../set_up/info.html" />
+    <link rel="prev" title="scDesign3Py.plot_reduceddim" href="../set_up/_autosummary/scDesign3Py.plot_reduceddim.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -37,7 +37,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            pyscDesign3
+            scDesign3Py
           </a>
               <div class="version">
                 1.0.0
@@ -55,7 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../set_up/Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../set_up/API.html">API</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../set_up/info.html">About pyscDesign3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../set_up/info.html">About scDesign3Py</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
@@ -79,7 +79,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">pyscDesign3</a>
+          <a href="../index.html">scDesign3Py</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -89,7 +89,7 @@
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Quick Start</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/tutorial/quick_start.ipynb" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/tutorial/quick_start.ipynb" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -101,8 +101,8 @@
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
-<p>The <strong>R</strong> package <strong>scDesign3</strong> is a unified probabilistic framework that generates realistic in silico high-dimensional single-cell omics data of various cell states, including discrete cell types, continuous trajectories, and spatial locations by learning from real datasets. <strong>pyscDesign3</strong> is the python interface for <strong>scDesign3</strong>.</p>
-<p>As a quick start, we demonstrate how to use <strong>pyscDesign3</strong> to simulate an scRNA-seq dataset with one continuous developmental trajectory.</p>
+<p>The <strong>R</strong> package <strong>scDesign3</strong> is a unified probabilistic framework that generates realistic in silico high-dimensional single-cell omics data of various cell states, including discrete cell types, continuous trajectories, and spatial locations by learning from real datasets. <strong>scDesign3Py</strong> is the python interface for <strong>scDesign3</strong>.</p>
+<p>As a quick start, we demonstrate how to use <strong>scDesign3Py</strong> to simulate an scRNA-seq dataset with one continuous developmental trajectory.</p>
 </section>
 <section id="step-1-import-packages-and-read-in-data">
 <h2>Step 1: Import packages and Read in data<a class="headerlink" href="#step-1-import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
@@ -112,12 +112,12 @@
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -149,9 +149,13 @@
 <section id="step-2-scdesign3-performs-all-in-one-simulation">
 <h2>Step 2: <code class="docutils literal notranslate"><span class="pre">scdesign3()</span></code> performs all-in-one simulation<a class="headerlink" href="#step-2-scdesign3-performs-all-in-one-simulation" title="Permalink to this heading"></a></h2>
 <p>First create an instance of the <code class="docutils literal notranslate"><span class="pre">scDesign</span></code> class to use the <code class="docutils literal notranslate"><span class="pre">scdesign3()</span></code> method, when creating the instance, we can also set up the basic settings when initializing.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If you are a windows user, please refer to <a class="reference internal" href="bpparam.html"><span class="doc">Get BPPARAM</span></a> section to use more than one core for parallel computing.</p>
+</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -168,7 +172,7 @@
     <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
     <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 5, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
     <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
     <span class="n">copula</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
 <span class="p">)</span>
@@ -202,7 +206,7 @@
 </div>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
     <span class="n">ref_anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
     <span class="n">anndata_list</span><span class="o">=</span><span class="n">simu_data</span><span class="p">,</span>
     <span class="n">name_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">,</span> <span class="s2">&quot;scDesign3&quot;</span><span class="p">],</span>
@@ -224,7 +228,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/273e55bc04c738bb068d08bfa1cffc2e85424b3d74208df91bcbf25077f1ac36.png" src="../_images/273e55bc04c738bb068d08bfa1cffc2e85424b3d74208df91bcbf25077f1ac36.png" />
+<img alt="../_images/714fdc4d77faabf7f3fcd8d7f77a3d21a539a025fbdb7a0c9eb8c3f154fd1b8f.png" src="../_images/714fdc4d77faabf7f3fcd8d7f77a3d21a539a025fbdb7a0c9eb8c3f154fd1b8f.png" />
 </div>
 </div>
 <p>PCA plot</p>
@@ -235,7 +239,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/e5aa88968c4a3f337a10a15494c502a69141d2be57323ee8b8a131f1f6d4e7fd.png" src="../_images/e5aa88968c4a3f337a10a15494c502a69141d2be57323ee8b8a131f1f6d4e7fd.png" />
+<img alt="../_images/12b77c3aed90cdd5879b7d050eb12a15c730141e2be76c127a7be7a12070b7e1.png" src="../_images/12b77c3aed90cdd5879b7d050eb12a15c730141e2be76c127a7be7a12070b7e1.png" />
 </div>
 </div>
 </section>
@@ -245,8 +249,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../set_up/_autosummary/pyscDesign3.plot_reduceddim.html" class="btn btn-neutral float-left" title="pyscDesign3.plot_reduceddim" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../set_up/info.html" class="btn btn-neutral float-right" title="About pyscDesign3" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../set_up/_autosummary/scDesign3Py.plot_reduceddim.html" class="btn btn-neutral float-left" title="scDesign3Py.plot_reduceddim" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../set_up/info.html" class="btn btn-neutral float-right" title="About scDesign3Py" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

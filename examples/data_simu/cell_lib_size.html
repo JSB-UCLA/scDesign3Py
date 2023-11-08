@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulate datasets with cell library size &mdash; pyscDesign3  documentation</title>
+  <title>Simulate datasets with cell library size &mdash; scDesign3Py  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            pyscDesign3
+            scDesign3Py
           </a>
               <div class="version">
                 1.0.0
@@ -57,7 +57,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../set_up/Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../set_up/API.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About pyscDesign3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About scDesign3Py</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
@@ -86,7 +86,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pyscDesign3</a>
+          <a href="../../index.html">scDesign3Py</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -97,7 +97,7 @@
           <li class="breadcrumb-item"><a href="index.html">Data Simulation</a></li>
       <li class="breadcrumb-item active">Simulate datasets with cell library size</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/examples/data_simu/cell_lib_size.ipynb" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/examples/data_simu/cell_lib_size.ipynb" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -109,7 +109,7 @@
 <h1>Simulate datasets with cell library size<a class="headerlink" href="#simulate-datasets-with-cell-library-size" title="Permalink to this heading"></a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
-<p>In this example, we will show how to use pyscDesign3 to simulate datasets adjusted by cell library size. The purpose of this example is to show that including the library size when modeling the marginal distribution for each gene can help cells in the synthetic data have more similar library sizes as the cells in the real data.</p>
+<p>In this example, we will show how to use scDesign3Py to simulate datasets adjusted by cell library size. The purpose of this example is to show that including the library size when modeling the marginal distribution for each gene can help cells in the synthetic data have more similar library sizes as the cells in the real data.</p>
 </section>
 <section id="import-packages-and-read-in-data">
 <h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
@@ -121,12 +121,12 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -176,7 +176,7 @@
 <p>Then, we set the mu_formula as cell_type and offsetted by the cell library size to generate new dataset adjusted by library size. The library size is log-transformed because the link function for <span class="math notranslate nohighlight">\(\mu\)</span> of the negative binomial distribution in GAMLSS is <strong>log</strong>.</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">)</span>
 <span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 <span class="n">simu_res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span>    
     <span class="n">anndata</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span>
@@ -217,7 +217,7 @@
 </div>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
     <span class="n">ref_anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
     <span class="n">anndata_list</span><span class="o">=</span><span class="n">simu_data</span><span class="p">,</span>
     <span class="n">name_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">,</span> <span class="s2">&quot;scDesign3&quot;</span><span class="p">],</span>

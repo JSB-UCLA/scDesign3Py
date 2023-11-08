@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Compare gaussian copula and vine copula &mdash; pyscDesign3  documentation</title>
+  <title>Compare gaussian copula and vine copula &mdash; scDesign3Py  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
@@ -37,7 +37,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            pyscDesign3
+            scDesign3Py
           </a>
               <div class="version">
                 1.0.0
@@ -55,7 +55,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../set_up/Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../set_up/API.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About pyscDesign3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About scDesign3Py</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul>
@@ -83,7 +83,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">pyscDesign3</a>
+          <a href="../../index.html">scDesign3Py</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -94,7 +94,7 @@
           <li class="breadcrumb-item"><a href="index.html">Model Parameter</a></li>
       <li class="breadcrumb-item active">Compare gaussian copula and vine copula</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/examples/model_para/comp_gau_vine.ipynb" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/examples/model_para/comp_gau_vine.ipynb" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -119,12 +119,12 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
-<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -183,10 +183,10 @@
 </section>
 <section id="simulation">
 <h2>Simulation<a class="headerlink" href="#simulation" title="Permalink to this heading"></a></h2>
-<p>We then use pyscdesign3 to simulate two new datasets using Gaussian copula and vine copula respectively.</p>
+<p>We then use scDesign3Py to simulate two new datasets using Gaussian copula and vine copula respectively.</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gaussian</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gaussian</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">)</span>
 <span class="n">gaussian</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 
 <span class="n">gaussian_res</span> <span class="o">=</span> <span class="n">gaussian</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span><span class="n">anndata</span> <span class="o">=</span> <span class="n">subdata</span><span class="p">,</span>
@@ -197,7 +197,7 @@
                             <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
                             <span class="n">assay_use</span> <span class="o">=</span> <span class="s2">&quot;normcounts&quot;</span><span class="p">,</span>
                             <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-                            <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                            <span class="n">usebam</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                             <span class="n">pseudo_obs</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
                             <span class="n">return_model</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -206,8 +206,8 @@
 </div>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vine</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">)</span>
-<span class="n">vine</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">456</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vine</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">)</span>
+<span class="n">vine</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 
 <span class="n">vine_res</span> <span class="o">=</span> <span class="n">vine</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span><span class="n">anndata</span> <span class="o">=</span> <span class="n">subdata</span><span class="p">,</span>
                         <span class="n">celltype</span> <span class="o">=</span> <span class="s1">&#39;cell_type&#39;</span><span class="p">,</span>
@@ -217,7 +217,7 @@
                         <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;vine&quot;</span><span class="p">,</span>
                         <span class="n">assay_use</span> <span class="o">=</span> <span class="s2">&quot;normcounts&quot;</span><span class="p">,</span>
                         <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-                        <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">usebam</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                         <span class="n">pseudo_obs</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> 
                         <span class="n">return_model</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
 </pre></div>
@@ -289,7 +289,7 @@
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../../_images/6ce92efa7484ee579883d1c53d4fd625bf1ddc67f335654d020c0c9fcc06f09f.png" src="../../_images/6ce92efa7484ee579883d1c53d4fd625bf1ddc67f335654d020c0c9fcc06f09f.png" />
+<img alt="../../_images/f29ae7654175dd7372249020739687b9c12db2ec68e13dc02c02b05d31886338.png" src="../../_images/f29ae7654175dd7372249020739687b9c12db2ec68e13dc02c02b05d31886338.png" />
 </div>
 </div>
 </section>
@@ -354,7 +354,7 @@
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../../_images/987b3f23dfdede46f87459de2811e14e0d0e89ea738421ab96b6867e2861359f.png" src="../../_images/987b3f23dfdede46f87459de2811e14e0d0e89ea738421ab96b6867e2861359f.png" />
+<img alt="../../_images/e3b422fcd7d23a69ea210c1b688ad3cfb08406690029310a5296a26bde564f93.png" src="../../_images/e3b422fcd7d23a69ea210c1b688ad3cfb08406690029310a5296a26bde564f93.png" />
 </div>
 </div>
 </section>

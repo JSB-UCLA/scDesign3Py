@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Run pyscDesign3 pipeline step by step &mdash; pyscDesign3  documentation</title>
+  <title>Run scDesign3Py pipeline step by step &mdash; scDesign3Py  documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
@@ -39,7 +39,7 @@
           
           
           <a href="../index.html" class="icon icon-home">
-            pyscDesign3
+            scDesign3Py
           </a>
               <div class="version">
                 1.0.0
@@ -57,7 +57,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../set_up/Installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../set_up/API.html">API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../set_up/info.html">About pyscDesign3</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../set_up/info.html">About scDesign3Py</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
@@ -81,7 +81,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../index.html">pyscDesign3</a>
+          <a href="../index.html">scDesign3Py</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -89,9 +89,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Run pyscDesign3 pipeline step by step</li>
+      <li class="breadcrumb-item active">Run scDesign3Py pipeline step by step</li>
       <li class="wy-breadcrumbs-aside">
-              <a href="https://github.com/DILIU899/pyscDesign3/blob/develop/docs/source/tutorial/stepwise.ipynb" class="fa fa-github"> Edit on GitHub</a>
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/tutorial/stepwise.ipynb" class="fa fa-github"> Edit on GitHub</a>
       </li>
   </ul>
   <hr/>
@@ -99,19 +99,19 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section class="tex2jax_ignore mathjax_ignore" id="run-pyscdesign3-pipeline-step-by-step">
-<h1>Run pyscDesign3 pipeline step by step<a class="headerlink" href="#run-pyscdesign3-pipeline-step-by-step" title="Permalink to this heading"></a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="run-scdesign3py-pipeline-step-by-step">
+<h1>Run scDesign3Py pipeline step by step<a class="headerlink" href="#run-scdesign3py-pipeline-step-by-step" title="Permalink to this heading"></a></h1>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
-<p>In this section, we will show how to run the whole pyscDesign3 pipeline step by step.</p>
-<p>Some basic introduction of pyscDesign3 package is included in the <a class="reference internal" href="all_in_one.html"><span class="doc std std-doc">All in one simulation</span></a> section, so if you have no idea of how to use the package, you can first go through that tutorial.</p>
+<p>In this section, we will show how to run the whole scDesign3Py pipeline step by step.</p>
+<p>Some basic introduction of scDesign3Py package is included in the <a class="reference internal" href="all_in_one.html"><span class="doc std std-doc">All in one simulation</span></a> section, so if you have no idea of how to use the package, you can first go through that tutorial.</p>
 <p>In this section, we will introduce the following methods according to their actual execution order.</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="#step-1-construct-data"><span class="std std-ref">Construct data</span></a> (<a class="reference internal" href="../set_up/_autosummary/pyscDesign3.scDesign3.construct_data.html"><span class="doc std std-doc">API</span></a>)</p></li>
-<li><p><a class="reference internal" href="#step-2-fit-marginal"><span class="std std-ref">Fit marginal</span></a> (<a class="reference internal" href="../set_up/_autosummary/pyscDesign3.scDesign3.fit_marginal.html"><span class="doc std std-doc">API</span></a>)</p></li>
-<li><p><a class="reference internal" href="#step-3-fit-copula"><span class="std std-ref">Fit copula</span></a> (<a class="reference internal" href="../set_up/_autosummary/pyscDesign3.scDesign3.fit_copula.html"><span class="doc std std-doc">API</span></a>)</p></li>
-<li><p><a class="reference internal" href="#step-4-extract-parameters"><span class="std std-ref">Extract parameters</span></a> (<a class="reference internal" href="../set_up/_autosummary/pyscDesign3.scDesign3.extract_para.html"><span class="doc std std-doc">API</span></a>)</p></li>
-<li><p><a class="reference internal" href="#step-5-simulate-new-data"><span class="std std-ref">Simulate new data</span></a> (<a class="reference internal" href="../set_up/_autosummary/pyscDesign3.scDesign3.simu_new.html"><span class="doc std std-doc">API</span></a>)</p></li>
+<li><p><a class="reference internal" href="#step-1-construct-data"><span class="std std-ref">Construct data</span></a> (<a class="reference internal" href="../set_up/_autosummary/scDesign3Py.scDesign3.construct_data.html"><span class="doc std std-doc">API</span></a>)</p></li>
+<li><p><a class="reference internal" href="#step-2-fit-marginal"><span class="std std-ref">Fit marginal</span></a> (<a class="reference internal" href="../set_up/_autosummary/scDesign3Py.scDesign3.fit_marginal.html"><span class="doc std std-doc">API</span></a>)</p></li>
+<li><p><a class="reference internal" href="#step-3-fit-copula"><span class="std std-ref">Fit copula</span></a> (<a class="reference internal" href="../set_up/_autosummary/scDesign3Py.scDesign3.fit_copula.html"><span class="doc std std-doc">API</span></a>)</p></li>
+<li><p><a class="reference internal" href="#step-4-extract-parameters"><span class="std std-ref">Extract parameters</span></a> (<a class="reference internal" href="../set_up/_autosummary/scDesign3Py.scDesign3.extract_para.html"><span class="doc std std-doc">API</span></a>)</p></li>
+<li><p><a class="reference internal" href="#step-5-simulate-new-data"><span class="std std-ref">Simulate new data</span></a> (<a class="reference internal" href="../set_up/_autosummary/scDesign3Py.scDesign3.simu_new.html"><span class="doc std std-doc">API</span></a>)</p></li>
 </ul>
 </section>
 <section id="step-0-preparation">
@@ -121,12 +121,12 @@
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
-<span class="kn">import</span> <span class="nn">pyscDesign3</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /root/anaconda3/envs/pyscdesign/lib/R
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
 </pre></div>
 </div>
 </div>
@@ -157,7 +157,7 @@
 <h3>Create the <code class="docutils literal notranslate"><span class="pre">scDesign3</span></code> instance<a class="headerlink" href="#create-the-scdesign3-instance" title="Permalink to this heading"></a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -262,12 +262,12 @@
 </div>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bpparam</span> <span class="o">=</span> <span class="n">pyscDesign3</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;MulticoreParam&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bpparam</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">get_bpparam</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;MulticoreParam&quot;</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="n">marginal</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
     <span class="n">data</span><span class="o">=</span><span class="n">const_data</span><span class="p">,</span>
     <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
     <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
-    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
     <span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;bpmapply&quot;</span><span class="p">,</span>
@@ -290,9 +290,9 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    (Intercept) s(pseudotime).1 s(pseudotime).2 s(pseudotime).3 s(pseudotime).4 
-      1.9507488      -1.4124446      -1.8604564      -1.6723522      -0.8250225 
+      1.9585122      -1.5466581      -1.8250803      -1.8320568      -0.6745635 
 s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9 
-      1.5108538       2.7502221       3.5714840       3.9859354       2.8515292 
+      1.0997392       2.6285021       3.5939811       4.0042983       2.8564420 
 </pre></div>
 </div>
 </div>
@@ -306,9 +306,9 @@ s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>    (Intercept) s(pseudotime).1 s(pseudotime).2 s(pseudotime).3 s(pseudotime).4 
-      1.9600000      -1.4124446      -1.8604564      -1.6723522      -0.8250225 
+      1.9600000      -1.5466581      -1.8250803      -1.8320568      -0.6745635 
 s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9 
-      1.5108538       2.7502221       3.5714840       3.9859354       2.8515292 
+      1.0997392       2.6285021       3.5939811       4.0042983       2.8564420 
 </pre></div>
 </div>
 </div>
@@ -337,9 +337,9 @@ s(pseudotime).5 s(pseudotime).6 s(pseudotime).7 s(pseudotime).8 s(pseudotime).9
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>aic.marginal    271036.643970
-aic.copula       -2268.993049
-aic.total       268767.650921
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>aic.marginal    271021.353838
+aic.copula       -2276.230162
+aic.total       268745.123676
 dtype: float64
 </pre></div>
 </div>
@@ -383,7 +383,7 @@ dtype: float64
 </ul>
 </li>
 </ul>
-<div class="cell tag_remove-output docutils container">
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">para</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">extract_para</span><span class="p">(</span>
     <span class="n">marginal_dict</span><span class="o">=</span><span class="n">marginal</span><span class="p">,</span>
@@ -430,51 +430,51 @@ dtype: float64
   <tbody>
     <tr>
       <th>AAACCTGAGAGGGATA</th>
-      <td>50.419465</td>
-      <td>1.181685</td>
-      <td>53.842404</td>
-      <td>20.240920</td>
-      <td>0.242246</td>
+      <td>49.940402</td>
+      <td>1.190921</td>
+      <td>54.085986</td>
+      <td>20.103570</td>
+      <td>0.243648</td>
     </tr>
     <tr>
       <th>AAACCTGGTAAGTGGC</th>
-      <td>1.301210</td>
-      <td>0.256551</td>
-      <td>5.701465</td>
-      <td>0.623444</td>
-      <td>0.215905</td>
+      <td>1.279222</td>
+      <td>0.254829</td>
+      <td>5.659475</td>
+      <td>0.599492</td>
+      <td>0.221166</td>
     </tr>
     <tr>
       <th>AAACGGGCAAAGAATC</th>
-      <td>104.864109</td>
-      <td>8.201911</td>
-      <td>38.288643</td>
-      <td>39.306191</td>
-      <td>0.217556</td>
+      <td>104.525977</td>
+      <td>8.290215</td>
+      <td>38.167856</td>
+      <td>39.422798</td>
+      <td>0.217998</td>
     </tr>
     <tr>
       <th>AAACGGGGTACAGTTC</th>
-      <td>162.884022</td>
-      <td>289.929054</td>
-      <td>18.686662</td>
-      <td>46.505082</td>
-      <td>0.276204</td>
+      <td>160.813500</td>
+      <td>290.218150</td>
+      <td>18.659258</td>
+      <td>46.143444</td>
+      <td>0.276631</td>
     </tr>
     <tr>
       <th>AAACGGGGTGAAATCA</th>
-      <td>0.740181</td>
-      <td>0.236181</td>
-      <td>0.941316</td>
-      <td>0.253139</td>
-      <td>0.229452</td>
+      <td>0.725943</td>
+      <td>0.234674</td>
+      <td>0.954873</td>
+      <td>0.240587</td>
+      <td>0.207927</td>
     </tr>
     <tr>
       <th>AAACGGGTCAAACAAG</th>
-      <td>0.565350</td>
-      <td>0.321886</td>
-      <td>0.076826</td>
-      <td>0.234823</td>
-      <td>6.812986</td>
+      <td>0.566305</td>
+      <td>0.322497</td>
+      <td>0.069305</td>
+      <td>0.249637</td>
+      <td>7.217850</td>
     </tr>
   </tbody>
 </table>
@@ -536,43 +536,43 @@ dtype: float64
   <tbody>
     <tr>
       <th>AAACCTGAGAGGGATA</th>
-      <td>25.0</td>
+      <td>29.0</td>
+      <td>1.0</td>
+      <td>64.0</td>
+      <td>22.0</td>
       <td>0.0</td>
-      <td>72.0</td>
-      <td>19.0</td>
-      <td>0.0</td>
-      <td>13.0</td>
+      <td>12.0</td>
     </tr>
     <tr>
       <th>AAACCTGGTAAGTGGC</th>
       <td>-0.0</td>
       <td>1.0</td>
-      <td>6.0</td>
+      <td>5.0</td>
       <td>-0.0</td>
       <td>1.0</td>
-      <td>1.0</td>
+      <td>-0.0</td>
     </tr>
     <tr>
       <th>AAACGGGCAAAGAATC</th>
-      <td>152.0</td>
-      <td>3.0</td>
-      <td>138.0</td>
-      <td>21.0</td>
+      <td>199.0</td>
+      <td>2.0</td>
+      <td>127.0</td>
+      <td>32.0</td>
       <td>-0.0</td>
-      <td>33.0</td>
+      <td>30.0</td>
     </tr>
     <tr>
       <th>AAACGGGGTACAGTTC</th>
-      <td>25.0</td>
-      <td>254.0</td>
-      <td>13.0</td>
-      <td>99.0</td>
+      <td>18.0</td>
+      <td>256.0</td>
+      <td>14.0</td>
+      <td>86.0</td>
       <td>0.0</td>
-      <td>9.0</td>
+      <td>11.0</td>
     </tr>
     <tr>
       <th>AAACGGGGTGAAATCA</th>
-      <td>1.0</td>
+      <td>0.0</td>
       <td>1.0</td>
       <td>-0.0</td>
       <td>-0.0</td>
