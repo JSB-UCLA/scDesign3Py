@@ -6,3 +6,6 @@ docs/build/
 
 # ignore .egg-info
 scDesign3Py.egg-info/**
+
+# ignore test data
+test/test_data/**
