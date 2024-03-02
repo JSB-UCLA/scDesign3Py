@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulate multi-omics data from single-omic data &mdash; scDesign3Py  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Model Selection" href="../model_select/index.html" />
+    <link rel="prev" title="Simulate CITE-seq data" href="CITE.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            scDesign3Py
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/API.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About scDesign3Py</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/all_in_one.html">All in one simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/stepwise.html">Step by step simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bpparam.html">Get BPPARAM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/lrt.html">Perform likelihood ratio test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/plot.html">Plot results</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Data simulation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cell_lib_size.html">Simulate datasets with cell library size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mul_lineage.html">Simulate datasets with multiple lineages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spatial.html">Simulate spatial transcriptomic data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deconvolution.html">Simulate spot-resolution spatial data for cell-type deconvolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ATAC.html">Simulate single-cell ATAC-seq data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CITE.html">Simulate CITE-seq data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Simulate multi-omics data from multiple single-omic datasets</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../model_select/index.html">Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model_alter/index.html">Model alteration</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">scDesign3Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Data Simulation</a></li>
+      <li class="breadcrumb-item active">Simulate multi-omics data from single-omic data</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/examples/data_simu/mul_omic.ipynb" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="simulate-multi-omics-data-from-single-omic-data">
+<h1>Simulate multi-omics data from single-omic data<a class="headerlink" href="#simulate-multi-omics-data-from-single-omic-data" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>In this example, we show how to use scDesign3Py to simulate multi-omics (RNA expression + DNA methylation) data by learning from real data that only have a single modality. The example data and aligned low-dimensional embeddings are from <a class="reference external" href="https://github.com/caokai1073/Pamona">Pamona</a>.</p>
+</section>
+<section id="import-packages-and-read-in-data">
+<h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Link to this heading"></a></h2>
+<section id="import-pacakges">
+<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Link to this heading"></a></h3>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="read-in-the-reference-data">
+<h3>Read in the reference data<a class="headerlink" href="#read-in-the-reference-data" title="Link to this heading"></a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meth_exp</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/SCGEMMETH.h5ad&quot;</span><span class="p">)</span>
+<span class="n">rna_exp</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/SCGEMRNA.h5ad&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="simulation">
+<h2>Simulation<a class="headerlink" href="#simulation" title="Link to this heading"></a></h2>
+<p>We first use the step-by-step functions to fit genes’ marginal models, copulas, and extract simulation parameters separately for the scRNA-seq data and the DNA methylation data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">)</span>
+<span class="n">rna_data</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">rna_exp</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;logcounts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">spatial</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;UMAP1_integrated&quot;</span><span class="p">,</span><span class="s2">&quot;UMAP2_integrated&quot;</span><span class="p">],</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meth</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">)</span>
+<span class="n">meth_data</span> <span class="o">=</span> <span class="n">meth</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">meth_exp</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">spatial</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;UMAP1_integrated&quot;</span><span class="p">,</span> <span class="s2">&quot;UMAP2_integrated&quot;</span><span class="p">],</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note here we actually treat the 2D aligned UMAPs as a kind of “pseudo”-spatial data. We use the tensor regression spline to fit two ref datasets seperately.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">rna_marginal</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;te(UMAP1_integrated, UMAP2_integrated, bs = &#39;cr&#39;, k = 10)&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;te(UMAP1_integrated, UMAP2_integrated, bs = &#39;cr&#39;, k = 5)&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meth</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">meth_marginal</span> <span class="o">=</span> <span class="n">meth</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;te(UMAP1_integrated, UMAP2_integrated, bs = &#39;cr&#39;, k = 10)&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;binomial&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_copula</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">fit_copula</span><span class="p">(</span><span class="n">copula</span><span class="o">=</span><span class="s2">&quot;vine&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meth_copula</span> <span class="o">=</span> <span class="n">meth</span><span class="o">.</span><span class="n">fit_copula</span><span class="p">(</span><span class="n">copula</span><span class="o">=</span><span class="s2">&quot;vine&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_para</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">extract_para</span><span class="p">(</span><span class="n">new_covariate</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">rna_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">],</span> <span class="n">meth_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meth_para</span> <span class="o">=</span> <span class="n">meth</span><span class="o">.</span><span class="n">extract_para</span><span class="p">(</span><span class="n">new_covariate</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">rna_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">],</span> <span class="n">meth_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then, we combined the cell covariates from both the scRNA-seq data and the DNA methylation data as the new covariate to simulate the two new datasets with parameters from scRNA-seq data and the DNA methylation data separately.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_res</span> <span class="o">=</span> <span class="n">rna</span><span class="o">.</span><span class="n">simu_new</span><span class="p">(</span><span class="n">new_covariate</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">rna_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">],</span> <span class="n">meth_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                       <span class="n">important_feature</span><span class="o">=</span><span class="n">rna_copula</span><span class="p">[</span><span class="s2">&quot;important_feature&quot;</span><span class="p">],)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meth_res</span> <span class="o">=</span> <span class="n">meth</span><span class="o">.</span><span class="n">simu_new</span><span class="p">(</span><span class="n">new_covariate</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">rna_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">],</span> <span class="n">meth_data</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+                         <span class="n">important_feature</span><span class="o">=</span><span class="n">meth_copula</span><span class="p">[</span><span class="s2">&quot;important_feature&quot;</span><span class="p">],)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h2>
+<p>We combine the two synthetic datasets and obtain the UMAP embeddings for the combined dataset.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">count_combine</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">rna_res</span><span class="p">,</span><span class="n">meth_res</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">combine_exp</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">count_combine</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">pca</span><span class="p">(</span><span class="n">combine_exp</span><span class="p">,</span> <span class="n">n_comps</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">combine_exp</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">n_pcs</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">combine_exp</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rna_exp</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;cov&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rna_exp</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">rna_exp</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;cov&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">rna_exp</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meth_exp</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;cov&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">meth_exp</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">neighbors</span><span class="p">(</span><span class="n">meth_exp</span><span class="p">,</span> <span class="n">n_neighbors</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">use_rep</span><span class="o">=</span><span class="s2">&quot;cov&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">umap</span><span class="p">(</span><span class="n">meth_exp</span><span class="p">,</span> <span class="n">min_dist</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we visualize the UMAP embeddings for the inputted scRNA-seq data, DNA methylation data, and the combined synthetic data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rna_exp</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">],</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">,</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">]),</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#66c2a5&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Real data: RNA&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s2">&quot;32 Features + 177 Cells&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">meth_exp</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">],</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">,</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">]),</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#8ea0c9&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Real data: Methylation&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s2">&quot;27 Features + 142 Cells&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">scatterplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">combine_exp</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s2">&quot;X_umap&quot;</span><span class="p">],</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">,</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">]),</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;UMAP1&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;UMAP2&quot;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#f79974&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;scDesign3: RNA + Meythlation&quot;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="s2">&quot;59 Features + 319 Cells&quot;</span><span class="p">,</span> <span class="n">verticalalignment</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span> <span class="n">horizontalalignment</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../../_images/f3e8f1a8106ca70de251e49169d9cdf403a53602475391a9b78cd1d2c83b57c7.png" src="../../_images/f3e8f1a8106ca70de251e49169d9cdf403a53602475391a9b78cd1d2c83b57c7.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CITE.html" class="btn btn-neutral float-left" title="Simulate CITE-seq data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../model_select/index.html" class="btn btn-neutral float-right" title="Model Selection" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Di Liu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

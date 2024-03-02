@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulate datasets with cell library size &mdash; scDesign3Py  documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
-        <script src="../../_static/clipboard.min.js"></script>
-        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
         <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../../_static/js/theme.js"></script>
@@ -74,6 +75,10 @@
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Simulate datasets with cell library size</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mul_lineage.html">Simulate datasets with multiple lineages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spatial.html">Simulate spatial transcriptomic data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deconvolution.html">Simulate spot-resolution spatial data for cell-type deconvolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ATAC.html">Simulate single-cell ATAC-seq data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CITE.html">Simulate CITE-seq data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mul_omic.html">Simulate multi-omics data from multiple single-omic datasets</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../model_select/index.html">Model selection</a></li>
@@ -106,16 +111,16 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="simulate-datasets-with-cell-library-size">
-<h1>Simulate datasets with cell library size<a class="headerlink" href="#simulate-datasets-with-cell-library-size" title="Permalink to this heading"></a></h1>
+<h1>Simulate datasets with cell library size<a class="headerlink" href="#simulate-datasets-with-cell-library-size" title="Link to this heading"></a></h1>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
 <p>In this example, we will show how to use scDesign3Py to simulate datasets adjusted by cell library size. The purpose of this example is to show that including the library size when modeling the marginal distribution for each gene can help cells in the synthetic data have more similar library sizes as the cells in the real data.</p>
 </section>
 <section id="import-packages-and-read-in-data">
-<h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
+<h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Link to this heading"></a></h2>
 <section id="import-pacakges">
-<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Permalink to this heading"></a></h3>
-<div class="cell docutils container">
+<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Link to this heading"></a></h3>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -125,15 +130,10 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="read-in-the-reference-data">
-<h3>Read in the reference data<a class="headerlink" href="#read-in-the-reference-data" title="Permalink to this heading"></a></h3>
+<h3>Read in the reference data<a class="headerlink" href="#read-in-the-reference-data" title="Link to this heading"></a></h3>
 <p>The raw data is from the R package <code class="docutils literal notranslate"><span class="pre">DuoClustering2018</span></code> which contain a set of datasets with true cell type labels and converted to <code class="docutils literal notranslate"><span class="pre">.h5ad</span></code> file using the R package <code class="docutils literal notranslate"><span class="pre">sceasy</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -172,7 +172,7 @@
 </section>
 </section>
 <section id="simulation">
-<h2>Simulation<a class="headerlink" href="#simulation" title="Permalink to this heading"></a></h2>
+<h2>Simulation<a class="headerlink" href="#simulation" title="Link to this heading"></a></h2>
 <p>Then, we set the mu_formula as cell_type and offsetted by the cell library size to generate new dataset adjusted by library size. The library size is log-transformed because the link function for <span class="math notranslate nohighlight">\(\mu\)</span> of the negative binomial distribution in GAMLSS is <strong>log</strong>.</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -206,7 +206,7 @@
 </div>
 </section>
 <section id="visualization">
-<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this heading"></a></h2>
+<h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -238,7 +238,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../../_images/968fa89c578c2ca8775e4df6a559bb114013b4909aab095cb990f0e2b6d229fa.png" src="../../_images/968fa89c578c2ca8775e4df6a559bb114013b4909aab095cb990f0e2b6d229fa.png" />
+<img alt="../../_images/c7e1b62a10230361e7c612fa1f1ce7734e8efb862e04bbbe563c7e0f4e9969fa.png" src="../../_images/c7e1b62a10230361e7c612fa1f1ce7734e8efb862e04bbbe563c7e0f4e9969fa.png" />
 </div>
 </div>
 <p>The violin plot below shows the cells in simulated dataset have similar library size as the cells in the reference dataset.</p>
@@ -264,7 +264,7 @@
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../../_images/2d24047b82380c70495d3bb163cf50aed6a55da62c60a908b7d6f3b55349fb89.png" src="../../_images/2d24047b82380c70495d3bb163cf50aed6a55da62c60a908b7d6f3b55349fb89.png" />
+<img alt="../../_images/641c53e6f9e7ea23ac79d457633366a806f7dfd8ea66023e0e73c3bc3bc98268.png" src="../../_images/641c53e6f9e7ea23ac79d457633366a806f7dfd8ea66023e0e73c3bc3bc98268.png" />
 </div>
 </div>
 </section>

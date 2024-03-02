@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Get the bpparam for bpmapply &mdash; scDesign3Py  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
-        <script src="../_static/clipboard.min.js"></script>
-        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -98,16 +99,16 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="get-the-bpparam-for-bpmapply">
-<h1>Get the bpparam for <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code><a class="headerlink" href="#get-the-bpparam-for-bpmapply" title="Permalink to this heading"></a></h1>
+<h1>Get the bpparam for <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code><a class="headerlink" href="#get-the-bpparam-for-bpmapply" title="Link to this heading"></a></h1>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
 <p>In this section, we will show how to use <code class="docutils literal notranslate"><span class="pre">get_bpparam()</span></code> function to get a <strong>R</strong> <code class="docutils literal notranslate"><span class="pre">BiocParallel::MulticoreParam</span></code> or <code class="docutils literal notranslate"><span class="pre">BiocParallel::SnowParam</span></code> object to combine with &#64;parallelization = <code class="docutils literal notranslate"><span class="pre">bpmapply</span></code>.</p>
-<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/scDesign3Py.get_bpparam.html"><span class="doc std std-doc">API</span></a>.</p>
+<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/scDesign3Py.get_bpparam.html"><span class="std std-doc">API</span></a>.</p>
 <p>To get more information on <code class="docutils literal notranslate"><span class="pre">BiocParallel</span></code> <strong>R</strong> package to help you set the parameters, please check the <a class="reference external" href="https://www.bioconductor.org/packages/devel/bioc/manuals/BiocParallel/man/BiocParallel.pdf">document</a>.</p>
 </section>
 <section id="step-1-import-packages">
-<h2>Step 1: Import packages<a class="headerlink" href="#step-1-import-packages" title="Permalink to this heading"></a></h2>
-<div class="cell docutils container">
+<h2>Step 1: Import packages<a class="headerlink" href="#step-1-import-packages" title="Link to this heading"></a></h2>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
@@ -115,15 +116,10 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="step-2-call-get-bpparam-function">
-<h2>Step 2: Call <code class="docutils literal notranslate"><span class="pre">get_bpparam</span></code> function<a class="headerlink" href="#step-2-call-get-bpparam-function" title="Permalink to this heading"></a></h2>
+<h2>Step 2: Call <code class="docutils literal notranslate"><span class="pre">get_bpparam</span></code> function<a class="headerlink" href="#step-2-call-get-bpparam-function" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>For Linux/Mac users:</p></li>
 </ul>
@@ -140,7 +136,7 @@
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>class: MulticoreParam
-  bpisup: FALSE; bpnworkers: 6; bptasks: 0; bpjobname: BPJOB
+  bpisup: FALSE; bpnworkers: 4; bptasks: 0; bpjobname: BPJOB
   bplog: FALSE; bpthreshold: INFO; bpstopOnError: FALSE
   bpRNGseed: ; bptimeout: NA; bpprogressbar: FALSE
   bpexportglobals: TRUE; bpexportvariables: FALSE; bpforceGC: FALSE
@@ -154,7 +150,7 @@
 </div>
 </section>
 <section id="step-3-read-in-data-and-run-the-scdesign3-methods">
-<h2>Step 3: Read in data and Run the scDesign3 methods<a class="headerlink" href="#step-3-read-in-data-and-run-the-scdesign3-methods" title="Permalink to this heading"></a></h2>
+<h2>Step 3: Read in data and Run the scDesign3 methods<a class="headerlink" href="#step-3-read-in-data-and-run-the-scdesign3-methods" title="Link to this heading"></a></h2>
 <p>The raw data is from the <a class="reference external" href="https://scvelo.readthedocs.io/scvelo.datasets.pancreas/">scvelo</a> and we only choose top 30 genes to save time.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -199,7 +195,7 @@
 </div>
 </div>
 </div>
-<p>Fit marginal using 2 core</p>
+<p>Fit marginal using 1 core</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -210,17 +206,17 @@
     <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total time cost when using 2 core is </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total time cost when using 1 core is </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total time cost when using 2 core is 164.04 sec
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total time cost when using 1 core is 195.70 sec
 </pre></div>
 </div>
 </div>
 </div>
-<p>Fit marginal using 6 cores</p>
+<p>Fit marginal using 3 cores</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
@@ -231,12 +227,12 @@
     <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">end</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total time cost when using 6 cores is </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Total time cost when using 3 cores is </span><span class="si">{:.2f}</span><span class="s2"> sec&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total time cost when using 6 cores is 114.14 sec
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total time cost when using 3 cores is 113.44 sec
 </pre></div>
 </div>
 </div>

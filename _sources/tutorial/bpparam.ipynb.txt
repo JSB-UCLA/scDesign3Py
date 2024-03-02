@@ -2,7 +2,7 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 1,
    "metadata": {
     "tags": [
      "remove-cell"
@@ -12,9 +12,11 @@
    "source": [
     "import os\n",
     "import sys\n",
+    "import warnings\n",
     "\n",
     "os.chdir(\"..\")\n",
-    "sys.path.append(\"../../\")"
+    "sys.path.append(\"../../\")\n",
+    "warnings.filterwarnings(\"ignore\")"
    ]
   },
   {
@@ -36,11 +38,21 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 2,
    "metadata": {
-    "tags": []
+    "tags": [
+     "remove-output"
+    ]
    },
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The R project used is located at /home/ld/anaconda3/envs/pyscdesign/lib/R\n"
+     ]
+    }
+   ],
    "source": [
     "import time\n",
     "import anndata as ad\n",
@@ -64,9 +76,26 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 3,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "class: MulticoreParam\n",
+      "  bpisup: FALSE; bpnworkers: 4; bptasks: 0; bpjobname: BPJOB\n",
+      "  bplog: FALSE; bpthreshold: INFO; bpstopOnError: FALSE\n",
+      "  bpRNGseed: ; bptimeout: NA; bpprogressbar: FALSE\n",
+      "  bpexportglobals: TRUE; bpexportvariables: FALSE; bpforceGC: FALSE\n",
+      "  bpfallback: TRUE\n",
+      "  bplogdir: NA\n",
+      "  bpresultdir: NA\n",
+      "  cluster type: FORK\n",
+      "\n"
+     ]
+    }
+   ],
    "source": [
     "bpparam = scDesign3Py.get_bpparam(mode=\"MulticoreParam\", show=True, stop_on_error=False)"
    ]
@@ -82,9 +111,23 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 4,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "View of AnnData object with n_obs × n_vars = 2087 × 30\n",
+       "    obs: 'clusters_coarse', 'clusters', 'S_score', 'G2M_score', 'cell_type', 'sizeFactor', 'pseudotime'\n",
+       "    var: 'highly_variable_genes'\n",
+       "    obsm: 'X_pca', 'X_umap', 'X_x_pca', 'X_x_umap'"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "data = ad.read_h5ad(\"data/PANCREAS.h5ad\")\n",
     "data = data[:, 0:30]\n",
@@ -100,13 +143,80 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 5,
    "metadata": {
     "tags": [
      "remove-output"
     ]
    },
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "\n",
+       "        <span>ListVector with 4 elements.</span>\n",
+       "        <table>\n",
+       "        <tbody>\n",
+       "        \n",
+       "          <tr>\n",
+       "            <th>\n",
+       "            count_mat\n",
+       "            </th>\n",
+       "            <td>\n",
+       "            <rpy2.rinterface.FloatSexpVector object at 0x7fb60e769510> [14]\n",
+       "            </td>\n",
+       "          </tr>\n",
+       "        \n",
+       "          <tr>\n",
+       "            <th>\n",
+       "            dat\n",
+       "            </th>\n",
+       "            <td>\n",
+       "            <rpy2.rinterface.ListSexpVector object at 0x7fb60eb89c90> [19]\n",
+       "            </td>\n",
+       "          </tr>\n",
+       "        \n",
+       "          <tr>\n",
+       "            <th>\n",
+       "            newCovariate\n",
+       "            </th>\n",
+       "            <td>\n",
+       "            <rpy2.rinterface.ListSexpVector object at 0x7fb60e74d750> [19]\n",
+       "            </td>\n",
+       "          </tr>\n",
+       "        \n",
+       "          <tr>\n",
+       "            <th>\n",
+       "            filtered_gene\n",
+       "            </th>\n",
+       "            <td>\n",
+       "            <rpy2.rinterface_lib.sexp.NULLType object at 0x7fb6eec841d0> [0]\n",
+       "            </td>\n",
+       "          </tr>\n",
+       "        \n",
+       "        </tbody>\n",
+       "        </table>\n",
+       "        "
+      ],
+      "text/plain": [
+       "<rpy2.robjects.vectors.ListVector object at 0x7fb60e73b2d0> [19]\n",
+       "R classes: ('list',)\n",
+       "[FloatSexpV..., ListSexpVe..., ListSexpVe..., NULLType]\n",
+       "  count_mat: <class 'rpy2.rinterface.FloatSexpVector'>\n",
+       "  <rpy2.rinterface.FloatSexpVector object at 0x7fb60e7b5fd0> [14]\n",
+       "  dat: <class 'rpy2.rinterface.ListSexpVector'>\n",
+       "  <rpy2.rinterface.ListSexpVector object at 0x7fb60e7c3e90> [19]\n",
+       "  newCovariate: <class 'rpy2.rinterface.ListSexpVector'>\n",
+       "  <rpy2.rinterface.ListSexpVector object at 0x7fb60e7c2510> [19]\n",
+       "  filtered_gene: <class 'rpy2.rinterface_lib.sexp.NULLType'>\n",
+       "  <rpy2.rinterface_lib.sexp.NULLType object at 0x7fb6eec841d0> [0]"
+      ]
+     },
+     "execution_count": 5,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "# create the instance\n",
     "test1 = scDesign3Py.scDesign3(n_cores=1, parallelization=\"bpmapply\", bpparam=bpparam, return_py=False)\n",
@@ -133,14 +243,22 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Fit marginal using 2 core"
+    "Fit marginal using 1 core"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 6,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Total time cost when using 1 core is 283.27 sec\n"
+     ]
+    }
+   ],
    "source": [
     "start = time.time()\n",
     "test1.fit_marginal(\n",
@@ -150,21 +268,29 @@
     "    usebam=False,\n",
     ")\n",
     "end = time.time()\n",
-    "print(\"Total time cost when using 2 core is {:.2f} sec\".format(end-start))"
+    "print(\"Total time cost when using 1 core is {:.2f} sec\".format(end-start))"
    ]
   },
   {
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Fit marginal using 6 cores"
+    "Fit marginal using 3 cores"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 7,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Total time cost when using 3 cores is 125.00 sec\n"
+     ]
+    }
+   ],
    "source": [
     "start = time.time()\n",
     "test2.fit_marginal(\n",
@@ -174,7 +300,7 @@
     "    usebam=False,\n",
     ")\n",
     "end = time.time()\n",
-    "print(\"Total time cost when using 6 cores is {:.2f} sec\".format(end-start))"
+    "print(\"Total time cost when using 3 cores is {:.2f} sec\".format(end-start))"
    ]
   }
  ],

@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>scDesign3Py.get_bpparam &mdash; scDesign3Py  documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
-        <script src="../../_static/clipboard.min.js"></script>
-        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -113,18 +114,18 @@
            <div itemprop="articleBody">
              
   <section id="scdesign3py-get-bpparam">
-<h1>scDesign3Py.get_bpparam<a class="headerlink" href="#scdesign3py-get-bpparam" title="Permalink to this heading"></a></h1>
+<h1>scDesign3Py.get_bpparam<a class="headerlink" href="#scdesign3py-get-bpparam" title="Link to this heading"></a></h1>
 <dl class="py function">
 <dt class="sig sig-object py" id="scDesign3Py.get_bpparam">
-<span class="sig-prename descclassname"><span class="pre">scDesign3Py.</span></span><span class="sig-name descname"><span class="pre">get_bpparam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typing.Literal['MulticoreParam',</span> <span class="pre">'SnowParam']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scDesign3Py/tools/get_bpparam.html#get_bpparam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scDesign3Py.get_bpparam" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">scDesign3Py.</span></span><span class="sig-name descname"><span class="pre">get_bpparam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">typing.Literal['MulticoreParam',</span> <span class="pre">'SnowParam']</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scDesign3Py/tools/get_bpparam.html#get_bpparam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#scDesign3Py.get_bpparam" title="Link to this definition"></a></dt>
 <dd><p>Get your parallelization parameters robject</p>
 <p>Check R function <cite>BiocParallel::MulticoreParam</cite> and <cite>BiocParallel::SnowParam</cite> for more informarion on how to set the parameters.</p>
 <section id="details">
-<h2>Details:<a class="headerlink" href="#details" title="Permalink to this heading"></a></h2>
+<h2>Details:<a class="headerlink" href="#details" title="Link to this heading"></a></h2>
 <p>For users who are going to use ‘bpmapply’ as the parallel method, this function provide the interface to create the control param. The implemented mode including ‘MulticoreParam’ for linux/Mac users and ‘SnowParam’ for windows users.</p>
 </section>
 <section id="arguments">
-<h2>Arguments:<a class="headerlink" href="#arguments" title="Permalink to this heading"></a></h2>
+<h2>Arguments:<a class="headerlink" href="#arguments" title="Link to this heading"></a></h2>
 <dl class="simple">
 <dt>mode: <cite>str</cite></dt><dd><p>The type of your selected parallel parameter. If windows, choose SnowParam. If linux or mac, choose MulticoreParam or SnowParam.</p>
 </dd>
@@ -133,7 +134,7 @@
 </dl>
 </section>
 <section id="output">
-<h2>Output:<a class="headerlink" href="#output" title="Permalink to this heading"></a></h2>
+<h2>Output:<a class="headerlink" href="#output" title="Link to this heading"></a></h2>
 <dl>
 <dt><cite>rpy2.robjects.methods.RS4</cite></dt><dd><p>A R class specifying the parrallel parameters.</p>
 <p>Combined use with &#64;parallelization = <cite>bpmapply</cite>.</p>

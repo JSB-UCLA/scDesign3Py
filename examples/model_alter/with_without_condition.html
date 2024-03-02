@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulate datasets with condition effect &mdash; scDesign3Py  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Benchmarking methods for identification of DE genes between discrete cell types" href="DE_cell.html" />
+    <link rel="prev" title="Simulate datasets with batch effect" href="with_without_batch.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            scDesign3Py
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/API.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About scDesign3Py</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/all_in_one.html">All in one simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/stepwise.html">Step by step simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bpparam.html">Get BPPARAM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/lrt.html">Perform likelihood ratio test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/plot.html">Plot results</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_simu/index.html">Data simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model_select/index.html">Model selection</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Model alteration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="with_without_batch.html">Simulate datasets with or without batch effect</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Simulate datasets with/without condition effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DE_cell.html">Simulate datasets for DE test between discrete cell types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DE_traj.html">Simulate datasets for DE test along continuous trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DE_spatial.html">Simulate datasets for SVG test</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">scDesign3Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Model Alteration</a></li>
+      <li class="breadcrumb-item active">Simulate datasets with condition effect</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/examples/model_alter/with_without_condition.ipynb" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="simulate-datasets-with-condition-effect">
+<h1>Simulate datasets with condition effect<a class="headerlink" href="#simulate-datasets-with-condition-effect" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>In this example, we will show how to use scDesign3Py to simulate data with condition effects and how to adjust the condition effects.</p>
+</section>
+<section id="import-packages-and-read-in-data">
+<h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Link to this heading"></a></h2>
+<section id="import-pacakges">
+<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Link to this heading"></a></h3>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="read-in-data">
+<h3>Read in data<a class="headerlink" href="#read-in-data" title="Link to this heading"></a></h3>
+<p>The raw data is from the <code class="docutils literal notranslate"><span class="pre">SeuratData</span></code> package. The data is called <code class="docutils literal notranslate"><span class="pre">ifnb</span></code> in the package; it is PBMC data simulated and controlled by IFNB. The raw data is converted to <code class="docutils literal notranslate"><span class="pre">.h5ad</span></code> file using the R package <code class="docutils literal notranslate"><span class="pre">sceasy</span></code>.</p>
+<p>To save time, we only choose the top 30 genes and two cell types (CD14 Mono and B).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/IFNB.h5ad&quot;</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;CD14 Mono&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;B&quot;</span><span class="p">),</span> <span class="mi">0</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span>
+<span class="n">data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+<span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 5340 × 30
+    obs: &#39;orig.ident&#39;, &#39;nCount_RNA&#39;, &#39;nFeature_RNA&#39;, &#39;stim&#39;, &#39;seurat_annotations&#39;, &#39;ident&#39;, &#39;cell_type&#39;, &#39;condition&#39;
+    var: &#39;name&#39;
+    layers: &#39;log&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>The condition information is stored in obs property of the example dataset.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;condition&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AAACATACATTTCC.1    CTRL
+AAACATACCAGAAA.1    CTRL
+AAACATACCTCGCT.1    CTRL
+AAACATACGGCATT.1    CTRL
+AAACATTGCTTCGC.1    CTRL
+Name: condition, dtype: category
+Categories (2, object): [&#39;CTRL&#39;, &#39;STIM&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="simulation">
+<h2>Simulation<a class="headerlink" href="#simulation" title="Link to this heading"></a></h2>
+<p>First, we will simulate new data with the condition effects.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">)</span>
+<span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">simu_res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">other_covariates</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;cell_type + condition + cell_type*condition&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">copula</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ifnb_newcount</span> <span class="o">=</span> <span class="n">simu_res</span><span class="p">[</span><span class="s2">&quot;new_count&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then, we can also simulate a new dataset with condition effects on B cells removed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create instance</span>
+<span class="n">ifnb</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># construct data</span>
+<span class="n">ifnb_data</span> <span class="o">=</span> <span class="n">ifnb</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">other_covariates</span> <span class="o">=</span> <span class="s2">&quot;condition&quot;</span><span class="p">,</span>
+    <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fit marginal</span>
+<span class="n">ifnb_marginal</span> <span class="o">=</span> <span class="n">ifnb</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
+    <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;cell_type + condition + cell_type*condition&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">n_cores</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fit copula</span>
+<span class="n">ifnb</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">ifnb_copula</span> <span class="o">=</span> <span class="n">ifnb</span><span class="o">.</span><span class="n">fit_copula</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>In here, the condition effects on B cells are removed for all genes by modifying the estimated coefficients for all genes’ marginal models.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ifnb_marginal_null_B</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">ifnb_marginal</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">ifnb_marginal</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">ifnb_marginal</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;fit&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;coefficients&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">-</span> <span class="n">ifnb_marginal</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span>
+        <span class="s2">&quot;fit&quot;</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">rx2</span><span class="p">(</span><span class="s2">&quot;coefficients&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then, we can generate the parameters using the altered marginal fits and simulate new data with the altered paremeters.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ifnb_para_null_B</span> <span class="o">=</span> <span class="n">ifnb</span><span class="o">.</span><span class="n">extract_para</span><span class="p">(</span>
+    <span class="n">marginal_dict</span><span class="o">=</span><span class="n">ifnb_marginal_null_B</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">n_cores</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ifnb</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">ifnb_newcount_null_B</span> <span class="o">=</span> <span class="n">ifnb</span><span class="o">.</span><span class="n">simu_new</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We then create the corresponding <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_anndata_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">count_mat</span> <span class="ow">in</span> <span class="p">[</span><span class="n">ifnb_newcount</span><span class="p">,</span> <span class="n">ifnb_newcount_null_B</span><span class="p">]:</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">count_mat</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="n">ifnb_data</span><span class="p">[</span><span class="s2">&quot;newCovariate&quot;</span><span class="p">])</span>
+    <span class="n">tmp</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">simu_anndata_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visulization">
+<h2>Visulization<a class="headerlink" href="#visulization" title="Link to this heading"></a></h2>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">plot_reduceddim</span><span class="p">(</span>
+    <span class="n">ref_anndata</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+    <span class="n">anndata_list</span><span class="o">=</span><span class="n">simu_anndata_list</span><span class="p">,</span>
+    <span class="n">name_list</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">,</span> <span class="s2">&quot;w/ Condition&quot;</span><span class="p">,</span> <span class="s2">&quot;Modified Condition&quot;</span><span class="p">],</span>
+    <span class="n">assay_use</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span>
+    <span class="n">color_by</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">shape_by</span><span class="o">=</span><span class="s2">&quot;condition&quot;</span><span class="p">,</span>
+    <span class="n">n_pc</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">point_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="umap">
+<h3>UMAP<a class="headerlink" href="#umap" title="Link to this heading"></a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plot</span><span class="p">[</span><span class="s2">&quot;p_umap&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/d3c321e543afbcb2a6a6481cd41e92d8e6e26f346b53684ebc01ddaf4794d3e9.png" src="../../_images/d3c321e543afbcb2a6a6481cd41e92d8e6e26f346b53684ebc01ddaf4794d3e9.png" />
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="with_without_batch.html" class="btn btn-neutral float-left" title="Simulate datasets with batch effect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="DE_cell.html" class="btn btn-neutral float-right" title="Benchmarking methods for identification of DE genes between discrete cell types" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Di Liu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Plot for visualization &mdash; scDesign3Py  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
-        <script src="../_static/clipboard.min.js"></script>
-        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -98,17 +99,17 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="plot-for-visualization">
-<h1>Plot for visualization<a class="headerlink" href="#plot-for-visualization" title="Permalink to this heading"></a></h1>
+<h1>Plot for visualization<a class="headerlink" href="#plot-for-visualization" title="Link to this heading"></a></h1>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
 <p>In this section, we will show how to use function <code class="docutils literal notranslate"><span class="pre">plot_reduceddim()</span></code> to realize dimension reduction and automatically plot the result.</p>
-<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/scDesign3Py.plot_reduceddim.html"><span class="doc std std-doc">API</span></a>.</p>
+<p>To get detailed information of the input and output of the function, please check <a class="reference internal" href="../set_up/_autosummary/scDesign3Py.plot_reduceddim.html"><span class="std std-doc">API</span></a>.</p>
 </section>
 <section id="step-1-import-packages-and-read-in-data">
-<h2>Step 1: Import packages and Read in data<a class="headerlink" href="#step-1-import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
+<h2>Step 1: Import packages and Read in data<a class="headerlink" href="#step-1-import-packages-and-read-in-data" title="Link to this heading"></a></h2>
 <section id="import-packages">
-<h3>import packages<a class="headerlink" href="#import-packages" title="Permalink to this heading"></a></h3>
-<div class="cell docutils container">
+<h3>import packages<a class="headerlink" href="#import-packages" title="Link to this heading"></a></h3>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -117,15 +118,10 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="read-in-data">
-<h3>Read in data<a class="headerlink" href="#read-in-data" title="Permalink to this heading"></a></h3>
+<h3>Read in data<a class="headerlink" href="#read-in-data" title="Link to this heading"></a></h3>
 <p>The raw data is from the <a class="reference external" href="https://scvelo.readthedocs.io/scvelo.datasets.pancreas/">scvelo</a> and we only choose top 30 genes to save time.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -147,11 +143,11 @@
 </section>
 </section>
 <section id="step-2-use-scdesign3-class-to-simulate-reads-for-comparison">
-<h2>Step 2: Use <code class="docutils literal notranslate"><span class="pre">scDesign3</span></code> class to simulate reads for comparison<a class="headerlink" href="#step-2-use-scdesign3-class-to-simulate-reads-for-comparison" title="Permalink to this heading"></a></h2>
+<h2>Step 2: Use <code class="docutils literal notranslate"><span class="pre">scDesign3</span></code> class to simulate reads for comparison<a class="headerlink" href="#step-2-use-scdesign3-class-to-simulate-reads-for-comparison" title="Link to this heading"></a></h2>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create the instance and set the parallel method</span>
-<span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;mcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">,</span> <span class="n">return_py</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 
 <span class="c1"># all-in-one simulation</span>
@@ -163,7 +159,7 @@
     <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
     <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 5, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
     <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-    <span class="n">usebam</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
     <span class="n">copula</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
 <span class="p">)</span>
@@ -173,7 +169,7 @@
 </div>
 </section>
 <section id="step-3-use-the-simulated-counts-to-construct-the-new-anndata-anndata-object">
-<h2>Step 3: Use the simulated counts to construct the new <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object<a class="headerlink" href="#step-3-use-the-simulated-counts-to-construct-the-new-anndata-anndata-object" title="Permalink to this heading"></a></h2>
+<h2>Step 3: Use the simulated counts to construct the new <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object<a class="headerlink" href="#step-3-use-the-simulated-counts-to-construct-the-new-anndata-anndata-object" title="Link to this heading"></a></h2>
 <p>Besides constructing the simulated <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object, we can also calculate the log transformed data for visualization.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -186,7 +182,7 @@
 </div>
 </section>
 <section id="step-4-visualization">
-<h2>Step 4: Visualization<a class="headerlink" href="#step-4-visualization" title="Permalink to this heading"></a></h2>
+<h2>Step 4: Visualization<a class="headerlink" href="#step-4-visualization" title="Link to this heading"></a></h2>
 <p>Please make sure all <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> objects provided in <code class="docutils literal notranslate"><span class="pre">ref_anndata</span></code> and <code class="docutils literal notranslate"><span class="pre">anndata_list</span></code> has similar assay name structure.</p>
 <p>For example, all involved count matrix should all be stored either in <code class="docutils literal notranslate"><span class="pre">anndata.AnnData.X</span></code> or <code class="docutils literal notranslate"><span class="pre">anndata.AnnData.layers[assay_use]</span></code> and all share the same name.</p>
 <div class="cell tag_remove-output docutils container">
@@ -214,7 +210,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/1232cf49602914745798bef65478cc3e87c38d5fb00e019b3d6e9aec0490ae0e.png" src="../_images/1232cf49602914745798bef65478cc3e87c38d5fb00e019b3d6e9aec0490ae0e.png" />
+<img alt="../_images/fa812b02861e835f82b34fb36698c38a9fe25cc4fa36ae0840e1ebfdcbe1c0f0.png" src="../_images/fa812b02861e835f82b34fb36698c38a9fe25cc4fa36ae0840e1ebfdcbe1c0f0.png" />
 </div>
 </div>
 <p>PCA plot</p>
@@ -225,12 +221,12 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/814b4ed26404a5b9aaaaebbec073482214c02d179d59e882d2053999d25f95df.png" src="../_images/814b4ed26404a5b9aaaaebbec073482214c02d179d59e882d2053999d25f95df.png" />
+<img alt="../_images/383afb649dcb62052ec6073a05d7d56fa1b1d210cfe791efc31db794195284c2.png" src="../_images/383afb649dcb62052ec6073a05d7d56fa1b1d210cfe791efc31db794195284c2.png" />
 </div>
 </div>
 </section>
 <section id="alternative-to-plot">
-<h2>Alternative to plot<a class="headerlink" href="#alternative-to-plot" title="Permalink to this heading"></a></h2>
+<h2>Alternative to plot<a class="headerlink" href="#alternative-to-plot" title="Link to this heading"></a></h2>
 <p>If you are not satisfied with the automatically generated plot result, you can set <code class="docutils literal notranslate"><span class="pre">if_plot</span></code> = False. Then you will get the dimension reduction result and customize your manipulation.</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -289,8 +285,8 @@
       <td>0.677236</td>
       <td>2.303983</td>
       <td>2.020007</td>
-      <td>0.631412</td>
-      <td>-2.877883</td>
+      <td>0.683344</td>
+      <td>-3.041574</td>
     </tr>
     <tr>
       <th>2</th>
@@ -298,8 +294,8 @@
       <td>0.431569</td>
       <td>-2.346135</td>
       <td>1.611974</td>
-      <td>3.804450</td>
-      <td>1.322171</td>
+      <td>3.921517</td>
+      <td>1.959380</td>
     </tr>
     <tr>
       <th>3</th>
@@ -307,8 +303,8 @@
       <td>0.749373</td>
       <td>3.688469</td>
       <td>0.252404</td>
-      <td>-0.996037</td>
-      <td>-4.582421</td>
+      <td>-0.697866</td>
+      <td>-4.915706</td>
     </tr>
     <tr>
       <th>4</th>
@@ -316,8 +312,8 @@
       <td>0.925441</td>
       <td>6.045197</td>
       <td>-2.888025</td>
-      <td>-4.195196</td>
-      <td>-5.028492</td>
+      <td>-3.680566</td>
+      <td>-5.195340</td>
     </tr>
     <tr>
       <th>5</th>
@@ -325,8 +321,8 @@
       <td>0.380345</td>
       <td>-3.650479</td>
       <td>1.347464</td>
-      <td>2.750727</td>
-      <td>1.911773</td>
+      <td>2.639666</td>
+      <td>2.250414</td>
     </tr>
   </tbody>
 </table>

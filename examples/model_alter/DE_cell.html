@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Benchmarking methods for identification of DE genes between discrete cell types &mdash; scDesign3Py  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Benchmarking methods for identification of DE genes along continuous trajectory" href="DE_traj.html" />
+    <link rel="prev" title="Simulate datasets with condition effect" href="with_without_condition.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            scDesign3Py
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/API.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About scDesign3Py</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/all_in_one.html">All in one simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/stepwise.html">Step by step simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bpparam.html">Get BPPARAM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/lrt.html">Perform likelihood ratio test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/plot.html">Plot results</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_simu/index.html">Data simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model_select/index.html">Model selection</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Model alteration</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="with_without_batch.html">Simulate datasets with or without batch effect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="with_without_condition.html">Simulate datasets with/without condition effect</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Simulate datasets for DE test between discrete cell types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DE_traj.html">Simulate datasets for DE test along continuous trajectory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="DE_spatial.html">Simulate datasets for SVG test</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">scDesign3Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Model Alteration</a></li>
+      <li class="breadcrumb-item active">Benchmarking methods for identification of DE genes between discrete cell types</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/examples/model_alter/DE_cell.ipynb" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="benchmarking-methods-for-identification-of-de-genes-between-discrete-cell-types">
+<h1>Benchmarking methods for identification of DE genes between discrete cell types<a class="headerlink" href="#benchmarking-methods-for-identification-of-de-genes-between-discrete-cell-types" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>In this example, we will demonstrate how to use scDesign3Py to generate negative control and benchmark methods for identifying differentially expressed (DE) genes between discrete cell types. Please note that here we only did a very brief benchmarking for illustration purpose, not for formal comparison.</p>
+</section>
+<section id="import-packages-and-read-in-data">
+<h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Link to this heading"></a></h2>
+<section id="import-pacakges">
+<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Link to this heading"></a></h3>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scanpy</span> <span class="k">as</span> <span class="nn">sc</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="read-in-data">
+<h3>Read in data<a class="headerlink" href="#read-in-data" title="Link to this heading"></a></h3>
+<p>The raw data is from the R package <code class="docutils literal notranslate"><span class="pre">DuoClustering2018</span></code>, which contain a set of datasets with various clustering results and converted to <code class="docutils literal notranslate"><span class="pre">.h5ad</span></code> file using the R package <code class="docutils literal notranslate"><span class="pre">sceasy</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/Zhengmix4eq.h5ad&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The top 200 highly variable genes are kept for generating synthetic data.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="s2">&quot;log&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">target_sum</span><span class="o">=</span><span class="mf">1e4</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">)</span>
+<span class="c1"># choose HVG genes</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">highly_variable_genes</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">layer</span><span class="o">=</span><span class="s2">&quot;log&quot;</span><span class="p">,</span><span class="n">n_top_genes</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[:,</span><span class="n">data</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;highly_variable&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We extract out B cells and regulatory T cells only and use all cells from these two cell types to simulate synthetic data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;phenoid&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;b.cells&quot;</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;phenoid&quot;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;regulatory.t&quot;</span><span class="p">),:]</span>
+<span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;phenoid&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 1802 × 200
+    obs: &#39;barcode&#39;, &#39;phenoid&#39;, &#39;total_features&#39;, &#39;log10_total_features&#39;, &#39;total_counts&#39;, &#39;log10_total_counts&#39;, &#39;pct_counts_top_50_features&#39;, &#39;pct_counts_top_100_features&#39;, &#39;pct_counts_top_200_features&#39;, &#39;pct_counts_top_500_features&#39;, &#39;sizeFactor&#39;, &#39;cell_type&#39;
+    var: &#39;id&#39;, &#39;symbol&#39;, &#39;mean_counts&#39;, &#39;log10_mean_counts&#39;, &#39;rank_counts&#39;, &#39;n_cells_counts&#39;, &#39;pct_dropout_counts&#39;, &#39;total_counts&#39;, &#39;log10_total_counts&#39;, &#39;highly_variable&#39;, &#39;means&#39;, &#39;dispersions&#39;, &#39;dispersions_norm&#39;
+    uns: &#39;log1p&#39;, &#39;hvg&#39;
+    obsm: &#39;X_pca&#39;, &#39;X_tsne&#39;
+    layers: &#39;logcounts&#39;, &#39;normcounts&#39;, &#39;log&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>b.cells6276    b.cells
+b.cells6144    b.cells
+b.cells6285    b.cells
+b.cells8679    b.cells
+b.cells96      b.cells
+Name: cell_type, dtype: category
+Categories (2, object): [&#39;b.cells&#39;, &#39;regulatory.t&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="simulation">
+<h2>Simulation<a class="headerlink" href="#simulation" title="Link to this heading"></a></h2>
+<p>We use the step-by-step functions instead of the one-shot function to generate synthetic data since these step-by-step functions allow us to alter estimated parameters and generate new data based on our desired parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">example</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">example_data</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>    
+    <span class="n">anndata</span> <span class="o">=</span> <span class="n">data</span><span class="p">,</span>
+    <span class="n">default_assay_name</span> <span class="o">=</span> <span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">example</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">example_marginal</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>
+    <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">example</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">example_copula</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">fit_copula</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">example_para</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">extract_para</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here, we examine the <code class="docutils literal notranslate"><span class="pre">mean_mat</span></code>, which is one of the outputs from the previous function <code class="docutils literal notranslate"><span class="pre">extract_para()</span></code>. For each gene, we calculate the difference in the between the maximum mean parameter and minimum mean parameter across all cells. We select genes which the gene’s mean difference across cells are in the top 50 largest differences. We regard these genes as DE genes. Then, we manually set the mean parameters of the rest genes to be the same across all cells. We regard all genes with the same mean parameter across cells as non-DE genes. Of course, this is a very flexible step and users may choose other ideas to modify the mean matrix.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">diff_idx</span> <span class="o">=</span> <span class="p">(</span><span class="n">example_para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">example_para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+<span class="n">de_idx</span> <span class="o">=</span> <span class="n">diff_idx</span><span class="p">[:</span><span class="mi">50</span><span class="p">]</span>
+<span class="n">no_de_idx</span> <span class="o">=</span> <span class="n">diff_idx</span><span class="p">[</span><span class="mi">50</span><span class="p">:]</span>
+<span class="n">example_para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">][</span><span class="n">no_de_idx</span><span class="p">]</span> <span class="o">=</span> <span class="p">((</span><span class="n">example_para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="n">example_para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="o">/</span><span class="mi">2</span><span class="p">)[</span><span class="n">no_de_idx</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">example</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">example_newcount</span> <span class="o">=</span> <span class="n">example</span><span class="o">.</span><span class="n">simu_new</span><span class="p">(</span><span class="n">mean_mat</span><span class="o">=</span><span class="n">example_para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="de-genes-identification">
+<h2>DE genes identification<a class="headerlink" href="#de-genes-identification" title="Link to this heading"></a></h2>
+<p>Then, we follow <a class="reference external" href="https://scanpy-tutorials.readthedocs.io/en/latest/pbmc3k.html#Finding-marker-genes">Scanpy</a>’s pipeline to preprocess the simulated data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">example_newcount</span><span class="p">)</span>
+<span class="n">simu_data</span><span class="o">.</span><span class="n">var</span><span class="p">[</span><span class="s2">&quot;mt&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">simu_data</span><span class="o">.</span><span class="n">var_names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;MT-&quot;</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">calculate_qc_metrics</span><span class="p">(</span>
+    <span class="n">simu_data</span><span class="p">,</span> <span class="n">qc_vars</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;mt&quot;</span><span class="p">],</span> <span class="n">percent_top</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">log1p</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">simu_data</span> <span class="o">=</span> <span class="n">simu_data</span><span class="p">[</span><span class="n">simu_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">n_genes_by_counts</span> <span class="o">&lt;</span> <span class="mi">2500</span><span class="p">,</span> <span class="p">:]</span>
+<span class="n">simu_data</span> <span class="o">=</span> <span class="n">simu_data</span><span class="p">[</span><span class="n">simu_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">pct_counts_mt</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">normalize_total</span><span class="p">(</span><span class="n">simu_data</span><span class="p">,</span> <span class="n">target_sum</span><span class="o">=</span><span class="mf">1e4</span><span class="p">)</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="n">simu_data</span><span class="p">)</span>
+<span class="n">simu_data</span><span class="o">.</span><span class="n">raw</span> <span class="o">=</span> <span class="n">simu_data</span>
+<span class="n">sc</span><span class="o">.</span><span class="n">pp</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span><span class="n">simu_data</span><span class="p">,</span> <span class="n">max_value</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Since we already have the ground truth cell type annotations for our simulated dataset, we can directly use the cell type annotations we have instead of clustering manually.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simu_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We follow <a class="reference external" href="https://scanpy-tutorials.readthedocs.io/en/latest/pbmc3k.html#Finding-marker-genes">Scanpy</a>’s pipeline to conduct DE test.</p>
+<p>Here, we only benchmark t test and wilcoxon test as an example.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">qvals</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">simu_data</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+<span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;t-test&quot;</span><span class="p">,</span><span class="s2">&quot;wilcoxon&quot;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+    <span class="n">sc</span><span class="o">.</span><span class="n">tl</span><span class="o">.</span><span class="n">rank_genes_groups</span><span class="p">(</span><span class="n">simu_data</span><span class="p">,</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">use_raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">tmp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">simu_data</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;rank_genes_groups&quot;</span><span class="p">][</span><span class="s2">&quot;pvals_adj&quot;</span><span class="p">][</span><span class="s2">&quot;b.cells&quot;</span><span class="p">],</span><span class="n">index</span><span class="o">=</span><span class="n">simu_data</span><span class="o">.</span><span class="n">uns</span><span class="p">[</span><span class="s2">&quot;rank_genes_groups&quot;</span><span class="p">][</span><span class="s2">&quot;names&quot;</span><span class="p">][</span><span class="s2">&quot;b.cells&quot;</span><span class="p">],</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">method</span><span class="p">])</span>
+    <span class="n">qvals</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">qvals</span><span class="p">,</span><span class="n">tmp</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Since we manually created non-DE genes in the <code class="docutils literal notranslate"><span class="pre">extra_para()</span></code> step, now we can calculate the actual false discovery proportion(FDP) and power of the DE tests we conducted above with various target FDR threshold.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">targetFDR</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.11</span><span class="p">,</span><span class="mf">0.01</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.1</span><span class="p">)])</span>
+<span class="n">fdp</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">targetFDR</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="n">methods</span><span class="p">)</span>
+<span class="n">power</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">targetFDR</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="n">methods</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+    <span class="n">curr_p</span> <span class="o">=</span> <span class="n">qvals</span><span class="p">[</span><span class="n">method</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">threshold</span> <span class="ow">in</span> <span class="n">targetFDR</span><span class="p">:</span>
+        <span class="n">discovery</span> <span class="o">=</span> <span class="n">curr_p</span><span class="p">[</span><span class="n">curr_p</span> <span class="o">&lt;=</span> <span class="n">threshold</span><span class="p">]</span>
+        <span class="n">true_positive</span> <span class="o">=</span> <span class="n">discovery</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">de_idx</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">discovery</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">fdp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">threshold</span><span class="p">,</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fdp</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">threshold</span><span class="p">,</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">discovery</span><span class="p">)</span> <span class="o">-</span> <span class="n">true_positive</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">discovery</span><span class="p">)</span>
+        
+        <span class="n">power</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">threshold</span><span class="p">,</span><span class="n">method</span><span class="p">]</span> <span class="o">=</span> <span class="n">true_positive</span><span class="o">/</span><span class="n">de_idx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h2>
+<p>We visualize the Target FDR vs Actual FDP and Target FDR vs Power below.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">targetFDR</span><span class="p">,</span><span class="n">fdp</span><span class="p">[</span><span class="n">method</span><span class="p">],</span><span class="s2">&quot;o-&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">targetFDR</span><span class="p">,</span> <span class="n">targetFDR</span><span class="p">,</span> <span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Target FDR&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Actual FDP&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../../_images/c13c323788809550998712c18c7145deb3703cf6b2206472704775f38ecb4d09.png" src="../../_images/c13c323788809550998712c18c7145deb3703cf6b2206472704775f38ecb4d09.png" />
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">targetFDR</span><span class="p">,</span><span class="n">power</span><span class="p">[</span><span class="n">method</span><span class="p">],</span><span class="s2">&quot;o-&quot;</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="n">method</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Target FDR&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Power&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;best&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../../_images/72a4ec6673643bb63dc3718b8cf57360747fc9bc3e631253d5f2e56304c0f4ab.png" src="../../_images/72a4ec6673643bb63dc3718b8cf57360747fc9bc3e631253d5f2e56304c0f4ab.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="with_without_condition.html" class="btn btn-neutral float-left" title="Simulate datasets with condition effect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="DE_traj.html" class="btn btn-neutral float-right" title="Benchmarking methods for identification of DE genes along continuous trajectory" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Di Liu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

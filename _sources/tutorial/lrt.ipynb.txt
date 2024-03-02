@@ -2,7 +2,7 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 1,
    "metadata": {
     "tags": [
      "remove-cell"
@@ -12,9 +12,11 @@
    "source": [
     "import os\n",
     "import sys\n",
+    "import warnings\n",
     "\n",
     "os.chdir(\"..\")\n",
-    "sys.path.append(\"../../\")"
+    "sys.path.append(\"../../\")\n",
+    "warnings.filterwarnings(\"ignore\")"
    ]
   },
   {
@@ -36,9 +38,21 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
+   "execution_count": 2,
+   "metadata": {
+    "tags": [
+     "remove-output"
+    ]
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The R project used is located at /home/ld/anaconda3/envs/pyscdesign/lib/R\n"
+     ]
+    }
+   ],
    "source": [
     "import anndata as ad\n",
     "import scDesign3Py"
@@ -55,9 +69,23 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 3,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "View of AnnData object with n_obs × n_vars = 2087 × 30\n",
+       "    obs: 'clusters_coarse', 'clusters', 'S_score', 'G2M_score', 'cell_type', 'sizeFactor', 'pseudotime'\n",
+       "    var: 'highly_variable_genes'\n",
+       "    obsm: 'X_pca', 'X_umap', 'X_x_pca', 'X_x_umap'"
+      ]
+     },
+     "execution_count": 3,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "data = ad.read_h5ad(\"data/PANCREAS.h5ad\")\n",
     "data = data[:, 0:30]\n",
@@ -73,16 +101,24 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 4,
    "metadata": {
     "tags": [
      "remove-output"
     ]
    },
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:03\n"
+     ]
+    }
+   ],
    "source": [
     "# create the instance\n",
-    "test1 = scDesign3Py.scDesign3(n_cores=3, parallelization=\"mcmapply\", return_py=False)\n",
+    "test1 = scDesign3Py.scDesign3(n_cores=3, parallelization=\"pbmcmapply\", return_py=False)\n",
     "test1.set_r_random_seed(123)\n",
     "\n",
     "# construct data\n",
@@ -105,12 +141,27 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
+   "execution_count": 5,
+   "metadata": {
+    "tags": [
+     "remove-output"
+    ]
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n",
+      "fitting ...\n",
+      "  |======================================================================| 100%\n",
+      "  |=======================================================| 100%, Elapsed 00:09\n"
+     ]
+    }
+   ],
    "source": [
     "# create the instance\n",
-    "test2 = scDesign3Py.scDesign3(n_cores=3, parallelization=\"mcmapply\", return_py=False)\n",
+    "test2 = scDesign3Py.scDesign3(n_cores=3, parallelization=\"pbmcmapply\", return_py=False)\n",
     "test2.set_r_random_seed(123)\n",
     "\n",
     "# construct data\n",
@@ -141,7 +192,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 6,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -162,9 +213,102 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 7,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>same_model</th>\n",
+       "      <th>LogLik_alter</th>\n",
+       "      <th>LogLik_null</th>\n",
+       "      <th>df_alter</th>\n",
+       "      <th>df_null</th>\n",
+       "      <th>p_value</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>Pyy</th>\n",
+       "      <td>1.0</td>\n",
+       "      <td>-6335.504699</td>\n",
+       "      <td>-7242.205596</td>\n",
+       "      <td>9.341965</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Iapp</th>\n",
+       "      <td>1.0</td>\n",
+       "      <td>-4260.230410</td>\n",
+       "      <td>-5730.149416</td>\n",
+       "      <td>9.802905</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Chgb</th>\n",
+       "      <td>1.0</td>\n",
+       "      <td>-5764.120772</td>\n",
+       "      <td>-6942.103030</td>\n",
+       "      <td>9.883961</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Rbp4</th>\n",
+       "      <td>1.0</td>\n",
+       "      <td>-5268.219696</td>\n",
+       "      <td>-6522.623963</td>\n",
+       "      <td>10.216497</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>Spp1</th>\n",
+       "      <td>1.0</td>\n",
+       "      <td>-3397.364727</td>\n",
+       "      <td>-4865.083733</td>\n",
+       "      <td>10.013325</td>\n",
+       "      <td>1.0</td>\n",
+       "      <td>0.0</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      same_model  LogLik_alter  LogLik_null   df_alter  df_null  p_value\n",
+       "Pyy          1.0  -6335.504699 -7242.205596   9.341965      1.0      0.0\n",
+       "Iapp         1.0  -4260.230410 -5730.149416   9.802905      1.0      0.0\n",
+       "Chgb         1.0  -5764.120772 -6942.103030   9.883961      1.0      0.0\n",
+       "Rbp4         1.0  -5268.219696 -6522.623963  10.216497      1.0      0.0\n",
+       "Spp1         1.0  -3397.364727 -4865.083733  10.013325      1.0      0.0"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "scDesign3Py.perform_lrt(marg_test_2,marg_test_1).head()"
    ]

@@ -2,7 +2,7 @@
  "cells": [
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 1,
    "metadata": {
     "tags": [
      "remove-cell"
@@ -12,9 +12,11 @@
    "source": [
     "import os\n",
     "import sys\n",
+    "import warnings\n",
     "\n",
     "os.chdir(\"../..\")\n",
-    "sys.path.append(\"../../\")"
+    "sys.path.append(\"../../\")\n",
+    "warnings.filterwarnings(\"ignore\")"
    ]
   },
   {
@@ -27,16 +29,28 @@
     "\n",
     "In this example, we will show how to use scDesign3Py to evaluate the clustering goodness-of-fit for different cell-type assignments. If the true labels are unavailable and we have little prior knowledge, the scDesign3Py BIC can serve as an unsupervised metric.\n",
     "\n",
-    "## Step 1: Import packages and Read in data\n",
+    "## Import packages and Read in data\n",
     "\n",
     "### import pacakges"
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
+   "execution_count": 2,
+   "metadata": {
+    "tags": [
+     "remove-output"
+    ]
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The R project used is located at /home/ld/anaconda3/envs/pyscdesign/lib/R\n"
+     ]
+    }
+   ],
    "source": [
     "import anndata as ad\n",
     "import pandas as pd\n",
@@ -59,7 +73,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 3,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -72,14 +86,30 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "For demonstration purpose, we use the `Zhengmix4eq` dataset in the package with top 30 highly variable genes and the corresponding k-means clustering results with $k = 2,5,8,10$."
+    "For demonstration purpose, we use the `Zhengmix4eq` dataset in the package with top 30 highly variable genes and the corresponding k-means clustering results with $k = 2 \\sim 10$."
    ]
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 4,
    "metadata": {},
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "View of AnnData object with n_obs × n_vars = 711 × 30\n",
+       "    obs: 'barcode', 'phenoid', 'total_features', 'log10_total_features', 'total_counts', 'log10_total_counts', 'pct_counts_top_50_features', 'pct_counts_top_100_features', 'pct_counts_top_200_features', 'pct_counts_top_500_features', 'sizeFactor', 'cell_type'\n",
+       "    var: 'id', 'symbol', 'mean_counts', 'log10_mean_counts', 'rank_counts', 'n_cells_counts', 'pct_dropout_counts', 'total_counts', 'log10_total_counts', 'highly_variable', 'means', 'dispersions', 'dispersions_norm'\n",
+       "    uns: 'log1p', 'hvg'\n",
+       "    obsm: 'X_pca', 'X_tsne'\n",
+       "    layers: 'logcounts', 'normcounts', 'log'"
+      ]
+     },
+     "execution_count": 4,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
    "source": [
     "kmeans_res = cluster_res.groupby(\"k\")\n",
     "ncell = data.n_obs\n",
@@ -108,7 +138,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 5,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -117,21 +147,887 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 6,
    "metadata": {
     "tags": [
      "remove-output"
     ]
    },
-   "outputs": [],
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "K number: 2 fitting.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Input Data Construction Start\n",
+      "\n",
+      "R[write to console]: Input Data Construction End\n",
+      "\n",
+      "R[write to console]: Start Marginal Fitting\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:02\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Marginal Fitting End\n",
+      "\n",
+      "R[write to console]: Start Copula Fitting\n",
+      "\n",
+      "R[write to console]: Convert Residuals to Multivariate Gaussian\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Converting End\n",
+      "\n",
+      "R[write to console]: Copula group 1 starts\n",
+      "\n",
+      "R[write to console]: Copula Fitting End\n",
+      "\n",
+      "R[write to console]: Start Parameter Extraction\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Parameter\n",
+      "Extraction End\n",
+      "\n",
+      "R[write to console]: Start Generate New Data\n",
+      "\n",
+      "R[write to console]: Use Copula to sample a multivariate quantile matrix\n",
+      "\n",
+      "R[write to console]: Sample Copula group 1 starts\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:00\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: New Data Generating End\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "K number: 3 fitting.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Input Data Construction Start\n",
+      "\n",
+      "R[write to console]: Input Data Construction End\n",
+      "\n",
+      "R[write to console]: Start Marginal Fitting\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:02\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Marginal Fitting End\n",
+      "\n",
+      "R[write to console]: Start Copula Fitting\n",
+      "\n",
+      "R[write to console]: Convert Residuals to Multivariate Gaussian\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Converting End\n",
+      "\n",
+      "R[write to console]: Copula group 1 starts\n",
+      "\n",
+      "R[write to console]: Copula Fitting End\n",
+      "\n",
+      "R[write to console]: Start Parameter Extraction\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Parameter\n",
+      "Extraction End\n",
+      "\n",
+      "R[write to console]: Start Generate New Data\n",
+      "\n",
+      "R[write to console]: Use Copula to sample a multivariate quantile matrix\n",
+      "\n",
+      "R[write to console]: Sample Copula group 1 starts\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:00\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: New Data Generating End\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "K number: 4 fitting.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Input Data Construction Start\n",
+      "\n",
+      "R[write to console]: Input Data Construction End\n",
+      "\n",
+      "R[write to console]: Start Marginal Fitting\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:03\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Marginal Fitting End\n",
+      "\n",
+      "R[write to console]: Start Copula Fitting\n",
+      "\n",
+      "R[write to console]: Convert Residuals to Multivariate Gaussian\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Converting End\n",
+      "\n",
+      "R[write to console]: Copula group 1 starts\n",
+      "\n",
+      "R[write to console]: Copula Fitting End\n",
+      "\n",
+      "R[write to console]: Start Parameter Extraction\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Parameter\n",
+      "Extraction End\n",
+      "\n",
+      "R[write to console]: Start Generate New Data\n",
+      "\n",
+      "R[write to console]: Use Copula to sample a multivariate quantile matrix\n",
+      "\n",
+      "R[write to console]: Sample Copula group 1 starts\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:00\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: New Data Generating End\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "K number: 5 fitting.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Input Data Construction Start\n",
+      "\n",
+      "R[write to console]: Input Data Construction End\n",
+      "\n",
+      "R[write to console]: Start Marginal Fitting\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:02\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Marginal Fitting End\n",
+      "\n",
+      "R[write to console]: Start Copula Fitting\n",
+      "\n",
+      "R[write to console]: Convert Residuals to Multivariate Gaussian\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Converting End\n",
+      "\n",
+      "R[write to console]: Copula group 1 starts\n",
+      "\n",
+      "R[write to console]: Copula Fitting End\n",
+      "\n",
+      "R[write to console]: Start Parameter Extraction\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Parameter\n",
+      "Extraction End\n",
+      "\n",
+      "R[write to console]: Start Generate New Data\n",
+      "\n",
+      "R[write to console]: Use Copula to sample a multivariate quantile matrix\n",
+      "\n",
+      "R[write to console]: Sample Copula group 1 starts\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:00\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: New Data Generating End\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "K number: 6 fitting.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Input Data Construction Start\n",
+      "\n",
+      "R[write to console]: Input Data Construction End\n",
+      "\n",
+      "R[write to console]: Start Marginal Fitting\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:02\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Marginal Fitting End\n",
+      "\n",
+      "R[write to console]: Start Copula Fitting\n",
+      "\n",
+      "R[write to console]: Convert Residuals to Multivariate Gaussian\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Converting End\n",
+      "\n",
+      "R[write to console]: Copula group 1 starts\n",
+      "\n",
+      "R[write to console]: Copula Fitting End\n",
+      "\n",
+      "R[write to console]: Start Parameter Extraction\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Parameter\n",
+      "Extraction End\n",
+      "\n",
+      "R[write to console]: Start Generate New Data\n",
+      "\n",
+      "R[write to console]: Use Copula to sample a multivariate quantile matrix\n",
+      "\n",
+      "R[write to console]: Sample Copula group 1 starts\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:00\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: New Data Generating End\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "K number: 7 fitting.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Input Data Construction Start\n",
+      "\n",
+      "R[write to console]: Input Data Construction End\n",
+      "\n",
+      "R[write to console]: Start Marginal Fitting\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:02\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Marginal Fitting End\n",
+      "\n",
+      "R[write to console]: Start Copula Fitting\n",
+      "\n",
+      "R[write to console]: Convert Residuals to Multivariate Gaussian\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Converting End\n",
+      "\n",
+      "R[write to console]: Copula group 1 starts\n",
+      "\n",
+      "R[write to console]: Copula Fitting End\n",
+      "\n",
+      "R[write to console]: Start Parameter Extraction\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Parameter\n",
+      "Extraction End\n",
+      "\n",
+      "R[write to console]: Start Generate New Data\n",
+      "\n",
+      "R[write to console]: Use Copula to sample a multivariate quantile matrix\n",
+      "\n",
+      "R[write to console]: Sample Copula group 1 starts\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:00\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: New Data Generating End\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "K number: 8 fitting.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Input Data Construction Start\n",
+      "\n",
+      "R[write to console]: Input Data Construction End\n",
+      "\n",
+      "R[write to console]: Start Marginal Fitting\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:02\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Marginal Fitting End\n",
+      "\n",
+      "R[write to console]: Start Copula Fitting\n",
+      "\n",
+      "R[write to console]: Convert Residuals to Multivariate Gaussian\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Converting End\n",
+      "\n",
+      "R[write to console]: Copula group 1 starts\n",
+      "\n",
+      "R[write to console]: Copula Fitting End\n",
+      "\n",
+      "R[write to console]: Start Parameter Extraction\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Parameter\n",
+      "Extraction End\n",
+      "\n",
+      "R[write to console]: Start Generate New Data\n",
+      "\n",
+      "R[write to console]: Use Copula to sample a multivariate quantile matrix\n",
+      "\n",
+      "R[write to console]: Sample Copula group 1 starts\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:00\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: New Data Generating End\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "K number: 9 fitting.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Input Data Construction Start\n",
+      "\n",
+      "R[write to console]: Input Data Construction End\n",
+      "\n",
+      "R[write to console]: Start Marginal Fitting\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:02\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Marginal Fitting End\n",
+      "\n",
+      "R[write to console]: Start Copula Fitting\n",
+      "\n",
+      "R[write to console]: Convert Residuals to Multivariate Gaussian\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Converting End\n",
+      "\n",
+      "R[write to console]: Copula group 1 starts\n",
+      "\n",
+      "R[write to console]: Copula Fitting End\n",
+      "\n",
+      "R[write to console]: Start Parameter Extraction\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Parameter\n",
+      "Extraction End\n",
+      "\n",
+      "R[write to console]: Start Generate New Data\n",
+      "\n",
+      "R[write to console]: Use Copula to sample a multivariate quantile matrix\n",
+      "\n",
+      "R[write to console]: Sample Copula group 1 starts\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:00\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: New Data Generating End\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "K number: 10 fitting.\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Input Data Construction Start\n",
+      "\n",
+      "R[write to console]: Input Data Construction End\n",
+      "\n",
+      "R[write to console]: Start Marginal Fitting\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:02\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Marginal Fitting End\n",
+      "\n",
+      "R[write to console]: Start Copula Fitting\n",
+      "\n",
+      "R[write to console]: Convert Residuals to Multivariate Gaussian\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Converting End\n",
+      "\n",
+      "R[write to console]: Copula group 1 starts\n",
+      "\n",
+      "R[write to console]: Copula Fitting End\n",
+      "\n",
+      "R[write to console]: Start Parameter Extraction\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:01\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: Parameter\n",
+      "Extraction End\n",
+      "\n",
+      "R[write to console]: Start Generate New Data\n",
+      "\n",
+      "R[write to console]: Use Copula to sample a multivariate quantile matrix\n",
+      "\n",
+      "R[write to console]: Sample Copula group 1 starts\n",
+      "\n"
+     ]
+    },
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "  |=======================================================| 100%, Elapsed 00:00\n"
+     ]
+    },
+    {
+     "name": "stderr",
+     "output_type": "stream",
+     "text": [
+      "R[write to console]: New Data Generating End\n",
+      "\n"
+     ]
+    }
+   ],
    "source": [
     "for key,value in kmeans_res:\n",
+    "    print(f\"K number: {key} fitting.\")\n",
     "    tmp = value[[\"cell\",\"cluster\"]]\n",
     "    tmp.index = tmp[\"cell\"]\n",
     "    train_data.obs[\"cell_type\"] = tmp.loc[train_data.obs.index,\"cluster\"].tolist()\n",
     "    train_data.obs[\"cell_type\"] = train_data.obs[\"cell_type\"].astype(\"int\").astype(\"str\").astype(\"category\")\n",
     "\n",
-    "    test = scDesign3Py.scDesign3(n_cores=3)\n",
+    "    test = scDesign3Py.scDesign3(n_cores=2, parallelization=\"pbmcmapply\")\n",
     "    test.set_r_random_seed(123)\n",
     "    res = test.scdesign3(anndata=train_data, \n",
     "                        celltype = 'cell_type',\n",
@@ -141,7 +1037,7 @@
     "                        copula = \"gaussian\", \n",
     "                        default_assay_name = \"counts\", \n",
     "                        family_use = \"nb\",\n",
-    "                        usebam = True)\n",
+    "                        usebam = False)\n",
     "\n",
     "    simu_res[key] = res"
    ]
@@ -157,7 +1053,7 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 7,
    "metadata": {},
    "outputs": [],
    "source": [
@@ -166,13 +1062,24 @@
   },
   {
    "cell_type": "code",
-   "execution_count": null,
+   "execution_count": 8,
    "metadata": {
     "tags": [
      "hide-input"
     ]
    },
-   "outputs": [],
+   "outputs": [
+    {
+     "data": {
+      "image/png": "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00+L0NDQOl+zadMm0aJFC1FZWSlt27Jli1AoFOLGjRt1vs7b21vMmzfvrntuLsz5/OaVJiKi/8/BwQEODg749ttvUVZWdtvaN954A2PGjMGvv/6K5557DmPHjsXhw4cB3LxKEhoaCrVajR9++AE//vgjHBwcMHz4cOlqSUlJCcaNG4c9e/YgOzsb3bp1w4gRI1BSUmLyPm+++Sb++te/4rfffsNLL70EADhx4gR27NiB5ORkrFu3Dp999hnCwsJw9uxZZGZm4r333sOcOXPw008/ScexsbHBRx99hIMHD2L16tVIT0/HzJkzTd7r6tWreP/99/HFF19g9+7dOH36NKZPn17nGHz55ZdwcHDAq6++Wuv+Nm3aAACSkpLwz3/+E6+99hry8/PxyiuvYPz48cjIyLjjuR4/fhxff/01vvnmG+Tl5QEAnnrqKZw/fx47duxAbm4u+vbti0cffbTO24F3Guuff/4ZAJCQkIDCwkLp+a0+/PBDLFy4EO+//z4OHDiA0NBQPPHEEzh27JhJ3euvv47p06cjLy8P3bt3xzPPPIOKigppv0KhkHVrrbqsrCwEBwebbAsNDUVWVladr+nXrx9sbGyQkJCAyspK6PV6fPHFFwgODkbLli1rfY3RaERJSQkcHR3N6u++0QQh7r7AK01E94avvvpKtG3bVtjZ2YmBAweK2bNni19//dWkBoCYPHmyybbAwEAREREhhBDiiy++ED169BBGo1HaX1ZWJuzt7UVKSkqt71tZWSnUarXYunWryftER0eb1MXFxYlWrVoJg8EgbQsNDRUeHh4mVxR69Ogh4uPj6zzPTZs2iXbt2knPExISBABx/PhxaduyZcuEi4tLncd4/PHHRe/evevcX2XgwIFi0qRJJtueeuopMWLECOl5XefasmVLcf78eWnbDz/8IDQajbh+/bpJbdeuXcUnn3wiva76FaJb1TXWSUlJNd6/+nE6dOgg3n77bZMaf39/8eqrrwoh/u9K06effirtP3jwoAAgDh8+LG3r0aOH+Oabb+rsrzbdunUT77zzjsm27du3CwDi6tWrdb5u165dwtnZWdja2goAIigoyOQK4K3ee+890bZtW1FUVGRWf81Zs7nSFB8fD39/f6jVajg7OyM8PBxHjx41qRk6dCgUCoXJY/LkySY1t+5XKBRYv369SY2cCXTLli2Dh4cH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yVi6dClmzpyJl156Cenp6di4cSO2b98u9RITE4Nx48ahf//+CAgIwOLFi1FaWorx48c3/cAQERGR9REWBKDWR0JCghBCiNOnT4vBgwcLR0dHoVKphJeXl5gxY4bQ6/Umxzl16pR4/PHHhb29vXBychKvvfaaKC8vN6nJyMgQfn5+QqlUii5dukjvUd2SJUtEp06dhFKpFAEBASI7O1v2uej1egGgRm9ERERkvcz5/LaqdZqaM67TRERE1Pw023WaiIiIiKwVQxMRERGRDAxNRERERDIwNBERERHJwNBEREREJANDExEREZEMDE1EREREMjA0EREREcnA0EREREQkA0MTERERkQwMTUREREQyMDQRERERycDQRERERCQDQxMRERGRDAxNRERERDIwNBERERHJwNBEREREJANDExEREZEMDE1EREREMjA0EREREcnA0EREREQkA0MTERERkQwMTUREREQyMDQRERERycDQRERERCQDQxMRERGRDAxNRERERDIwNBERERHJwNBEREREJANDExEREZEMDE1EREREMjA0EREREclg0dAUHx8Pf39/qNVqODs7Izw8HEePHq21VgiBxx9/HAqFAt9++63JPoVCUeOxfv16k5pdu3ahb9++UKlU8PLyQmJiYo33WLZsGTw8PGBnZ4fAwEDk5OQ01KkSERFRM2fR0JSZmYnIyEhkZ2cjNTUV5eXlCAkJQWlpaY3axYsXQ6FQ1HmshIQEFBYWSo/w8HBpX0FBAcLCwjBs2DDk5eUhOjoaEydOREpKilSzYcMGxMTEIC4uDvv27YOvry9CQ0Nx/vz5Bj1nIiIiap4UQghh6SaqFBcXw9nZGZmZmRg8eLC0PS8vDyNHjsQvv/wCNzc3JCUlmYQihUJRY1t1sbGx2L59O/Lz86VtY8eOxeXLl5GcnAwACAwMhL+/P5YuXQoAMBqNcHd3x5QpUzBr1qw79m4wGKDVaqHX66HRaOpx9kRERNTUzPn8ln2l6dq1a9iyZQtKSkpqfcMtW7agrKzM/G6r0ev1AABHR0dp29WrV/Hss89i2bJlcHV1rfO1kZGRcHJyQkBAAFatWoXqWTArKwvBwcEm9aGhocjKygIA3LhxA7m5uSY1NjY2CA4OlmpuVVZWBoPBYPIgIiKie5fs0PTf//4XH374IdRqdY19Go0GH330ET799NN6N2I0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336LM2fOICUlBSEhIQCA8+fP87YUERER3bPMDk1z587F9OnT4eHhgcDAQOlr+zt37kSfPn0avEEiIiIia2D2RHDg5s+SFBYWwtfXFzY2N3NXTk4ONBoNevbs2eBNNgecCE5ERNT8mPP5Xa91mlxdXWuslB0QEFCfQxERERE1C2bfniMiIiK6HzE0EREREcnA0EREREQkA0MTERERkQwMTUREREQyMDQRERERycDQRERERCQDQxMRERGRDAxNRERERDIwNBERERHJwNBEREREJANDExEREZEMDE1EREREMjA0EREREcnA0EREREQkA0MTERERkQwMTUREREQyMDQRERERycDQRERERCQDQxMRERGRDAxNRERERDIwNBERERHJwNBEREREJANDExEREZEMDE1EREREMjA0EREREclg0dAUHx8Pf39/qNVqODs7Izw8HEePHjWpeeWVV9C1a1fY29ujffv2GD16NI4cOWJSc/r0aYSFhaFVq1ZwdnbGjBkzUFFRYVKza9cu9O3bFyqVCl5eXkhMTKzRz7Jly+Dh4QE7OzsEBgYiJyenwc+ZiIiImieLhqbMzExERkYiOzsbqampKC8vR0hICEpLS6Wafv36ISEhAYcPH0ZKSgqEEAgJCUFlZSUAoLKyEmFhYbhx4wb27t2L1atXIzExEXPnzpWOUVBQgLCwMAwbNgx5eXmIjo7GxIkTkZKSItVs2LABMTExiIuLw759++Dr64vQ0FCcP3++6QaEiIiIrJZCCCEs3USV4uJiODs7IzMzE4MHD6615sCBA/D19cXx48fRtWtX7NixAyNHjsS5c+fg4uICAFixYgViY2NRXFwMpVKJ2NhYbN++Hfn5+dJxxo4di8uXLyM5ORkAEBgYCH9/fyxduhQAYDQa4e7ujilTpmDWrFl37N1gMECr1UKv10Oj0dztUBDRPa7SKJBTcBHnS67DWW2HAE9H2NooLN0W0X3HnM/vFk3Ukyx6vR4A4OjoWOv+0tJSJCQkwNPTE+7u7gCArKws9OrVSwpMABAaGoqIiAgcPHgQffr0QVZWFoKDg02OFRoaiujoaADAjRs3kJubi9mzZ0v7bWxsEBwcjKysrFp7KSsrQ1lZmfTcYDCYf8JEdF9Kzi/EvK2HUKi/Lm1z09ohbpQ3hvu4WbAzIrodq5kIbjQaER0djUGDBsHHx8dk3/Lly+Hg4AAHBwfs2LEDqampUCqVAACdTmcSmABIz3U63W1rDAYDrl27hgsXLqCysrLWmqpj3Co+Ph5arVZ6VIU4IqLbSc4vRMSafSaBCQB0+uuIWLMPyfmFFuqMiO7EakJTZGQk8vPzsX79+hr7nnvuOezfvx+ZmZno3r07/v73v+P69eu1HKXpzJ49G3q9XnqcOXPGov0QkfWrNArM23oItc2JqNo2b+shVBqtZtYEEVVjFbfnoqKisG3bNuzevRsdO3assb/qak63bt0wYMAAtG3bFklJSXjmmWfg6upa41tuRUVFAABXV1fpn1XbqtdoNBrY29vD1tYWtra2tdZUHeNWKpUKKpWq3udMRPefnIKLNa4wVScAFOqvI6fgIoK6tmu6xohIFoteaRJCICoqCklJSUhPT4enp6es1wghpPlEQUFB+O2330y+5ZaamgqNRgNvb2+pJi0tzeQ4qampCAoKAgAolUr069fPpMZoNCItLU2qISK6W+dL5F0hl1tHRE3LoqEpMjISa9aswdq1a6FWq6HT6aDT6XDt2jUAwMmTJxEfH4/c3FycPn0ae/fuxVNPPQV7e3uMGDECABASEgJvb2+88MIL+PXXX5GSkoI5c+YgMjJSuhI0efJknDx5EjNnzsSRI0ewfPlybNy4EdOmTZN6iYmJwcqVK7F69WocPnwYERERKC0txfjx45t+YIjonuSstmvQOiJqWha9Pffxxx8DAIYOHWqyPSEhAS+++CLs7Ozwww8/YPHixbh06RJcXFwwePBg7N27F87OzgAAW1tbbNu2DREREQgKCkLr1q0xbtw4zJ8/Xzqep6cntm/fjmnTpuHDDz9Ex44d8emnnyI0NFSqefrpp1FcXIy5c+dCp9PBz88PycnJNSaHExHVV4CnI9y0dtDpr9c6r0kBwFV7c/kBIrI+VrVOU3PGdZqISI6qb88BMAlOVSs0ffx8Xy47QNSEzPn8tppvzxER3Q+G+7jh4+f7wlVregvOVWvHwERk5azi23NERPeT4T5ueMzblSuCEzUzDE1ERBZga6PgsgJEzQxvzxERERHJwNBEREREJANDExEREZEMnNNERESNqtIoOOmd7gkMTURE1GiS8wsxb+shk9/cc9PaIW6UN79BSM0OQxMRETWKqoU8b11BWae/jslr9qFNq5a4fLVc2l4VprhWFVkrzmkiIqIGV2kUmLf1UK0/F1O1rXpgAm6GqYg1+5CcX9jo/RHVB0MTEVEdKo0CWSf+xOa8/yHrxJ+oNPJXp+TKKbhocktOjqrRnbf1EMearBJvzxER1eJ2c3F4++jOzpeYF5iqCACF+uvIKbjIxT/J6vBKExHRLarm4tx6pYS3j+RzVtvdueg26hu6iBoTQxMRUTVy5uLw9tGdBXg6wk1rh/p+F+5uQxdRY2BoIiKq5k5zcarfPqK62dooEDfKGwDMCk4K3LwNGuDp2Ch9Ed0NhiYiomrk3hbi7aM7G+7jho+f7wtXrelVo7atWgKoGaaqnseN8uZ6TWSVOBGciKgaubeFePtInuE+brUuYpl6SFdjor0rJ9qTlWNoIiKqpmoujk5/vdZ5TQrc/HDn7SP5bG0UNb4JV1eY4hUmsmYMTURE1VTNxYlYsw8KwCQ4Ndbto/v1t9lqC1NE1oyhiYjoFlVzcZri9hHXgyJqPhRCCH5vtgEYDAZotVro9XpoNBpLt0NEDaCxrwDV9dtsVe/w8fN9GZyIGpk5n9+80kREVIfGvH10p/WgFLi5HtRj3q73xa06ouaASw4QEVkA14Mian54pYmIyAK4HpR57tfJ8mRdGJqIiCyA60HJx8nyZC14e46IyALu9Nts/DmRm/jjyWRNGJqIiCzgdr/Nxp8TuYk/nkzWhqGJiMhC6vptNletHZcbACfLk/XhnCYiIgviz4nUjZPlydowNBERWRh/TqR2nCxP1oa354iIyCpxsjxZG4YmIiKySpwsT9bGoqEpPj4e/v7+UKvVcHZ2Rnh4OI4ePSrtv3jxIqZMmYIePXrA3t4enTp1wtSpU6HX602Oo1AoajzWr19vUrNr1y707dsXKpUKXl5eSExMrNHPsmXL4OHhATs7OwQGBiInJ6dRzpuIiOThZHmyJhad05SZmYnIyEj4+/ujoqIC//rXvxASEoJDhw6hdevWOHfuHM6dO4f3338f3t7e+OOPPzB58mScO3cOX331lcmxEhISMHz4cOl5mzZtpH8vKChAWFgYJk+ejC+//BJpaWmYOHEi3NzcEBoaCgDYsGEDYmJisGLFCgQGBmLx4sUIDQ3F0aNH4ezs3CTjQURENXGyPFkLhRDCaha4KC4uhrOzMzIzMzF48OBaazZt2oTnn38epaWlaNHiZuZTKBRISkpCeHh4ra+JjY3F9u3bkZ+fL20bO3YsLl++jOTkZABAYGAg/P39sXTpUgCA0WiEu7s7pkyZglmzZt2xd3N+JZmIiIisgzmf31Y1p6nqtpujY92T+qpOqiowVYmMjISTkxMCAgKwatUqVM+CWVlZCA4ONqkPDQ1FVlYWAODGjRvIzc01qbGxsUFwcLBUc6uysjIYDAaTBxEREd27rGbJAaPRiOjoaAwaNAg+Pj611ly4cAFvvfUWXn75ZZPt8+fPxyOPPIJWrVph586dePXVV3HlyhVMnToVAKDT6eDi4mLyGhcXFxgMBly7dg2XLl1CZWVlrTVHjhyptZf4+HjMmzevvqdLREREzYzVhKbIyEjk5+djz549te43GAwICwuDt7c33nzzTZN9b7zxhvTvffr0QWlpKf7zn/9IoakxzJ49GzExMSb9ubu7N9r7ERERkWVZxe25qKgobNu2DRkZGejYsWON/SUlJRg+fDjUajWSkpLQsmXL2x4vMDAQZ8+eRVlZGQDA1dUVRUVFJjVFRUXQaDSwt7eHk5MTbG1ta61xdXWt9T1UKhU0Go3Jg4iIiO5dFg1NQghERUUhKSkJ6enp8PT0rFFjMBgQEhICpVKJLVu2wM7uziu/5uXloW3btlCpVACAoKAgpKWlmdSkpqYiKCgIAKBUKtGvXz+TGqPRiLS0NKmGiIiI7m8WvT0XGRmJtWvXYvPmzVCr1dDpdAAArVYLe3t7KTBdvXoVa9asMZlw3b59e9ja2mLr1q0oKirCgAEDYGdnh9TUVLzzzjuYPn269D6TJ0/G0qVLMXPmTLz00ktIT0/Hxo0bsX37dqkmJiYG48aNQ//+/REQEIDFixejtLQU48ePb9pBISIiIuskLAg3f6S6xiMhIUEIIURGRkadNQUFBUIIIXbs2CH8/PyEg4ODaN26tfD19RUrVqwQlZWVJu+VkZEh/Pz8hFKpFF26dJHeo7olS5aITp06CaVSKQICAkR2drbsc9Hr9QKA0Ov19R0OIiIiamLmfH5b1TpNzRnXaSIiImp+mu06TURERETWiqGJiIiISAaGJiIiIiIZGJqIiIiIZGBoIiIiIpKBoYmIiIhIBoYmIiIiIhkYmoiIiIhkYGgiIiIikoGhiYiIiEgGhiYiIiIiGRiaiIiIiGRoYekGiIiIyFSlUSCn4CLOl1yHs9oOAZ6OsLVRWLqt+x5DExERkRVJzi/EvK2HUKi/Lm1z09ohbpQ3hvu4WbAz4u05IiIiK5GcX4iINftMAhMA6PTXEbFmH5LzCy3UGQEMTURERFah0igwb+shiFr2VW2bt/UQKo21VVBTYGgiIiKyAjkFF2tcYapOACjUX0dOwcWma4pMMDQRERFZgfMldQem+tRRw2NoIiIisgLOarsGraOGx9BERERkBQI8HeGmtUNdCwsocPNbdAGejk3ZFlXD0ERERGQFbG0UiBvlDQA1glPV87hR3lyvyYIYmoiIiKzEcB83fPx8X7hqTW/BuWrt8PHzfblOk4VxcUsiIiIrMtzHDY95u3JFcCvE0ERERGRlbG0UCOraztJt0C14e46IiIhIBoYmIiIiIhkYmoiIiIhkYGgiIiIikoGhiYiIiEgGhiYiIiIiGRiaiIiIiGTgOk1ERERk1SqNwioW+7Tolab4+Hj4+/tDrVbD2dkZ4eHhOHr0qLT/4sWLmDJlCnr06AF7e3t06tQJU6dOhV6vNznO6dOnERYWhlatWsHZ2RkzZsxARUWFSc2uXbvQt29fqFQqeHl5ITExsUY/y5Ytg4eHB+zs7BAYGIicnJxGOW8iIiKSJzm/EH95Lx3PrMzGP9fn4ZmV2fjLe+lIzi9s8l4sGpoyMzMRGRmJ7OxspKamory8HCEhISgtLQUAnDt3DufOncP777+P/Px8JCYmIjk5GRMmTJCOUVlZibCwMNy4cQN79+7F6tWrkZiYiLlz50o1BQUFCAsLw7Bhw5CXl4fo6GhMnDgRKSkpUs2GDRsQExODuLg47Nu3D76+vggNDcX58+ebbkCIiIhIkpxfiIg1+1Cov26yXae/jog1+5o8OCmEEKJJ3/E2iouL4ezsjMzMTAwePLjWmk2bNuH5559HaWkpWrRogR07dmDkyJE4d+4cXFxcAAArVqxAbGwsiouLoVQqERsbi+3btyM/P186ztixY3H58mUkJycDAAIDA+Hv74+lS5cCAIxGI9zd3TFlyhTMmjXrjr0bDAZotVro9XpoNJq7HQoiIqL7WqVR4C/vpdcITFUUuPlDxntiH7mrW3XmfH5b1UTwqttujo6Ot63RaDRo0eLmdKysrCz06tVLCkwAEBoaCoPBgIMHD0o1wcHBJscJDQ1FVlYWAODGjRvIzc01qbGxsUFwcLBUc6uysjIYDAaTBxERETWMnIKLdQYmABAACvXXkVNwscl6sprQZDQaER0djUGDBsHHx6fWmgsXLuCtt97Cyy+/LG3T6XQmgQmA9Fyn0922xmAw4Nq1a7hw4QIqKytrrak6xq3i4+Oh1Wqlh7u7u3knTERERHU6X1J3YKpPXUOwmtAUGRmJ/Px8rF+/vtb9BoMBYWFh8Pb2xptvvtm0zdVi9uzZ0Ov10uPMmTOWbomIiOie4ay2a9C6hmAVSw5ERUVh27Zt2L17Nzp27Fhjf0lJCYYPHw61Wo2kpCS0bNlS2ufq6lrjW25FRUXSvqp/Vm2rXqPRaGBvbw9bW1vY2trWWlN1jFupVCqoVCrzT5aIiIjuKMDTEW5aO+j011Hb5OuqOU0BnnVP6WloFr3SJIRAVFQUkpKSkJ6eDk9Pzxo1BoMBISEhUCqV2LJlC+zsTBNlUFAQfvvtN5NvuaWmpkKj0cDb21uqSUtLM3ldamoqgoKCAABKpRL9+vUzqTEajUhLS5NqiIiIqOnY2igQN+rm5/it07yrnseN8m7S9ZosGpoiIyOxZs0arF27Fmq1GjqdDjqdDteuXQPwf4GptLQUn332GQwGg1RTWVkJAAgJCYG3tzdeeOEF/Prrr0hJScGcOXMQGRkpXQmaPHkyTp48iZkzZ+LIkSNYvnw5Nm7ciGnTpkm9xMTEYOXKlVi9ejUOHz6MiIgIlJaWYvz48U0/MERERIThPm74+Pm+cNWaXjBx1drh4+f7YriPW9M2JCwINye/13gkJCQIIYTIyMios6agoEA6zqlTp8Tjjz8u7O3thZOTk3jttddEeXm5yXtlZGQIPz8/oVQqRZcuXaT3qG7JkiWiU6dOQqlUioCAAJGdnS37XPR6vQAg9Hp9fYaCiIiI6lBRaRR7j18Q3+4/K/YevyAqKo0NdmxzPr+tap2m5ozrNBERETU/zXadJiIiIiJrxdBEREREJANDExEREZEMDE1EREREMjA0EREREcnA0EREREQkA0MTERERkQwMTUREREQyMDQRERERydDC0g3cK6oWVjcYDBbuhIiIiOSq+tyW8wMpDE0NpKSkBADg7u5u4U6IiIjIXCUlJdBqtbet4W/PNRCj0Yhz585BrVZDoVA06LENBgPc3d1x5swZ/q5dA+PYNh6ObePi+DYejm3jscaxFUKgpKQEHTp0gI3N7Wct8UpTA7GxsUHHjh0b9T00Go3V/CG713BsGw/HtnFxfBsPx7bxWNvY3ukKUxVOBCciIiKSgaGJiIiISAaGpmZApVIhLi4OKpXK0q3cczi2jYdj27g4vo2HY9t4mvvYciI4ERERkQy80kREREQkA0MTERERkQwMTUREREQyMDQRERERycDQZCWWLVsGDw8P2NnZITAwEDk5Obet37RpE3r27Ak7Ozv06tUL3333XRN12vyYM7YHDx7EmDFj4OHhAYVCgcWLFzddo82QOWO7cuVKPPzww2jbti3atm2L4ODgO/45v9+ZM77ffPMN+vfvjzZt2qB169bw8/PDF1980YTdNi/m/p1bZf369VAoFAgPD2/cBpsxc8Y2MTERCoXC5GFnZ9eE3ZpJkMWtX79eKJVKsWrVKnHw4EExadIk0aZNG1FUVFRr/Y8//ihsbW3FggULxKFDh8ScOXNEy5YtxW+//dbEnVs/c8c2JydHTJ8+Xaxbt064urqKRYsWNW3DzYi5Y/vss8+KZcuWif3794vDhw+LF198UWi1WnH27Nkm7rx5MHd8MzIyxDfffCMOHTokjh8/LhYvXixsbW1FcnJyE3du/cwd2yoFBQXigQceEA8//LAYPXp00zTbzJg7tgkJCUKj0YjCwkLpodPpmrhr+RiarEBAQICIjIyUnldWVooOHTqI+Pj4Wuv//ve/i7CwMJNtgYGB4pVXXmnUPpsjc8e2us6dOzM03cbdjK0QQlRUVAi1Wi1Wr17dWC02a3c7vkII0adPHzFnzpzGaK9Zq8/YVlRUiIEDB4pPP/1UjBs3jqGpDuaObUJCgtBqtU3U3d3j7TkLu3HjBnJzcxEcHCxts7GxQXBwMLKysmp9TVZWlkk9AISGhtZZf7+qz9iSPA0xtlevXkV5eTkcHR0bq81m627HVwiBtLQ0HD16FIMHD27MVpud+o7t/Pnz4ezsjAkTJjRFm81Sfcf2ypUr6Ny5M9zd3TF69GgcPHiwKdqtF4YmC7tw4QIqKyvh4uJist3FxQU6na7W1+h0OrPq71f1GVuSpyHGNjY2Fh06dKjxPwBU//HV6/VwcHCAUqlEWFgYlixZgscee6yx221W6jO2e/bswWeffYaVK1c2RYvNVn3GtkePHli1ahU2b96MNWvWwGg0YuDAgTh79mxTtGy2FpZugIjuP++++y7Wr1+PXbt2Wfekz2ZGrVYjLy8PV65cQVpaGmJiYtClSxcMHTrU0q01WyUlJXjhhRewcuVKODk5Wbqde05QUBCCgoKk5wMHDsSDDz6ITz75BG+99ZYFO6sdQ5OFOTk5wdbWFkVFRSbbi4qK4OrqWutrXF1dzaq/X9VnbEmeuxnb999/H++++y6+//579O7duzHbbLbqO742Njbw8vICAPj5+eHw4cOIj49naKrG3LE9ceIETp06hVGjRknbjEYjAKBFixY4evQounbt2rhNNxMN8Xduy5Yt0adPHxw/frwxWrxrvD1nYUqlEv369UNaWpq0zWg0Ii0tzSR9VxcUFGRSDwCpqal11t+v6jO2JE99x3bBggV46623kJycjP79+zdFq81SQ/3ZNRqNKCsra4wWmy1zx7Znz5747bffkJeXJz2eeOIJDBs2DHl5eXB3d2/K9q1aQ/y5raysxG+//QY3N7fGavPuWHomOt38iqZKpRKJiYni0KFD4uWXXxZt2rSRvnb5wgsviFmzZkn1P/74o2jRooV4//33xeHDh0VcXByXHKiDuWNbVlYm9u/fL/bv3y/c3NzE9OnTxf79+8WxY8csdQpWy9yxfffdd4VSqRRfffWVydeLS0pKLHUKVs3c8X3nnXfEzp07xYkTJ8ShQ4fE+++/L1q0aCFWrlxpqVOwWuaO7a347bm6mTu28+bNEykpKeLEiRMiNzdXjB07VtjZ2YmDBw9a6hRui6HJSixZskR06tRJKJVKERAQILKzs6V9Q4YMEePGjTOp37hxo+jevbtQKpXioYceEtu3b2/ijpsPc8a2oKBAAKjxGDJkSNM33gyYM7adO3eudWzj4uKavvFmwpzxff3114WXl5ews7MTbdu2FUFBQWL9+vUW6Lp5MPfv3OoYmm7PnLGNjo6Wal1cXMSIESPEvn37LNC1PAohhLDUVS4iIiKi5oJzmoiIiIhkYGgiIiIikoGhiYiIiEgGhiYiIiIiGRiaiIiIiGRgaCIiIiKSgaGJiIiISAaGJiIiIiIZGJqIiIiIZGBoIiICkJWVBVtbW4SFhZlsP3XqFBQKhfRwdHTEkCFD8MMPP5jUvfnmm/Dz82vCjomoqTE0EREB+OyzzzBlyhTs3r0b586dq7H/+++/R2FhIXbv3o0OHTpg5MiRKCoqskCnRGQpDE1EdN+7cuUKNmzYgIiICISFhSExMbFGTbt27eDq6gofHx/861//gsFgwE8//dT0zRKRxTA0EdF9b+PGjejZsyd69OiB559/HqtWrUJdv2V+7do1fP755wAApVLZlG0SkYW1sHQDRESW9tlnn+H5558HAAwfPhx6vR6ZmZkYOnSoVDNw4EDY2Njg6tWrEEKgX79+ePTRRy3UMRFZAq80EdF97ejRo8jJycEzzzwDAGjRogWefvppfPbZZyZ1GzZswP79+/H111/Dy8sLiYmJaNmypSVaJiIL4ZUmIrqvffbZZ6ioqECHDh2kbUIIqFQqLF26VNrm7u6Obt26oVu3bqioqMBf//pX5OfnQ6VSWaJtIrIAXmkiovtWRUUFPv/8cyxcuBB5eXnS49dff0WHDh2wbt26Wl/3t7/9DS1atMDy5cubuGMisiSGJiK6b23btg2XLl3ChAkT4OPjY/IYM2ZMjVt0VRQKBaZOnYp3330XV69ebeKuichSGJqI6L712WefITg4GFqttsa+MWPG4JdffoHBYKj1tePGjUN5ebnJLTwiurcpRF3fqyUiIiIiCa80EREREcnA0EREREQkA0MTERERkQwMTUREREQyMDQRERERycDQRERERCQDQxMRERGRDAxNRERERDIwNBERERHJwNBEREREJANDExEREZEM/w9lyZtCGaTN8QAAAABJRU5ErkJggg==",
+      "text/plain": [
+       "<Figure size 640x480 with 1 Axes>"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
    "source": [
     "bics = pd.Series([v[\"model_bic\"][\"bic.marginal\"] for v in simu_res.values()])\n",
     "ari = pd.Series([adjusted_rand_score(v[\"cluster\"],v[\"trueclass\"]) for _,v in kmeans_res])\n",

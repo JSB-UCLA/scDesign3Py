@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulate spatial transcriptomic data &mdash; scDesign3Py  documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../_static/doctools.js"></script>
-        <script src="../../_static/sphinx_highlight.js"></script>
-        <script src="../../_static/clipboard.min.js"></script>
-        <script src="../../_static/copybutton.js"></script>
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Model Selection" href="../model_select/index.html" />
+    <link rel="next" title="Simulate spatial transcriptomic data" href="deconvolution.html" />
     <link rel="prev" title="Simulate datasets with multiple lineages" href="mul_lineage.html" /> 
 </head>
 
@@ -72,6 +73,10 @@
 <li class="toctree-l2"><a class="reference internal" href="cell_lib_size.html">Simulate datasets with cell library size</a></li>
 <li class="toctree-l2"><a class="reference internal" href="mul_lineage.html">Simulate datasets with multiple lineages</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Simulate spatial transcriptomic data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deconvolution.html">Simulate spot-resolution spatial data for cell-type deconvolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ATAC.html">Simulate single-cell ATAC-seq data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CITE.html">Simulate CITE-seq data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mul_omic.html">Simulate multi-omics data from multiple single-omic datasets</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="../model_select/index.html">Model selection</a></li>
@@ -104,16 +109,16 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="simulate-spatial-transcriptomic-data">
-<h1>Simulate spatial transcriptomic data<a class="headerlink" href="#simulate-spatial-transcriptomic-data" title="Permalink to this heading"></a></h1>
+<h1>Simulate spatial transcriptomic data<a class="headerlink" href="#simulate-spatial-transcriptomic-data" title="Link to this heading"></a></h1>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
 <p>In this example, we show how to use scDesign3Py to simulate the single-cell spatial data.</p>
 </section>
 <section id="import-packages-and-read-in-data">
-<h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
+<h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Link to this heading"></a></h2>
 <section id="import-pacakges">
-<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Permalink to this heading"></a></h3>
-<div class="cell docutils container">
+<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Link to this heading"></a></h3>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -122,15 +127,10 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="read-in-the-reference-data">
-<h3>Read in the reference data<a class="headerlink" href="#read-in-the-reference-data" title="Permalink to this heading"></a></h3>
+<h3>Read in the reference data<a class="headerlink" href="#read-in-the-reference-data" title="Link to this heading"></a></h3>
 <p>The raw data is from the <a class="reference external" href="https://satijalab.org/seurat/articles/spatial_vignette.html">Seurat</a>, which is a dataset generated with the Visium technology from 10x Genomics. We pre-select the top spatial variable genes. To save time, we only use the top 10 genes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -151,7 +151,7 @@
 </section>
 </section>
 <section id="simulation">
-<h2>Simulation<a class="headerlink" href="#simulation" title="Permalink to this heading"></a></h2>
+<h2>Simulation<a class="headerlink" href="#simulation" title="Link to this heading"></a></h2>
 <p>Then, we can use this spatial dataset to generate new data by setting the parameter mu_formula as a smooth terms for the spatial coordinates.</p>
 <div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
@@ -184,7 +184,7 @@
 </div>
 </section>
 <section id="visualization">
-<h2>Visualization<a class="headerlink" href="#visualization" title="Permalink to this heading"></a></h2>
+<h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h2>
 <p>We plot a selected gene as an example showing the gene expression and the spatial locations.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -238,7 +238,7 @@
 </div>
 </details>
 <div class="cell_output docutils container">
-<img alt="../../_images/53a9b3a7ac9e8f68c619a8f24248c4dc3e03ce8ac635d40f955f93e93dd41d4e.png" src="../../_images/53a9b3a7ac9e8f68c619a8f24248c4dc3e03ce8ac635d40f955f93e93dd41d4e.png" />
+<img alt="../../_images/90f91f33e37e33c75c27bfcb9729ec3deb75ddab1c8cfd1eaad159d7b56e7311.png" src="../../_images/90f91f33e37e33c75c27bfcb9729ec3deb75ddab1c8cfd1eaad159d7b56e7311.png" />
 </div>
 </div>
 </section>
@@ -249,7 +249,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="mul_lineage.html" class="btn btn-neutral float-left" title="Simulate datasets with multiple lineages" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../model_select/index.html" class="btn btn-neutral float-right" title="Model Selection" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="deconvolution.html" class="btn btn-neutral float-right" title="Simulate spatial transcriptomic data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

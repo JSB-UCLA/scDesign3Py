@@ -12,3 +12,4 @@ The provided examples are shown as below.
    :maxdepth: 1
    
    Evaluate clustering goodness-of-fit <eva_cluster>
+   Evaluate pseudotime goodness-of-fit <eva_pseudotime>

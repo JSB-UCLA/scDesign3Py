@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evaluate pseudotime goodness-of-fit &mdash; scDesign3Py  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Model Alteration" href="../model_alter/index.html" />
+    <link rel="prev" title="Evaluate clustering goodness-of-fit" href="eva_cluster.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            scDesign3Py
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/API.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About scDesign3Py</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/all_in_one.html">All in one simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/stepwise.html">Step by step simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bpparam.html">Get BPPARAM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/lrt.html">Perform likelihood ratio test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/plot.html">Plot results</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data_simu/index.html">Data simulation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Model selection</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="eva_cluster.html">Evaluate clustering goodness-of-fit</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Evaluate pseudotime goodness-of-fit</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../model_alter/index.html">Model alteration</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">scDesign3Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Model Selection</a></li>
+      <li class="breadcrumb-item active">Evaluate pseudotime goodness-of-fit</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/examples/model_select/eva_pseudotime.ipynb" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="evaluate-pseudotime-goodness-of-fit">
+<h1>Evaluate pseudotime goodness-of-fit<a class="headerlink" href="#evaluate-pseudotime-goodness-of-fit" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>In this example, we will show how to use scDesign3Py to evaluate the pseudotime goodness-of-fit for different pseudotime labels. If the true labels are unavailable and we have little prior knowledge, the scDesign3 BIC can serve as an unsupervised metric. In this tutorial, we will first use the ground truth “pseudotime” generated by the R package <a class="reference external" href="https://dyngen.dynverse.org/">dyngen</a>. Then, we will perturb the ground truth pseudotime to worsen its quality and use scDesign3’s BIC to examine pseudotime goodness-of-fit.</p>
+</section>
+<section id="import-packages-and-read-in-data">
+<h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Link to this heading"></a></h2>
+<section id="import-pacakges">
+<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Link to this heading"></a></h3>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="read-in-data">
+<h3>Read in data<a class="headerlink" href="#read-in-data" title="Link to this heading"></a></h3>
+<p>The raw data is from the R package <code class="docutils literal notranslate"><span class="pre">dyngen</span></code>. Here, we directly use the result from the <a class="reference external" href="https://songdongyuan1994.github.io/scDesign3/docs/articles/scDesign3-pseudotimeGOF-vignette.html">scDesign3 tutorial</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/dyngen.h5ad&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">data</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 500 × 155
+    obs: &#39;step_ix&#39;, &#39;simulation_i&#39;, &#39;sim_time&#39;, &#39;pseudotime&#39;
+    var: &#39;module_id&#39;, &#39;basal&#39;, &#39;burn&#39;, &#39;independence&#39;, &#39;color&#39;, &#39;is_tf&#39;, &#39;is_hk&#39;, &#39;transcription_rate&#39;, &#39;splicing_rate&#39;, &#39;translation_rate&#39;, &#39;mrna_halflife&#39;, &#39;protein_halflife&#39;, &#39;mrna_decay_rate&#39;, &#39;protein_decay_rate&#39;, &#39;max_premrna&#39;, &#39;max_mrna&#39;, &#39;max_protein&#39;, &#39;mol_premrna&#39;, &#39;mol_mrna&#39;, &#39;mol_protein&#39;
+    uns: &#39;traj_dimred_segments&#39;, &#39;traj_milestone_network&#39;, &#39;traj_progressions&#39;
+    obsm: &#39;dimred&#39;
+    layers: &#39;counts_protein&#39;, &#39;counts_spliced&#39;, &#39;counts_unspliced&#39;, &#39;logcounts&#39;
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="simulation">
+<h2>Simulation<a class="headerlink" href="#simulation" title="Link to this heading"></a></h2>
+<p>We perturb the pseudotime by generating random numbers from uniform distribution and replacing various percentages of the original pseudotime with random numbers. The percentage ranges from 0% to 100%. In the code below, we generate 11 sets of perturbed pseudotime with the percentage of perturbation ranging from 0% to 100%. For each new set of perturbed pseudotime, we create a new <code class="docutils literal notranslate"><span class="pre">AnnData</span></code> object, storing the original count matrix and the corresponding perturbed pseudotime.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">perturb_data_dict</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:{</span><span class="s2">&quot;dat&quot;</span><span class="p">:</span><span class="n">data</span><span class="p">}}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">):</span>
+    <span class="n">tmp_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="mi">10</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp_data</span><span class="p">))</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">tmp_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">tmp_data</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">num</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="n">i</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">,</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">num</span><span class="p">)</span>
+    <span class="n">perturb_data_dict</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;dat&quot;</span><span class="p">:</span><span class="n">tmp_data</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we run scDesign3Py to get the model bic.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">perturb_data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">tmp_data</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="s2">&quot;dat&quot;</span><span class="p">]</span>
+    
+    <span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">)</span>
+    <span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">test</span><span class="o">.</span><span class="n">scdesign3</span><span class="p">(</span><span class="n">anndata</span><span class="o">=</span><span class="n">tmp_data</span><span class="p">,</span> 
+                        <span class="n">pseudotime</span><span class="o">=</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">,</span>
+                        <span class="n">corr_formula</span> <span class="o">=</span> <span class="s2">&quot;ind&quot;</span><span class="p">,</span> 
+                        <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;s(pseudotime, bs = &#39;cr&#39;, k = 10)&quot;</span><span class="p">,</span> 
+                        <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span> 
+                        <span class="n">copula</span> <span class="o">=</span> <span class="s2">&quot;gaussian&quot;</span><span class="p">,</span> 
+                        <span class="n">default_assay_name</span> <span class="o">=</span> <span class="s2">&quot;counts&quot;</span><span class="p">,</span> 
+                        <span class="n">family_use</span> <span class="o">=</span> <span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+                        <span class="n">usebam</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+    
+    <span class="n">perturb_data_dict</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s2">&quot;bic&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s2">&quot;model_bic&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h2>
+<p>After the simulations, we use BIC, which is an unsupervised metric, for evaluating the goodness-of-fit of the pseudotime.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">bic_res</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">i</span><span class="p">[</span><span class="s2">&quot;bic&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span><span class="n">i</span> <span class="ow">in</span> <span class="n">perturb_data_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">bic_res</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="o">/</span><span class="mi">10</span><span class="si">}</span><span class="s2"> perturb&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">bic_res</span><span class="o">.</span><span class="n">index</span><span class="p">]</span>
+<span class="n">bic_res</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>bic.marginal</th>
+      <th>bic.copula</th>
+      <th>bic.total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0.0 perturb</th>
+      <td>440744.638950</td>
+      <td>0.0</td>
+      <td>440744.638950</td>
+    </tr>
+    <tr>
+      <th>0.1 perturb</th>
+      <td>465098.582392</td>
+      <td>0.0</td>
+      <td>465098.582392</td>
+    </tr>
+    <tr>
+      <th>0.2 perturb</th>
+      <td>471527.503356</td>
+      <td>0.0</td>
+      <td>471527.503356</td>
+    </tr>
+    <tr>
+      <th>0.3 perturb</th>
+      <td>487017.888671</td>
+      <td>0.0</td>
+      <td>487017.888671</td>
+    </tr>
+    <tr>
+      <th>0.4 perturb</th>
+      <td>487621.784061</td>
+      <td>0.0</td>
+      <td>487621.784061</td>
+    </tr>
+    <tr>
+      <th>0.5 perturb</th>
+      <td>493888.709002</td>
+      <td>0.0</td>
+      <td>493888.709002</td>
+    </tr>
+    <tr>
+      <th>0.6 perturb</th>
+      <td>496339.699622</td>
+      <td>0.0</td>
+      <td>496339.699622</td>
+    </tr>
+    <tr>
+      <th>0.7 perturb</th>
+      <td>499465.894561</td>
+      <td>0.0</td>
+      <td>499465.894561</td>
+    </tr>
+    <tr>
+      <th>0.8 perturb</th>
+      <td>499858.520011</td>
+      <td>0.0</td>
+      <td>499858.520011</td>
+    </tr>
+    <tr>
+      <th>0.9 perturb</th>
+      <td>501529.672888</td>
+      <td>0.0</td>
+      <td>501529.672888</td>
+    </tr>
+    <tr>
+      <th>1.0 perturb</th>
+      <td>502280.653546</td>
+      <td>0.0</td>
+      <td>502280.653546</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Since we also have the ground truth pseudotime, we also calculate the <span class="math notranslate nohighlight">\(r^2\)</span> between the ground truth pseudotime and perturbed pseudotime. The <span class="math notranslate nohighlight">\(r^2\)</span> is a supervised metric to evaluate the pseudotime qualities. The figure shows that model BICs agree with <span class="math notranslate nohighlight">\(r^2\)</span></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">11</span><span class="p">):</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">perturb_data_dict</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;dat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">perturb_data_dict</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;dat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;pseudotime&quot;</span><span class="p">],</span><span class="s2">&quot;pearson&quot;</span><span class="p">))</span>
+<span class="n">r2</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">r</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compare</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;bic&quot;</span><span class="p">:</span><span class="n">bic_res</span><span class="p">[</span><span class="s2">&quot;bic.marginal&quot;</span><span class="p">],</span><span class="s2">&quot;r2&quot;</span><span class="p">:</span><span class="n">r2</span><span class="p">})</span>
+<span class="n">spearman_corr</span> <span class="o">=</span> <span class="n">compare</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;spearman&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">r2</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="n">bic_res</span><span class="p">[</span><span class="s2">&quot;bic.marginal&quot;</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;R2 (truth vs pseudotime)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;scDesign3 BIC&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">y</span><span class="o">=</span><span class="mi">450000</span><span class="p">,</span><span class="n">s</span><span class="o">=</span><span class="s2">&quot;Spearman Correlation: </span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">spearman_corr</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../../_images/f2ef2a20fa973d829a2c956f9b14b3a263bf0d583c93f4be6d73320b1536c915.png" src="../../_images/f2ef2a20fa973d829a2c956f9b14b3a263bf0d583c93f4be6d73320b1536c915.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="eva_cluster.html" class="btn btn-neutral float-left" title="Evaluate clustering goodness-of-fit" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../model_alter/index.html" class="btn btn-neutral float-right" title="Model Alteration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Di Liu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

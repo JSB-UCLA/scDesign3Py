@@ -1,26 +1,27 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quick Start &mdash; scDesign3Py  documentation</title>
-      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/copybutton.css" type="text/css" />
-      <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+
+  
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
-        <script src="../_static/clipboard.min.js"></script>
-        <script src="../_static/copybutton.js"></script>
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -98,17 +99,17 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="quick-start">
-<h1>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading"></a></h1>
+<h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h1>
 <section id="introduction">
-<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
 <p>The <strong>R</strong> package <strong>scDesign3</strong> is a unified probabilistic framework that generates realistic in silico high-dimensional single-cell omics data of various cell states, including discrete cell types, continuous trajectories, and spatial locations by learning from real datasets. <strong>scDesign3Py</strong> is the python interface for <strong>scDesign3</strong>.</p>
 <p>As a quick start, we demonstrate how to use <strong>scDesign3Py</strong> to simulate an scRNA-seq dataset with one continuous developmental trajectory.</p>
 </section>
 <section id="step-1-import-packages-and-read-in-data">
-<h2>Step 1: Import packages and Read in data<a class="headerlink" href="#step-1-import-packages-and-read-in-data" title="Permalink to this heading"></a></h2>
+<h2>Step 1: Import packages and Read in data<a class="headerlink" href="#step-1-import-packages-and-read-in-data" title="Link to this heading"></a></h2>
 <section id="import-pacakges">
-<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Permalink to this heading"></a></h3>
-<div class="cell docutils container">
+<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Link to this heading"></a></h3>
+<div class="cell tag_remove-output docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -116,15 +117,10 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>The R project used is located at /home/liudi/anaconda3/envs/pyscdesign/lib/R
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 <section id="read-in-data">
-<h3>Read in data<a class="headerlink" href="#read-in-data" title="Permalink to this heading"></a></h3>
+<h3>Read in data<a class="headerlink" href="#read-in-data" title="Link to this heading"></a></h3>
 <p>The raw data is from the <a class="reference external" href="https://scvelo.readthedocs.io/scvelo.datasets.pancreas/">scvelo</a>, which describes pancreatic endocrinogenesis. We pre-select the top 1000 highly variable genes and filter out some cell types to ensure a <strong>single trajectory</strong>.</p>
 <p>To save time, we only use the top 30 genes.</p>
 <div class="cell docutils container">
@@ -147,7 +143,7 @@
 </section>
 </section>
 <section id="step-2-scdesign3-performs-all-in-one-simulation">
-<h2>Step 2: <code class="docutils literal notranslate"><span class="pre">scdesign3()</span></code> performs all-in-one simulation<a class="headerlink" href="#step-2-scdesign3-performs-all-in-one-simulation" title="Permalink to this heading"></a></h2>
+<h2>Step 2: <code class="docutils literal notranslate"><span class="pre">scdesign3()</span></code> performs all-in-one simulation<a class="headerlink" href="#step-2-scdesign3-performs-all-in-one-simulation" title="Link to this heading"></a></h2>
 <p>First create an instance of the <code class="docutils literal notranslate"><span class="pre">scDesign</span></code> class to use the <code class="docutils literal notranslate"><span class="pre">scdesign3()</span></code> method, when creating the instance, we can also set up the basic settings when initializing.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
@@ -155,7 +151,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">)</span>
 <span class="n">test</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -172,7 +168,7 @@
     <span class="n">mu_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 10, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
     <span class="n">sigma_formula</span><span class="o">=</span><span class="s2">&quot;s(pseudotime, k = 5, bs = &#39;cr&#39;)&quot;</span><span class="p">,</span>
     <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
-    <span class="n">usebam</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">,</span>
     <span class="n">copula</span><span class="o">=</span><span class="s2">&quot;gaussian&quot;</span><span class="p">,</span>
 <span class="p">)</span>
@@ -186,7 +182,7 @@
 </div>
 </section>
 <section id="step-3-construct-new-anndata-anndata-object-with-the-simulated-result">
-<h2>Step 3: Construct new <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object with the simulated result<a class="headerlink" href="#step-3-construct-new-anndata-anndata-object-with-the-simulated-result" title="Permalink to this heading"></a></h2>
+<h2>Step 3: Construct new <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object with the simulated result<a class="headerlink" href="#step-3-construct-new-anndata-anndata-object-with-the-simulated-result" title="Link to this heading"></a></h2>
 <p>Besides constructing the simulated <code class="docutils literal notranslate"><span class="pre">anndata.AnnData</span></code> object, we can also calculate the log transformed data for visualization.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -199,7 +195,7 @@
 </div>
 </section>
 <section id="step-4-visualization">
-<h2>Step 4: Visualization<a class="headerlink" href="#step-4-visualization" title="Permalink to this heading"></a></h2>
+<h2>Step 4: Visualization<a class="headerlink" href="#step-4-visualization" title="Link to this heading"></a></h2>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Details of the plot process will be shown in <a class="reference internal" href="plot.html"><span class="doc">tutorial</span></a> section.</p>
@@ -228,7 +224,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/714fdc4d77faabf7f3fcd8d7f77a3d21a539a025fbdb7a0c9eb8c3f154fd1b8f.png" src="../_images/714fdc4d77faabf7f3fcd8d7f77a3d21a539a025fbdb7a0c9eb8c3f154fd1b8f.png" />
+<img alt="../_images/0ad773edc4bbb07a816f3cf9a51e9b4394ee1b2137ec6a40f2cc7a5248a7b06e.png" src="../_images/0ad773edc4bbb07a816f3cf9a51e9b4394ee1b2137ec6a40f2cc7a5248a7b06e.png" />
 </div>
 </div>
 <p>PCA plot</p>
@@ -239,7 +235,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/12b77c3aed90cdd5879b7d050eb12a15c730141e2be76c127a7be7a12070b7e1.png" src="../_images/12b77c3aed90cdd5879b7d050eb12a15c730141e2be76c127a7be7a12070b7e1.png" />
+<img alt="../_images/0e8f02493f4857c927d4fc32e80b0ad301d5e4c7d94df434edbef8ebd185027b.png" src="../_images/0e8f02493f4857c927d4fc32e80b0ad301d5e4c7d94df434edbef8ebd185027b.png" />
 </div>
 </div>
 </section>

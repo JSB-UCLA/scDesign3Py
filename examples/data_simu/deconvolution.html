@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulate spatial transcriptomic data &mdash; scDesign3Py  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b76e3c8a" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+        <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Simulate single-cell ATAC-seq data" href="ATAC.html" />
+    <link rel="prev" title="Simulate spatial transcriptomic data" href="spatial.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            scDesign3Py
+          </a>
+              <div class="version">
+                1.0.0
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/Installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/API.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../set_up/info.html">About scDesign3Py</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/all_in_one.html">All in one simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/stepwise.html">Step by step simulation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/bpparam.html">Get BPPARAM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/lrt.html">Perform likelihood ratio test</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial/plot.html">Plot results</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">More examples</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../model_para/index.html">Model parameter</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Data simulation</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cell_lib_size.html">Simulate datasets with cell library size</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mul_lineage.html">Simulate datasets with multiple lineages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spatial.html">Simulate spatial transcriptomic data</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Simulate spot-resolution spatial data for cell-type deconvolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ATAC.html">Simulate single-cell ATAC-seq data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="CITE.html">Simulate CITE-seq data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mul_omic.html">Simulate multi-omics data from multiple single-omic datasets</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../model_select/index.html">Model selection</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model_alter/index.html">Model alteration</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">scDesign3Py</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Data Simulation</a></li>
+      <li class="breadcrumb-item active">Simulate spatial transcriptomic data</li>
+      <li class="wy-breadcrumbs-aside">
+              <a href="https://github.com/DILIU899/scDesign3Py/blob/main/docs/source/examples/data_simu/deconvolution.ipynb" class="fa fa-github"> Edit on GitHub</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="simulate-spatial-transcriptomic-data">
+<h1>Simulate spatial transcriptomic data<a class="headerlink" href="#simulate-spatial-transcriptomic-data" title="Link to this heading"></a></h1>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading"></a></h2>
+<p>In this example, we show how to use scDesign3Py to simulate the spot-resolution spatial data, which each spot is a mix of cells from different cell types.</p>
+</section>
+<section id="import-packages-and-read-in-data">
+<h2>Import packages and Read in data<a class="headerlink" href="#import-packages-and-read-in-data" title="Link to this heading"></a></h2>
+<section id="import-pacakges">
+<h3>import pacakges<a class="headerlink" href="#import-pacakges" title="Link to this heading"></a></h3>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">anndata</span> <span class="k">as</span> <span class="nn">ad</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scDesign3Py</span>
+
+<span class="kn">import</span> <span class="nn">cell2location</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="read-in-the-reference-data">
+<h3>Read in the reference data<a class="headerlink" href="#read-in-the-reference-data" title="Link to this heading"></a></h3>
+<p>The paired scRNA-seq and spatial data were used in <a class="reference external" href="https://www.nature.com/articles/s41587-022-01273-7">CARD</a>. We pre-select the top cell-type marker genes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MOBSC_exp</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/MOBSC.h5ad&quot;</span><span class="p">)</span>
+<span class="n">MOBSP_exp</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">read_h5ad</span><span class="p">(</span><span class="s2">&quot;data/MOBSP.h5ad&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MOBSC_exp</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 12640 × 182
+    obs: &#39;cellType&#39;, &#39;sampleInfo&#39;, &#39;sizeFactor&#39;, &#39;cell_type&#39;
+    var: &#39;rownames.count.&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MOBSP_exp</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AnnData object with n_obs × n_vars = 278 × 182
+    obs: &#39;spatial1&#39;, &#39;spatial2&#39;
+    var: &#39;name&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cell_type</span> <span class="o">=</span> <span class="n">MOBSC_exp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cellType&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="simulation">
+<h2>Simulation<a class="headerlink" href="#simulation" title="Link to this heading"></a></h2>
+<p>We first use scDesign3Py to estimate the cell-type reference from scRNA-seq data.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mobsc</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">)</span>
+<span class="n">mobsc</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">MOBSC_data</span> <span class="o">=</span> <span class="n">mobsc</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">MOBSC_exp</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">celltype</span><span class="o">=</span><span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span>
+<span class="p">)</span>
+<span class="n">MOBSC_marginal</span> <span class="o">=</span> <span class="n">mobsc</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>  
+    <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;cell_type&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">MOBSC_copula</span> <span class="o">=</span> <span class="n">mobsc</span><span class="o">.</span><span class="n">fit_copula</span><span class="p">()</span>
+<span class="n">MOBSC_para</span> <span class="o">=</span> <span class="n">mobsc</span><span class="o">.</span><span class="n">extract_para</span><span class="p">()</span>
+<span class="n">MOBSC_newcount</span> <span class="o">=</span> <span class="n">mobsc</span><span class="o">.</span><span class="n">simu_new</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mobsp</span> <span class="o">=</span> <span class="n">scDesign3Py</span><span class="o">.</span><span class="n">scDesign3</span><span class="p">(</span><span class="n">n_cores</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">parallelization</span><span class="o">=</span><span class="s2">&quot;pbmcmapply&quot;</span><span class="p">)</span>
+<span class="n">mobsp</span><span class="o">.</span><span class="n">set_r_random_seed</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
+<span class="n">MOBSP_data</span> <span class="o">=</span> <span class="n">mobsp</span><span class="o">.</span><span class="n">construct_data</span><span class="p">(</span>
+    <span class="n">anndata</span><span class="o">=</span><span class="n">MOBSP_exp</span><span class="p">,</span>
+    <span class="n">default_assay_name</span><span class="o">=</span><span class="s2">&quot;counts&quot;</span><span class="p">,</span>
+    <span class="n">spatial</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;spatial1&quot;</span><span class="p">,</span> <span class="s2">&quot;spatial2&quot;</span><span class="p">],</span>
+    <span class="n">corr_formula</span><span class="o">=</span><span class="s2">&quot;1&quot;</span>
+<span class="p">)</span>
+<span class="n">MOBSP_marginal</span> <span class="o">=</span> <span class="n">mobsp</span><span class="o">.</span><span class="n">fit_marginal</span><span class="p">(</span>  
+    <span class="n">mu_formula</span> <span class="o">=</span> <span class="s2">&quot;s(spatial1, spatial2, bs = &#39;gp&#39;, k = 50, m = c(1, 2, 1))&quot;</span><span class="p">,</span>
+    <span class="n">sigma_formula</span> <span class="o">=</span> <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+    <span class="n">family_use</span><span class="o">=</span><span class="s2">&quot;nb&quot;</span><span class="p">,</span>
+    <span class="n">usebam</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">MOBSP_copula</span> <span class="o">=</span> <span class="n">mobsp</span><span class="o">.</span><span class="n">fit_copula</span><span class="p">()</span>
+<span class="n">MOBSP_para</span> <span class="o">=</span> <span class="n">mobsp</span><span class="o">.</span><span class="n">extract_para</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="deconvolution">
+<h2>Deconvolution<a class="headerlink" href="#deconvolution" title="Link to this heading"></a></h2>
+<p>Now we get the fitted models for scRNA-seq and spatial data. We need to extract their mean parameters (i.e., expected expression values).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">MOBSC_sig_matrix</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span> <span class="o">=</span> <span class="n">MOBSC_para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">cell_type</span><span class="p">:</span>
+    <span class="n">cell</span> <span class="o">=</span> <span class="n">MOBSC_exp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="n">MOBSC_exp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">t</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">MOBSC_sig_matrix</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">=</span> <span class="n">MOBSC_para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">cell</span><span class="p">,:]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">T</span>
+<span class="n">mixture_file</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">MOBSP_para</span><span class="p">[</span><span class="s2">&quot;mean_mat&quot;</span><span class="p">])</span>
+<span class="n">mixture_file</span><span class="o">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">mixture_file</span><span class="o">.</span><span class="n">X</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We use <a class="reference external" href="https://cell2location.readthedocs.io/en/latest/">cell2location</a> to decompose each spot’s expected expression into cell-type proportions. This step is to set the true cell-type proportions. Please note you can also use other decomposition methods or set the proportion mannully if you have your own design.</p>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cell2location</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Cell2location</span><span class="o">.</span><span class="n">setup_anndata</span><span class="p">(</span><span class="n">adata</span><span class="o">=</span><span class="n">mixture_file</span><span class="p">)</span>
+<span class="n">mod</span> <span class="o">=</span> <span class="n">cell2location</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">Cell2location</span><span class="p">(</span>
+    <span class="n">adata</span> <span class="o">=</span> <span class="n">mixture_file</span><span class="p">,</span>
+    <span class="n">cell_state_df</span><span class="o">=</span><span class="n">MOBSC_sig_matrix</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">mod</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">max_epochs</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">mixture_file</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">export_posterior</span><span class="p">(</span><span class="n">mixture_file</span><span class="p">,</span> <span class="n">sample_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;num_samples&quot;</span><span class="p">:</span><span class="mi">1000</span><span class="p">,</span> <span class="s2">&quot;batch_size&quot;</span><span class="p">:</span><span class="n">mod</span><span class="o">.</span><span class="n">adata</span><span class="o">.</span><span class="n">n_obs</span><span class="p">,</span><span class="s2">&quot;use_gpu&quot;</span><span class="p">:</span><span class="kc">True</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Then we can simulate new spatial data where each spot is the sum of 50 cells/5 (therefore on average 10 cells per spot). Increasing the number of cells will make the spatial data smoother (closer to the expected spatial expression).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">abundance</span> <span class="o">=</span> <span class="n">mixture_file</span><span class="o">.</span><span class="n">obsm</span><span class="p">[</span><span class="s1">&#39;q05_cell_abundance_w_sf&#39;</span><span class="p">]</span>
+<span class="n">abundance</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">cell_type</span>
+<span class="n">percent</span> <span class="o">=</span> <span class="n">abundance</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">abundance</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># simu single cell data</span>
+<span class="n">simu_data</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">MOBSC_newcount</span><span class="p">,</span><span class="n">obs</span><span class="o">=</span><span class="n">MOBSC_exp</span><span class="o">.</span><span class="n">obs</span><span class="p">)</span>
+
+<span class="c1"># simu mixture data</span>
+<span class="n">mixture</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">spot</span> <span class="ow">in</span> <span class="n">MOBSP_exp</span><span class="o">.</span><span class="n">obs_names</span><span class="p">:</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="n">MOBSC_exp</span><span class="o">.</span><span class="n">var_names</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">cell_type</span><span class="p">:</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">simu_data</span><span class="p">[</span><span class="n">simu_data</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;cell_type&quot;</span><span class="p">]</span><span class="o">==</span><span class="n">t</span><span class="p">,</span> <span class="p">]</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">tmp</span><span class="o">.</span><span class="n">obs</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">count_t</span> <span class="o">=</span> <span class="n">MOBSC_newcount</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">percent</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">spot</span><span class="p">,</span><span class="n">t</span><span class="p">]</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="n">count</span> <span class="o">+</span> <span class="n">count_t</span>
+    <span class="n">count</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">spot</span>
+    <span class="n">mixture</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+<span class="n">mixture</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">mixture</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">mixture</span> <span class="o">=</span> <span class="n">mixture</span> <span class="o">/</span> <span class="mi">5</span>
+<span class="n">mixture</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">mixture</span><span class="p">)</span>
+
+<span class="n">simu_mixture</span> <span class="o">=</span> <span class="n">ad</span><span class="o">.</span><span class="n">AnnData</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">mixture</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="n">MOBSP_exp</span><span class="o">.</span><span class="n">obs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="visualization">
+<h2>Visualization<a class="headerlink" href="#visualization" title="Link to this heading"></a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Patch</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can visualzie the proportions by pie-chart.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">drawPieMarker</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">ratios</span><span class="p">,</span> <span class="n">sizes</span><span class="p">,</span> <span class="n">colors</span><span class="p">):</span>
+    <span class="n">markers</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">previous</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="c1"># calculate the points of the pie pieces</span>
+    <span class="k">for</span> <span class="n">color</span><span class="p">,</span> <span class="n">ratio</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span> <span class="n">ratios</span><span class="p">):</span>
+        <span class="n">this</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">+</span> <span class="n">previous</span>
+        <span class="n">x</span>  <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span>  <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">previous</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">xy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">])</span>
+        <span class="n">previous</span> <span class="o">=</span> <span class="n">this</span>
+        <span class="n">markers</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;marker&#39;</span><span class="p">:</span><span class="n">xy</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sizes</span><span class="p">),</span> <span class="s1">&#39;facecolor&#39;</span><span class="p">:</span><span class="n">color</span><span class="p">})</span>
+
+    <span class="c1"># scatter each of the pie pieces to create pies</span>
+    <span class="k">for</span> <span class="n">marker</span> <span class="ow">in</span> <span class="n">markers</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="o">**</span><span class="n">marker</span><span class="p">)</span>
+
+<span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;#e41a1c&quot;</span><span class="p">,</span><span class="s2">&quot;#377eb8&quot;</span><span class="p">,</span><span class="s2">&quot;#4daf4a&quot;</span><span class="p">,</span><span class="s2">&quot;#984ea3&quot;</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">spot</span> <span class="ow">in</span> <span class="n">MOBSP_exp</span><span class="o">.</span><span class="n">obs_names</span><span class="p">:</span>
+    <span class="n">drawPieMarker</span><span class="p">(</span><span class="n">xs</span><span class="o">=</span><span class="n">MOBSP_exp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;spatial1&quot;</span><span class="p">][</span><span class="n">spot</span><span class="p">],</span>
+                <span class="n">ys</span><span class="o">=</span><span class="n">MOBSP_exp</span><span class="o">.</span><span class="n">obs</span><span class="p">[</span><span class="s2">&quot;spatial2&quot;</span><span class="p">][</span><span class="n">spot</span><span class="p">],</span>
+                <span class="n">ratios</span><span class="o">=</span><span class="n">percent</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">spot</span><span class="p">,:]</span><span class="o">.</span><span class="n">to_list</span><span class="p">(),</span>
+                <span class="n">sizes</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span>
+                <span class="n">colors</span><span class="o">=</span><span class="n">colors</span>
+                <span class="p">)</span>
+
+<span class="n">legend_elements</span> <span class="o">=</span> <span class="p">[</span><span class="n">Patch</span><span class="p">(</span><span class="n">facecolor</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">cell_type</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cell_type</span><span class="p">))]</span>
+<span class="n">legend</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">legend_elements</span><span class="p">,</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">legend</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Cell Type&#39;</span><span class="p">,</span> <span class="n">prop</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;size&#39;</span><span class="p">:</span> <span class="mi">13</span><span class="p">})</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../../_images/c7fa1dd8767939f7a047cf54ac405cfdab0478485e657ab659d108a1c866d815.png" src="../../_images/c7fa1dd8767939f7a047cf54ac405cfdab0478485e657ab659d108a1c866d815.png" />
+</div>
+</div>
+<p>We can also check the simulated results. We use one cell-type marker genes as the example.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gene_name</span> <span class="o">=</span> <span class="s2">&quot;S100a5&quot;</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">MOBSP_exp</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;spatial1&quot;</span><span class="p">,</span><span class="s2">&quot;spatial2&quot;</span><span class="p">]],</span><span class="n">simu_mixture</span><span class="o">.</span><span class="n">obs</span><span class="p">[[</span><span class="s2">&quot;spatial1&quot;</span><span class="p">,</span><span class="s2">&quot;spatial2&quot;</span><span class="p">]]],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Expression&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">MOBSP_exp</span><span class="p">[:,</span><span class="n">gene_name</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span><span class="n">simu_mixture</span><span class="p">[:,</span><span class="n">gene_name</span><span class="p">]</span><span class="o">.</span><span class="n">X</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;Method&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Reference&quot;</span><span class="p">]</span><span class="o">*</span><span class="n">MOBSP_exp</span><span class="o">.</span><span class="n">n_obs</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;scDesign3&quot;</span><span class="p">]</span><span class="o">*</span><span class="n">MOBSP_exp</span><span class="o">.</span><span class="n">n_obs</span>
+
+<span class="c1"># plot</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+<span class="n">methods</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;Method&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">methods</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">methods</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span> <span class="o">*</span> <span class="mi">5</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">exp</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">methods</span><span class="p">):</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+    <span class="n">scatter</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+        <span class="n">exp</span><span class="p">[</span><span class="s2">&quot;spatial1&quot;</span><span class="p">],</span>
+        <span class="n">exp</span><span class="p">[</span><span class="s2">&quot;spatial2&quot;</span><span class="p">],</span>
+        <span class="n">c</span><span class="o">=</span><span class="n">exp</span><span class="p">[</span><span class="s2">&quot;Expression&quot;</span><span class="p">],</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">s</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">method</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">)</span>
+<span class="n">position</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.60</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">scatter</span><span class="p">,</span>                <span class="n">cax</span><span class="o">=</span><span class="n">position</span><span class="p">,</span>
+                <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;horizontal&quot;</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">gene_name</span><span class="si">}</span><span class="s2"> Expression&quot;</span><span class="p">,)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../../_images/53055e47cc6a8afac59ecd1c8834e6fcbd82957574d8d747fc0abefd542c68ea.png" src="../../_images/53055e47cc6a8afac59ecd1c8834e6fcbd82957574d8d747fc0abefd542c68ea.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="spatial.html" class="btn btn-neutral float-left" title="Simulate spatial transcriptomic data" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="ATAC.html" class="btn btn-neutral float-right" title="Simulate single-cell ATAC-seq data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Di Liu.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
