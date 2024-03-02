@@ -76,7 +76,7 @@ pygments_style = "sphinx"
 todo_include_todos = False
 
 # Set myst_nb extension in case execution is too slow
-nb_execution_timeout = 600
+nb_execution_timeout = 1200
 
 # -- Options for HTML output -------------------------------------------------
 
